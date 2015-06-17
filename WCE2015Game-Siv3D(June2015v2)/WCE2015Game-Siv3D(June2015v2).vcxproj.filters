@@ -426,4 +426,9 @@
       <Filter>リソース ファイル\Engine\objdetect</Filter>
     </Xml>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
