@@ -13,7 +13,7 @@ public:
 	//全体マップの座標から、カメラセンターのとき、画面上でどこに位置するかの座標を返す
 	inline Vec2 getDrawPos(const Vec2& globalPos)const 
 	{
-		return globalPos;//Vec2{ 640.0, 400.0 } + globalPos - m_pos;
+		return Vec2{ 640.0, 400.0 } + globalPos - m_pos;
 	}
 
 	Vec2 m_pos;

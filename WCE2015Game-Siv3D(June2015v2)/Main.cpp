@@ -53,7 +53,7 @@ public:
 public:
 	MyVehicle()
 	{
-		const Polygon pol = Imaging::FindExternalContour(Image(L"Maze.png"), true) + Point(320, 240);
+		const Polygon pol = Imaging::FindExternalContour(Image(L"Maze.png"), true) + Vec2(320, 240);
 
 		const Polygon pol2 = pol.simplified(10.0);
 
@@ -65,9 +65,7 @@ public:
 
 	}
 
-
-
-	void update()
+	void collisionPlayerWithObject()
 	{
 		Vec2 futurePos = m_pos + m_v;//そのままならm_v進める
 
@@ -126,6 +124,11 @@ public:
 
 	}
 
+	void update()
+	{
+		collisionPlayerWithObject();
+	}
+
 	void draw(const D2Camera& camera)const
 	{
 		const Vec2 myDrawPos = camera.getDrawPos(m_pos);
@@ -134,7 +137,7 @@ public:
 
 		Line(myDrawPos, myDrawPos + m_v * 20).draw(3, Palette::Dimgray);
 
-		const Vec2  testObjectPos = camera.getDrawPos({ 320, 240 });
+		const Vec2  testObjectPos = camera.getDrawPos({320, 240 });
 
 		m_tex.draw(testObjectPos);
 
@@ -142,13 +145,8 @@ public:
 
 		for (const auto& wall : m_walls)
 		{
-			wall.movedBy(testObjectPos).drawFrame(2, Color(40, 200, 200, 30));
+			wall.drawFrame(camera.getDrawPos({ 0 ,0 }), 2, Color(40, 200, 200, 30));
 		}
-	}
-
-	inline Circle getBody()const
-	{
-		return Circle(m_pos, 20);
 	}
 
 };
