@@ -1,6 +1,6 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"MRShotGenerator.hpp"
+#include"ShotGenerator.hpp"
 
 class MRVehicle
 {
@@ -44,9 +44,9 @@ public:
 		case ShotType::Rotate:
 		{
 			//遅延ショットは管理リストに入れてupdate()で撃つ
-			MRShotRound* round = new MRShotRound(2000, pos());
+			ShotRound* round = new ShotRound(2000, pos());
 			round->start();
-			shotList.push_back(std::shared_ptr<MRShotGenerator>(round));
+			shotList.push_back(std::shared_ptr<ShotGenerator>(round));
 			interval = 2000;
 			break;
 		}
@@ -81,7 +81,7 @@ public:
 			s->update(pos());
 		}
 
-		Erase_if(shotList, [=](const std::shared_ptr<MRShotGenerator>& sh){ return sh->isDead; });
+		Erase_if(shotList, [=](const std::shared_ptr<ShotGenerator>& sh){ return sh->isDead; });
 
 		if (Input::MouseL.pressed)
 		{
@@ -105,10 +105,10 @@ private:
 		NumOfType
 	};
 
-	std::vector< std::shared_ptr<MRShotGenerator> > shotList;//遅延ショットリスト
+	std::vector< std::shared_ptr<ShotGenerator> > shotList;//遅延ショットリスト
 
-	MRShotSakura sakuraShot;
-	MRShotChase chaseShot;
+	ShotSakura sakuraShot;
+	ShotChase chaseShot;
 
 	TimerMillisec intervalTimer;//インターバル計測用タイマー
 

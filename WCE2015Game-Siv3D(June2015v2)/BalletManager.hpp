@@ -1,3 +1,4 @@
+#pragma once
 #include<vector>
 #include<Siv3D.hpp>
 #include"Ballet.hpp"
@@ -12,9 +13,9 @@ class BalletManager
 public:
 	BalletManager(){}
 
-	BalletManager(GameBase* gb);
+	BalletManager(GameBase* gb) :m_gb(gb){}
 
-	std::vector<Ballet> m_ballets;
+	std::vector<std::shared_ptr<Ballet>> m_ballets;
 
 	GameBase* m_gb;
 

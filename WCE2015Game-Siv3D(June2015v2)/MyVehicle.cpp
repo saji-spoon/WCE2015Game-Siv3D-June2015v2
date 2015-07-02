@@ -2,7 +2,7 @@
 
 using namespace shimi;
 
-MyVehicle::MyVehicle(GameBase* base) :m_gb(base),interval(0), vehicleType(ShotType::Rotate), sakuraShot(1000), chaseShot(1000)
+MyVehicle::MyVehicle(GameBase* base) :m_gb(base),interval(0), vehicleType(ShotType::Red), ougiShot(base, 1000), chaseShot(base, 1000)
 {
 	//---for prototype
 	const Polygon pol = Imaging::FindExternalContour(Image(L"Maze.png"), true) + Vec2(320, 240);

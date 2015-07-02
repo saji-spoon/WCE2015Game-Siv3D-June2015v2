@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Ballet.cpp" />
-    <ClCompile Include="BalletManager.cpp" />
+    <ClCompile Include="AscAnime.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ShotGenerator.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
     <ClCompile Include="Resource.cpp" />
   </ItemGroup>
@@ -167,12 +167,15 @@
     <Xml Include="Engine\objdetect\facePhoto.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ballet.hpp" />
+    <ClInclude Include="AscAnime.hpp" />
     <ClInclude Include="BalletManager.hpp" />
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="EnemyManager.hpp" />
     <ClInclude Include="GameBase.hpp" />
-    <ClInclude Include="MRBallet.hpp" />
-    <ClInclude Include="MRShotGenerator.hpp" />
+    <ClInclude Include="ImageAsset.hpp" />
+    <ClInclude Include="Ballet.hpp" />
+    <ClInclude Include="ShotGenerator.hpp" />
     <ClInclude Include="MRVehicle.hpp" />
     <ClInclude Include="Resource.hpp" />
     <ClInclude Include="MyVehicle.hpp" />

@@ -1,7 +1,7 @@
 #pragma once
 #include<Siv3D.hpp>
 #include"Camera.hpp"
-#include"MRShotGenerator.hpp"
+#include"ShotGenerator.hpp"
 
 namespace shimi
 {
@@ -11,7 +11,7 @@ class GameBase;
 class MyVehicle
 {
 public:
-	Vec2 m_pos = Point(640, 400);
+	Vec2 m_pos = Vec2(640, 400);
 
 	Vec2 m_v = Circular(3, 0);
 
@@ -24,17 +24,17 @@ public:
 
 	enum class ShotType
 	{
-		Rotate,
+		Red,
 		//Throw,
-		Chase,
-		Sakura,
+		Green,
+		Blue,
 		NumOfType
 	};
 
-	std::vector< std::shared_ptr<MRShotGenerator> > shotList;//遅延ショットリスト
+	std::vector< std::shared_ptr<ShotGenerator> > shotList;//遅延ショットリスト
 
-	MRShotSakura sakuraShot;
-	MRShotChase chaseShot;
+	ShotOugi ougiShot;
+	ShotChase chaseShot;
 
 	TimerMillisec intervalTimer;//インターバル計測用タイマー
 
@@ -57,13 +57,17 @@ public:
 
 		switch (vehicleType)
 		{
-		case ShotType::Rotate:
+		case ShotType::Red:
 		{
+			interval = 10;
+			ougiShot.update(m_pos, m_v);
 			//遅延ショットは管理リストに入れてupdate()で撃つ
-			MRShotRound* round = new MRShotRound(2000, pos());
+			/*
+			ShotRound* round = new ShotRound(m_gb, 2000, m_pos);
 			round->start();
-			shotList.push_back(std::shared_ptr<MRShotGenerator>(round));
+			shotList.push_back(std::shared_ptr<ShotGenerator>(round));
 			interval = 2000;
+			*/
 			break;
 		}
 		/*
@@ -72,16 +76,16 @@ public:
 		interval = 1000;
 		break;
 		*/
-		case ShotType::Chase:
+		case ShotType::Green:
 			//遅延ショットではないのでここで直接撃つ(update)
 			interval = 1000;
-			chaseShot.update(pos());
+			chaseShot.update(m_pos, m_v);
 			break;
-		case ShotType::Sakura:
+		case ShotType::Blue:
 		{
 			//遅延ショットではないのでここで直接撃つ(update)
 			interval = 10;
-			sakuraShot.update(pos());
+			ougiShot.update(m_pos, m_v);
 			break;
 		}
 		default:
@@ -96,10 +100,10 @@ public:
 
 		for (auto& s : shotList)
 		{
-			s->update(pos());
+			s->update(m_pos, m_v);
 		}
 
-		Erase_if(shotList, [=](const std::shared_ptr<MRShotGenerator>& sh){ return sh->isDead; });
+		Erase_if(shotList, [=](const std::shared_ptr<ShotGenerator>& sh){ return sh->isDead; });
 
 		if (Input::MouseL.pressed)
 		{

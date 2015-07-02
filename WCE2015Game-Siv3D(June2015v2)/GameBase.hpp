@@ -3,7 +3,9 @@
 #include"MyVehicle.hpp"
 #include"Camera.hpp"
 #include"Ballet.hpp"
+#include "Enemy.hpp"
 #include"BalletManager.hpp"
+#include"EnemyManager.hpp"
 
 namespace shimi
 {
@@ -18,14 +20,20 @@ public:
 	DynamicTexture m_dTex = DynamicTexture(m_image);
 
 	//myBalletManager;
-	BalletManager m_myBM;
+	BalletManager m_myBM = BalletManager(this);
+	//EnemyManager
+	EnemyManager m_EM = EnemyManager(this);
 
 	MyVehicle mv = MyVehicle(this);
 
 	D2Camera m_camera;
 
-	GameBase() :m_camera(mv.m_pos), m_myBM(this)
+	GameBase() :m_camera(mv.m_pos)
 	{
+		/*for prototype*/
+
+		m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy{ &m_EM, {120.0, 300.0} }));
+
 	}
 
 	void update();
