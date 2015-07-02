@@ -3,6 +3,7 @@
 #include"MyVehicle.hpp"
 #include"Camera.hpp"
 #include"Ballet.hpp"
+#include"BalletManager.hpp"
 
 namespace shimi
 {
@@ -16,18 +17,23 @@ public:
 
 	DynamicTexture m_dTex = DynamicTexture(m_image);
 
-	std::vector<Ballet> m_ballets;
+	//myBalletManager;
+	BalletManager m_myBM;
 
 	MyVehicle mv = MyVehicle(this);
 
 	D2Camera m_camera;
 
-	GameBase() :m_camera(mv.m_pos)
+	GameBase() :m_camera(mv.m_pos), m_myBM(this)
 	{
 	}
 
 	void update();
 
+	inline Vec2 getMyVehiclePos()
+	{
+		return mv.m_pos;
+	}
 
 	void updateCamera(const Vec2& cPos)
 	{

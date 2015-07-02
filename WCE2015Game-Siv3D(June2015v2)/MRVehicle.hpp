@@ -1,53 +1,37 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"Camera.hpp"
 #include"MRShotGenerator.hpp"
 
-namespace shimi
-{
-
-class GameBase;
-
-class MyVehicle
+class MRVehicle
 {
 public:
-	Vec2 m_pos = Point(640, 400);
 
-	Vec2 m_v = Circular(3, 0);
-
-	//---for prototype
-	std::vector<Polygon> m_walls;
-	Texture m_tex = Texture(L"Maze.png");
-	//---
-
-	GameBase* m_gb;
-
-	enum class ShotType
+	MRVehicle() :interval(0), vehicleType(ShotType::Rotate), sakuraShot(1000), chaseShot(1000)
+	{}
+	
+	void draw()
 	{
-		Rotate,
-		//Throw,
-		Chase,
-		Sakura,
-		NumOfType
-	};
 
-	std::vector< std::shared_ptr<MRShotGenerator> > shotList;//遅延ショットリスト
 
-	MRShotSakura sakuraShot;
-	MRShotChase chaseShot;
+		Rect(pos() - Point(30, 30), { 60, 60 })(TextureAsset(L"player")).draw();
 
-	TimerMillisec intervalTimer;//インターバル計測用タイマー
+		switch (vehicleType)
+		{
+		case MRVehicle::ShotType::Rotate:
+			TextureAsset(L"ballet1").draw(pos(), Alpha(180));
+			break;
+		case MRVehicle::ShotType::Chase:
+			TextureAsset(L"ballet2").draw(pos(), Alpha(180));
+			break;
+		case MRVehicle::ShotType::Sakura:
+			TextureAsset(L"ballet3").draw(pos(), Alpha(180));
+			break;
+		default:
+			break;
+		}
 
-	unsigned int interval;//インターバル
 
-	ShotType vehicleType;//自機の弾タイプ
-
-public:
-	MyVehicle(GameBase* base);
-
-	void collisionPlayerWithObject();
-
-	void draw(const D2Camera& camera)const;
+	}
 
 	void shot()
 	{
@@ -68,9 +52,9 @@ public:
 		}
 		/*
 		case ShotType::Throw:
-		//TODO//弾生成クラスのnewとstart, shotListへの挿入
-		interval = 1000;
-		break;
+			//TODO//弾生成クラスのnewとstart, shotListへの挿入
+			interval = 1000;
+			break;
 		*/
 		case ShotType::Chase:
 			//遅延ショットではないのでここで直接撃つ(update)
@@ -92,8 +76,6 @@ public:
 
 	void update()
 	{
-		collisionPlayerWithObject();
-
 		for (auto& s : shotList)
 		{
 			s->update(pos());
@@ -113,6 +95,24 @@ public:
 
 	}
 
-};
+private:
+	enum class ShotType
+	{
+		Rotate,
+		//Throw,
+		Chase,
+		Sakura,
+		NumOfType
+	};
 
-}
+	std::vector< std::shared_ptr<MRShotGenerator> > shotList;//遅延ショットリスト
+
+	MRShotSakura sakuraShot;
+	MRShotChase chaseShot;
+
+	TimerMillisec intervalTimer;//インターバル計測用タイマー
+
+	unsigned int interval;//インターバル
+
+	ShotType vehicleType;//自機の弾タイプ
+};

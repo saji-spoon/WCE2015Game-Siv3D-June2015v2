@@ -2,8 +2,11 @@
 #include<Siv3D.hpp>
 #include"Camera.hpp"
 
+
 namespace shimi
 {
+
+class BalletManager;
 
 class Ballet
 {
@@ -12,25 +15,24 @@ public:
 
 	Image m_image;
 
-	Point m_pos = Point(320, 300);
+	BalletManager* m_manager;
+
+	Vec2 m_pos;
 
 public:
 
 	Ballet(){}
 
-	Ballet(FilePath path) :m_image(path), m_tex(path)
-	{
-
-	}
+	Ballet(BalletManager* bm, const FilePath& path, const Vec2& pos);
 
 	void update()
 	{
-		m_pos += Point(0, -1);
+		m_pos += Vec2(0, -1);
 	}
 
 	void drop(Image& img)
 	{
-		m_image.write(img, m_pos - m_tex.size / 2, Alpha(128));
+		m_image.write(img, m_pos.asPoint() - m_tex.size / 2, Alpha(128));
 	}
 
 	void draw(const D2Camera& camera)const 

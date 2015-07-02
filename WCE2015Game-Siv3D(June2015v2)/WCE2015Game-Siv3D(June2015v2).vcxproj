@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ballet.cpp" />
+    <ClCompile Include="BalletManager.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
@@ -166,8 +168,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ballet.hpp" />
+    <ClInclude Include="BalletManager.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="GameBase.hpp" />
+    <ClInclude Include="MRBallet.hpp" />
+    <ClInclude Include="MRShotGenerator.hpp" />
+    <ClInclude Include="MRVehicle.hpp" />
     <ClInclude Include="Resource.hpp" />
     <ClInclude Include="MyVehicle.hpp" />
   </ItemGroup>

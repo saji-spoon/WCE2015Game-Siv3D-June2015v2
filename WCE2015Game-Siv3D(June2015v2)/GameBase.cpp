@@ -9,16 +9,19 @@ void GameBase::update()
 
 	mv.update();
 
+	/*ショット機能はMyVechicleへ
 	if (Mouse::LeftClicked())
 	{
-		m_ballets.push_back(Ballet(L"ballet.png"));
+		
+		m_myBM.m_ballets.push_back(Ballet(&m_myBM, L"ballet.png", getMyVehiclePos()));
 
 		Println(Profiler::FPS());
 	}
+	*/
 
 	if (Mouse::RightClicked())
 	{
-		for (auto& b : m_ballets)
+		for (auto& b : m_myBM.m_ballets)
 		{
 			b.drop(m_image);
 			//b.m_image.write(m_image, b.m_pos);
@@ -27,7 +30,7 @@ void GameBase::update()
 		m_dTex.fill(m_image);
 	}
 
-	std::for_each(m_ballets.begin(), m_ballets.end(), [](Ballet& b){ b.update(); });
+	std::for_each(m_myBM.m_ballets.begin(), m_myBM.m_ballets.end(), [](Ballet& b){ b.update(); });
 }
 
 void GameBase::draw()const
@@ -36,5 +39,5 @@ void GameBase::draw()const
 
 	mv.draw(m_camera);
 
-	std::for_each(m_ballets.begin(), m_ballets.end(), [this](const Ballet& b){ b.draw(m_camera); });
+	std::for_each(m_myBM.m_ballets.begin(), m_myBM.m_ballets.end(), [this](const Ballet& b){ b.draw(m_camera); });
 }
