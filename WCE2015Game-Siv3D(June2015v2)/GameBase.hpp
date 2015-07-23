@@ -15,9 +15,9 @@ class GameBase
 private:
 public:
 
-	Image m_image = Image(Window::Size(), Palette::White);
+	Image m_image;
 
-	DynamicTexture m_dTex = DynamicTexture(m_image);
+	DynamicTexture m_dTex;
 
 	//myBalletManager;
 	BalletManager m_myBM = BalletManager(this);
@@ -28,13 +28,8 @@ public:
 
 	D2Camera m_camera;
 
-	GameBase() :m_camera(mv.m_pos)
-	{
-		/*for prototype*/
+	GameBase();
 
-		m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy{ &m_EM, {120.0, 300.0} }));
-
-	}
 
 	void update();
 

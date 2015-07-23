@@ -14,6 +14,15 @@ MyVehicle::MyVehicle(GameBase* base) :m_gb(base),interval(0), vehicleType(ShotTy
 	m_walls.push_back(pol2);
 
 	m_walls.push_back(polRect);
+
+	m_walls.push_back(Rect(0, 0, 700, 3000).asPolygon());
+	m_walls.push_back(Rect(3300, 0, 700, 3000).asPolygon());
+	m_walls.push_back(Rect(0, 0, 4000, 450).asPolygon());
+	m_walls.push_back(Rect(0, 3550, 6000, 450).asPolygon());
+
+	const Polygon polTemp = Imaging::FindExternalContour(Image(L"temp.png"), true) + Vec2(1000, 1500);
+	m_walls.push_back(polTemp.simplified(10.0));
+
 	//---
 
 }
@@ -30,7 +39,7 @@ void MyVehicle::collisionPlayerWithObject()
 	{
 		const auto& outer = wall.outer();
 
-		//全ての壁のLineについて、本体の未来位置と交差するものはwallLinesへ
+		//全ての壁のLineについて、wallLinesへ
 		for (size_t i = 0; i < outer.size(); ++i)
 		{
 			const Line line(outer[i], outer[(i + 1) % outer.size()]);
@@ -79,9 +88,9 @@ void MyVehicle::collisionPlayerWithObject()
 
 void MyVehicle::draw(const D2Camera& camera)const
 {
-	const Vec2 myDrawPos = camera.getDrawPos(m_pos);
+	FontAsset(L"Debug").draw(Format(m_pos.asPoint()), camera.getDrawPos( m_pos ) + Vec2(0, 20), Palette::Black);
 
-	//仮の主人公グラ//Circle(myDrawPos, 10).drawFrame(0, 3, Palette::Gray);
+	const Vec2 myDrawPos = camera.getDrawPos(m_pos);
 
 	const double theta = Circular3(m_v).theta;
 
@@ -92,11 +101,12 @@ void MyVehicle::draw(const D2Camera& camera)const
 	const Vec2  testObjectPos = camera.getDrawPos({ 320, 240 });
 
 	m_tex.draw(testObjectPos);
+	m_tex2.draw(camera.getDrawPos({ 1000, 1500 }));
 
 	//.drawAt(320 + m_tex.width / 2, 240 + m_tex.height / 2);
-
+	/*
 	for (const auto& wall : m_walls)
 	{
 		wall.drawFrame(camera.getDrawPos({ 0, 0 }), 2, Color(40, 200, 200, 30));
-	}
+	}*/
 }

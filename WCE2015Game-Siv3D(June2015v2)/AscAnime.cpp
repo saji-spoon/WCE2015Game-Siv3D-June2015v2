@@ -124,7 +124,7 @@ const RectF Anime::drawAt(double x, double y, const Color& diffuse) const
 
 const RectF Anime::drawAt(const Vec2& pos, const Color& diffuse) const
 {
-	return get().draw(pos, diffuse);
+	return get().drawAt(pos, diffuse);
 }
 
 const TextureRegion Anime::operator ()(double x, double y, double w, double h) const

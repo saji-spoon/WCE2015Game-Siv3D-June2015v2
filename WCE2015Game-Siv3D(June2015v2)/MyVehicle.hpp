@@ -11,13 +11,14 @@ class GameBase;
 class MyVehicle
 {
 public:
-	Vec2 m_pos = Vec2(640, 400);
+	Vec2 m_pos = Vec2(1000, 1200);
 
 	Vec2 m_v = Circular(3, 0);
 
 	//---for prototype
 	std::vector<Polygon> m_walls;
 	Texture m_tex = Texture(L"Maze.png");
+	Texture m_tex2 = Texture(L"temp.png");
 	//---
 
 	GameBase* m_gb;
@@ -105,7 +106,7 @@ public:
 
 		Erase_if(shotList, [=](const std::shared_ptr<ShotGenerator>& sh){ return sh->isDead; });
 
-		if (Input::MouseL.pressed)
+		if (Input::MouseL.pressed || Input::KeyZ.pressed)
 		{
 			shot();
 		}

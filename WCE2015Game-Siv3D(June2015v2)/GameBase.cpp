@@ -2,6 +2,26 @@
 
 using namespace shimi;
 
+GameBase::GameBase() :
+	m_camera(mv.m_pos),
+	m_image(Image({ 4000, 3000 }, Palette::White)),
+	m_dTex(DynamicTexture(m_image))
+{
+	/*for prototype*/
+
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1450.0, 2250.0 }, Anime( TextureAsset(L"enemy1"), 4, 1 ) )));
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1550.0, 2300.0 }, Anime(TextureAsset(L"enemy1"), 4, 1))));
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(&m_EM, { 1300.0, 2400.0 }, Anime(TextureAsset(L"enemy1"), 4, 1))));
+
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(
+		&m_EM, { 1700.0, 2300.0 }, Anime(TextureAsset(L"enemy2"), 13, 3
+		))));
+
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(
+		&m_EM, { 1650.0, 2450.0 }, Anime(TextureAsset(L"enemy2"), 13, 3
+		))));
+}
+
 void GameBase::update()
 {
 	updateCamera(mv.m_pos);
