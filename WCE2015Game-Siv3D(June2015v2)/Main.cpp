@@ -3,7 +3,7 @@
 #include"Camera.hpp"
 #include"MyVehicle.hpp"
 #include"GameBase.hpp"
-#include"Resource.hpp"
+#include"MyResource.hpp"
 
 using namespace shimi;
 
@@ -14,6 +14,8 @@ void Main()
 	Window::Resize(1280, 800);
 
 	GameBase gb;
+
+	Graphics::SetBackground(Palette::White);
 
 	while (System::Update())
 	{

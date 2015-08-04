@@ -46,7 +46,7 @@ void ShotSakura::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
 
 void ShotChase::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
 {
-	const Vec2 target = m_gb->mv.m_pos;//‚±‚±‚Å’Ç”ö‚·‚é“GÀ•W‚ðŽæ“¾
+	const Vec2 target = m_gb->m_mv.m_pos;//‚±‚±‚Å’Ç”ö‚·‚é“GÀ•W‚ðŽæ“¾
 
 	for (int i = 0; i < 5; ++i)
 	{

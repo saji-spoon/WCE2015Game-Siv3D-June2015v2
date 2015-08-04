@@ -2,6 +2,7 @@
 #include<Siv3D.hpp>
 #include"Camera.hpp"
 #include"ShotGenerator.hpp"
+#include"Obstacle.hpp"
 
 namespace shimi
 {
@@ -11,15 +12,9 @@ class GameBase;
 class MyVehicle
 {
 public:
-	Vec2 m_pos = Vec2(1000, 1200);
+	Vec2 m_pos = Vec2(760, 2650);
 
-	Vec2 m_v = Circular(3, 0);
-
-	//---for prototype
-	std::vector<Polygon> m_walls;
-	Texture m_tex = Texture(L"Maze.png");
-	Texture m_tex2 = Texture(L"temp.png");
-	//---
+	Circular m_v = Circular(3.0, 0);
 
 	GameBase* m_gb;
 
@@ -97,6 +92,8 @@ public:
 
 	void update()
 	{
+		m_v.r = Input::KeyX.pressed? 3.0 : 1.8;
+
 		collisionPlayerWithObject();
 
 		for (auto& s : shotList)

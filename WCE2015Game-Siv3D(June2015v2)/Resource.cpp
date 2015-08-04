@@ -1,4 +1,4 @@
-#include"Resource.hpp"
+#include"MyResource.hpp"
 #include"ImageAsset.hpp"
 
 using namespace shimi;
@@ -15,8 +15,8 @@ void shimi::ResourceRegister()
 	TextureAsset::Register(L"ballet3", L"ballet.png", {}, AssetFlag::Default);
 
 	const FilePath EnemyRegister = ResourcePath + L"Enemy/";
-	TextureAsset::Register(L"enemy1", EnemyRegister + L"enemy_01.png");
-	TextureAsset::Register(L"enemy2", EnemyRegister + L"enemy_02.png");
+	TextureAsset::Register(L"enemy1", EnemyRegister + L"enemy_01Test.png");
+	TextureAsset::Register(L"enemy2", EnemyRegister + L"enemy_02Test.png");
 
 	ImageAsset::inst()->assetRegister(L"ballet1", L"ballet.png");
 	ImageAsset::inst()->assetRegister(L"ballet2", L"ballet.png");

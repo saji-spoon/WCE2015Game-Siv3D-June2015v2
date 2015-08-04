@@ -14,34 +14,34 @@ class GameBase
 {
 private:
 public:
-
-	Image m_image;
-
-	DynamicTexture m_dTex;
+	Texture m_tex;
 
 	//myBalletManager;
 	BalletManager m_myBM = BalletManager(this);
 	//EnemyManager
 	EnemyManager m_EM = EnemyManager(this);
 
-	MyVehicle mv = MyVehicle(this);
+	MyVehicle m_mv = MyVehicle(this);
+
+	std::vector<Obstacle> m_obstacles;
 
 	D2Camera m_camera;
 
 	GameBase();
 
-
 	void update();
 
 	inline Vec2 getMyVehiclePos()
 	{
-		return mv.m_pos;
+		return m_mv.m_pos;
 	}
 
 	void updateCamera(const Vec2& cPos)
 	{
 		m_camera.m_pos = cPos;
 	}
+
+	void collisionPlayerWithEnemy()const;
 
 	void draw()const;
 

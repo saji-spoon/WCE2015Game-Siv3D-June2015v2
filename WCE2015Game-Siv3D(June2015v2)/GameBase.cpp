@@ -3,15 +3,14 @@
 using namespace shimi;
 
 GameBase::GameBase() :
-	m_camera(mv.m_pos),
-	m_image(Image({ 4000, 3000 }, Palette::White)),
-	m_dTex(DynamicTexture(m_image))
+	m_camera(m_mv.m_pos),
+	m_tex(L"Resource/Paper2.png")
 {
 	/*for prototype*/
 
-	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1450.0, 2250.0 }, Anime( TextureAsset(L"enemy1"), 4, 1 ) )));
-	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1550.0, 2300.0 }, Anime(TextureAsset(L"enemy1"), 4, 1))));
-	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(&m_EM, { 1300.0, 2400.0 }, Anime(TextureAsset(L"enemy1"), 4, 1))));
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 720.0, 2150.0 }, Anime( TextureAsset(L"enemy1"), 4, 5 ) )));
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1000.0, 1900.0 }, Anime(TextureAsset(L"enemy1"), 4, 5))));
+	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy( &m_EM, { 1300.0, 2200.0 }, Anime(TextureAsset(L"enemy1"), 4, 5))));
 
 	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(
 		&m_EM, { 1700.0, 2300.0 }, Anime(TextureAsset(L"enemy2"), 13, 3
@@ -20,13 +19,17 @@ GameBase::GameBase() :
 	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(
 		&m_EM, { 1650.0, 2450.0 }, Anime(TextureAsset(L"enemy2"), 13, 3
 		))));
+
+	m_obstacles.push_back(Obstacle({ 0, 0 }, L"Resource/Object/Stage1.png", 3.0));
 }
 
 void GameBase::update()
 {
-	updateCamera(mv.m_pos);
+	updateCamera(m_mv.m_pos);
 
-	mv.update();
+	m_mv.update();
+
+	collisionPlayerWithEnemy();
 
 	/*ショット機能はMyVechicleへ
 	if (Mouse::LeftClicked())
@@ -42,11 +45,9 @@ void GameBase::update()
 	{
 		for (auto& b : m_myBM.m_ballets)
 		{
-			b->drop(m_image);
-			//b.m_image.write(m_image, b.m_pos);
+			const Image img(0, 0);
+			b->drop(Image(img));
 		}
-
-		m_dTex.fill(m_image);
 	}
 
 	//std::for_each(m_myBM.m_ballets.begin(), m_myBM.m_ballets.end(), [](const std::shared_ptr<Ballet>& b){ b->update(); });
@@ -84,11 +85,11 @@ void GameBase::update()
 
 void GameBase::draw()const
 {
-	m_dTex.draw(m_camera.getDrawPos({ 0, 0 }));
+	m_tex.map(6000, 8000).draw(m_camera.getDrawPos({ 0,0 }), Alpha(70));
 
-	mv.draw(m_camera);
+	m_mv.draw(m_camera);
 
-	for (auto& e : m_EM.m_enemies)
+	for (const auto& e : m_EM.m_enemies)
 	{
 		e->draw(m_camera);
 	}
@@ -97,4 +98,12 @@ void GameBase::draw()const
 	{
 		b->draw(m_camera);
 	}	
+}
+
+void GameBase::collisionPlayerWithEnemy()const
+{
+	if (AnyOf(m_EM.m_enemies, [this](const std::shared_ptr<Enemy>& e){ return e->m_pos.distanceFrom(m_mv.m_pos) < 20; }))
+	{
+		Println(L"Attacked!");
+	}
 }

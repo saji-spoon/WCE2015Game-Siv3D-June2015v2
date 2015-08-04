@@ -176,9 +176,9 @@
     <ClInclude Include="ImageAsset.hpp" />
     <ClInclude Include="Ballet.hpp" />
     <ClInclude Include="ShotGenerator.hpp" />
-    <ClInclude Include="MRVehicle.hpp" />
     <ClInclude Include="Resource.hpp" />
     <ClInclude Include="MyVehicle.hpp" />
+    <ClInclude Include="Obstacle.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{01EBD207-CEBE-4DA3-A9A9-7D6E6169945A}</ProjectGuid>
