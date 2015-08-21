@@ -23,14 +23,14 @@ public:
 
 	Point m_pos;
 
-	void draw(const D2Camera camera)const
+	void draw()const
 	{
-		m_tex.draw(camera.getDrawPos(m_pos));
+		m_tex.draw(D2Camera::I()->getDrawPos(m_pos));
 	}
 
-	void drawDebug(const D2Camera camera)const
+	void drawDebug()const
 	{
-		const Vec2 drawPos = camera.getDrawPos(m_pos);
+		const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
 
 		m_pols.drawFrame(drawPos, 2, Color(40, 200, 200, 30));
 

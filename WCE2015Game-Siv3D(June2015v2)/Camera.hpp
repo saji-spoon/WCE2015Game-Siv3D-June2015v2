@@ -1,22 +1,36 @@
 #pragma once
-
 #include<Siv3D.hpp>
-#include<HamFramework.hpp>
 
-class D2Camera {
+namespace shimi
+{
 
+class D2Camera 
+{
 public:
 
-	D2Camera(){}
+	static D2Camera* I()
+	{
+		static D2Camera instance;
+		return &instance;
+	}
 
-	D2Camera(const Vec2& v) :m_pos(v)
-	{}
+	D2Camera(const D2Camera& rhs) = delete;
+
+	D2Camera& operator=(const D2Camera& rhs) = delete;
 
 	//全体マップの座標から、カメラセンターのとき、画面上でどこに位置するかの座標を返す
-	inline Vec2 getDrawPos(const Vec2& globalPos)const 
+	inline Vec2 getDrawPos(const Vec2& globalPos)const
 	{
-		return Vec2{ 640.0, 400.0 } + globalPos - m_pos;
+		return Vec2{ 640.0, 400.0 } +globalPos - m_pos;
 	}
 
 	Vec2 m_pos;
+
+private:
+
+	D2Camera()
+	{
+	}
 };
+
+}

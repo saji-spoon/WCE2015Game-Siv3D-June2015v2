@@ -6,6 +6,7 @@
 #include "Enemy.hpp"
 #include"BalletManager.hpp"
 #include"EnemyManager.hpp"
+#include"EffectManager.hpp"
 
 namespace shimi
 {
@@ -23,9 +24,9 @@ public:
 
 	MyVehicle m_mv = MyVehicle(this);
 
-	std::vector<Obstacle> m_obstacles;
+	ItemDetabase m_idb;
 
-	D2Camera m_camera;
+	std::vector<Obstacle> m_obstacles;
 
 	GameBase();
 
@@ -38,10 +39,14 @@ public:
 
 	void updateCamera(const Vec2& cPos)
 	{
-		m_camera.m_pos = cPos;
+		D2Camera::I()->m_pos = cPos;
 	}
 
 	void collisionPlayerWithEnemy()const;
+
+	void collisionEnemyWithBallet();
+
+	void collisionBalletWithObstacle();
 
 	void draw()const;
 

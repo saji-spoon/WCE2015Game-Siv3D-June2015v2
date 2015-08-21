@@ -1,6 +1,7 @@
 #include"MyVehicle.hpp"
 #include"GameBase.hpp"
 
+#define NO_WALLDEBUG 1
 
 using namespace shimi;
 
@@ -19,7 +20,6 @@ void MyVehicle::collisionPlayerWithObject()
 
 	for (const auto& obstacle : m_gb->m_obstacles)
 	{
-
 		for (const Polygon& wall : obstacle.m_pols)
 		{
 			const auto& outer = wall.outer();
@@ -71,28 +71,37 @@ void MyVehicle::collisionPlayerWithObject()
 
 }
 
-void MyVehicle::draw(const D2Camera& camera)const
+void MyVehicle::draw()const
 {
 	for (const auto& o : m_gb->m_obstacles)
 	{
-		o.draw(camera);
+		o.draw();
 	}
-	const Vec2 myDrawPos = camera.getDrawPos(m_pos);
+	const Vec2 myDrawPos = D2Camera::I()->getDrawPos(m_pos);
 
 	const double theta = Circular3(m_v).theta;
 
 	TextureAsset(L"Hero").rotate(theta + Pi / 2.0).drawAt(myDrawPos);
 
-	const Vec2  testObjectPos = camera.getDrawPos({ 320, 240 });
+	const Vec2  testObjectPos = D2Camera::I()->getDrawPos({ 320, 240 });
 
 #ifdef _DEBUG
 
-	FontAsset(L"Debug").draw(Format(m_pos.asPoint()), camera.getDrawPos(m_pos) + Vec2(0, 20), Palette::Black);
+	FontAsset(L"Debug").draw(Format(m_pos.asPoint()), D2Camera::I()->getDrawPos(m_pos) + Vec2(0, 20), Palette::Black);
 
-	for (const auto& o : m_gb->m_obstacles)
-	{
-		o.drawDebug(camera);
-	}
+#ifndef NO_WALLDEBUG
+	wallDebugDraw();
+#endif
 
 #endif
 }
+
+void MyVehicle::wallDebugDraw()const
+{
+	for (const auto& o : m_gb->m_obstacles)
+	{
+		o.drawDebug();
+	}
+
+}
+

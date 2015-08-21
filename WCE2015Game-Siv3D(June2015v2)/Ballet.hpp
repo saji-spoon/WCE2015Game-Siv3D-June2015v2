@@ -18,14 +18,14 @@ public:
 	Entity(const Vec2& p) :m_pos(p)
 	{}
 
-	virtual void draw(const D2Camera& camera)const = 0;
+	virtual void draw()const = 0;
 
 	virtual void move() = 0;
 
 	//オブジェクトを削除してよい状態かどうか
-	virtual bool isDead(const D2Camera& camera)
+	virtual bool isDead()
 	{
-		return !Window::ClientRect().movedBy(-camera.getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos);//デフォルトは画面から出た時
+		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos);//デフォルトは画面から出た時
 	}
 
 	Vec2 m_pos;
@@ -38,6 +38,10 @@ protected:
 
 class Ballet : public Entity
 {
+public:
+	bool m_isDead = false;
+
+
 protected:
 	//TextureとImageを一度に指定するタグ
 	String m_balletPictureLabel;
@@ -50,10 +54,10 @@ public:
 
 	Ballet(BalletManager* bm, const String& bpl, const Vec2& p) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl){}
 
-	void draw(const D2Camera& camera) const override
+	void draw() const override
 	{
 		//Circle(pos, 5).draw(Palette::Green);
-		TextureAsset(m_balletPictureLabel).drawAt(camera.getDrawPos(m_pos));
+		TextureAsset(m_balletPictureLabel).drawAt(D2Camera::I()->getDrawPos(m_pos));
 		
 	}
 
@@ -74,6 +78,11 @@ public:
 
 	inline Vec2 getPos()const
 	{ return m_pos; }
+
+	bool isDead()
+	{
+		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
+	}
 };
 
 class BalletAVR : public Ballet
@@ -99,10 +108,10 @@ public:
 		dirv(dv)
 	{}
 
-	void draw(const D2Camera& camera) const override
+	void draw() const override
 	{
 		//Circle(pos, 5).draw(Palette::Green);
-		TextureAsset(m_balletPictureLabel).rotate(dir + Pi / 2.0).drawAt(camera.getDrawPos(m_pos));
+		TextureAsset(m_balletPictureLabel).rotate(dir + Pi / 2.0).drawAt(D2Camera::I()->getDrawPos(m_pos));
 	}
 
 	void move() override

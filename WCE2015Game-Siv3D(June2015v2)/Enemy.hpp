@@ -2,6 +2,7 @@
 #include<Siv3D.hpp>
 #include"Ballet.hpp"
 #include"AscAnime.hpp"
+#include"ItemDatabase.hpp"
 
 namespace shimi
 {
@@ -14,19 +15,20 @@ class Enemy : public Entity
 public:
 	EnemyManager* m_manager;
 
+	Anime m_anime;
+
+	Optional<int> m_itemID = none;
+
 	int count = 0;
 
 	bool m_isDead = false;
 
-	Anime m_anime;
+	Enemy(EnemyManager* em, const Vec2 pos, const Anime& anime = Anime(TextureAsset(L"enemy1"), 4, 1), const Optional<ItemRecord> ir = none);
 
-	Enemy(EnemyManager* em, const Vec2 pos, const Anime& anime = Anime(TextureAsset(L"enemy1"), 4, 1)) :m_manager(em), Entity(pos), m_anime(anime)
-	{}
-
-	void draw(const D2Camera& camera) const override
+	virtual void draw() const override
 	{
 		//Circle(camera.getDrawPos(m_pos), 20).draw(Palette::Red);
-		m_anime.drawAt(camera.getDrawPos(m_pos));
+		m_anime.drawAt(D2Camera::I()->getDrawPos(m_pos));
 	}
 
 	virtual void update()
@@ -38,11 +40,10 @@ public:
 	{
 	}
 
-	virtual bool isDead(const D2Camera& camera)override
+	virtual bool isDead()override
 	{
 		return m_isDead;
 	}
 };
-
 
 }

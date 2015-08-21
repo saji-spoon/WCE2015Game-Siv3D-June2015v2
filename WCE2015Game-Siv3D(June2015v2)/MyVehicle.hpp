@@ -43,7 +43,7 @@ public:
 
 	void collisionPlayerWithObject();
 
-	void draw(const D2Camera& camera)const;
+	void draw()const;
 
 	void shot()
 	{
@@ -114,7 +114,7 @@ public:
 		}
 
 	}
-
+	void wallDebugDraw()const;
 };
 
 }

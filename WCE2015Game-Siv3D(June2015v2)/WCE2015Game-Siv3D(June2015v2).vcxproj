@@ -12,11 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AscAnime.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MyResource.cpp" />
+    <ClCompile Include="ShimiColors.cpp" />
     <ClCompile Include="ShotGenerator.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
-    <ClCompile Include="Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\splash.png" />
@@ -167,16 +169,21 @@
     <Xml Include="Engine\objdetect\facePhoto.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimeAsset.hpp" />
     <ClInclude Include="AscAnime.hpp" />
     <ClInclude Include="BalletManager.hpp" />
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Effect.hpp" />
+    <ClInclude Include="EffectManager.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="EnemyManager.hpp" />
     <ClInclude Include="GameBase.hpp" />
     <ClInclude Include="ImageAsset.hpp" />
     <ClInclude Include="Ballet.hpp" />
+    <ClInclude Include="ItemDatabase.hpp" />
+    <ClInclude Include="MyResource.hpp" />
+    <ClInclude Include="ShimiColors.hpp" />
     <ClInclude Include="ShotGenerator.hpp" />
-    <ClInclude Include="Resource.hpp" />
     <ClInclude Include="MyVehicle.hpp" />
     <ClInclude Include="Obstacle.hpp" />
   </ItemGroup>
