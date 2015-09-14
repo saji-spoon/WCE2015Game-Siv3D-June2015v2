@@ -1,5 +1,7 @@
 #include"ShotGenerator.hpp"
 #include"GameBase.hpp"
+
+
 using namespace shimi;
 
 void ShotRound::generate(const Vec2& vehiclePos, const Vec2& vehicleV)

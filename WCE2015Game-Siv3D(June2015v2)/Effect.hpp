@@ -1,6 +1,5 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"Camera.hpp"
 
 namespace shimi
 {

@@ -2,7 +2,6 @@
 #include<vector>
 #include<Siv3D.hpp>
 #include"Ballet.hpp"
-
 namespace shimi
 {
 

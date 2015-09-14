@@ -1,12 +1,14 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"MyVehicle.hpp"
-#include"Camera.hpp"
-#include"Ballet.hpp"
-#include "Enemy.hpp"
 #include"BalletManager.hpp"
 #include"EnemyManager.hpp"
+#include"MyVehicle.hpp"
+#include"ItemDatabase.hpp"
+#include"Obstacle.hpp"
+#include"Camera.hpp"
+#include"AnimeAsset.hpp"
 #include"EffectManager.hpp"
+#include"Effect.hpp"
 
 namespace shimi
 {

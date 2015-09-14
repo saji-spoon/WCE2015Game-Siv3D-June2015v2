@@ -1,8 +1,8 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"Camera.hpp"
+#include"Shot.hpp"
 #include"ShotGenerator.hpp"
-#include"Obstacle.hpp"
+#include"ItemDatabase.hpp"
 
 namespace shimi
 {
@@ -29,14 +29,59 @@ public:
 
 	std::vector< std::shared_ptr<ShotGenerator> > shotList;//遅延ショットリスト
 
-	ShotOugi ougiShot;
-	ShotChase chaseShot;
-
 	TimerMillisec intervalTimer;//インターバル計測用タイマー
 
 	unsigned int interval;//インターバル
 
 	ShotType vehicleType;//自機の弾タイプ
+
+private:
+
+	//Shot管理クラス
+	class ShotManager
+	{
+	public:
+
+		struct ShotProperty
+		{
+			ShimiColors color;
+			int exp = 0;
+			int level = 0;
+		};
+
+		GameBase* m_gb;
+
+		//装備中のショット
+		std::vector<Optional<std::shared_ptr<Shot>>> m_equipShot = std::vector<Optional<std::shared_ptr<Shot>>>(3, none);
+
+		//ショットの成長値とレベル
+		std::array<ShotProperty, static_cast<size_t>(ShimiColors::ColorNum)> m_shotPropertys;
+
+		//装備可能数
+		int m_equipNum = 1;
+
+		//選択しているショット
+		int m_select = 0;
+
+
+		ShotManager(GameBase* gb);
+
+		void update();
+
+		void draw()const;
+
+		void shot()
+		{
+			m_equipShot[m_select].value()->shot();
+		}
+
+		void event();
+
+
+		std::shared_ptr<Shot> ShimiColorsToShot(ShimiColors col, int level);
+
+	} m_shotManager;
+	
 
 public:
 	MyVehicle(GameBase* base);
@@ -45,76 +90,29 @@ public:
 
 	void draw()const;
 
+	void drawShotEquip()const
+	{
+		m_shotManager.draw();
+	}
+
 	void shot()
 	{
-		if (intervalTimer.elapsed() < interval) return;
-
-		intervalTimer.restart();
-
-		switch (vehicleType)
-		{
-		case ShotType::Red:
-		{
-			interval = 10;
-			ougiShot.update(m_pos, m_v);
-			//遅延ショットは管理リストに入れてupdate()で撃つ
-			/*
-			ShotRound* round = new ShotRound(m_gb, 2000, m_pos);
-			round->start();
-			shotList.push_back(std::shared_ptr<ShotGenerator>(round));
-			interval = 2000;
-			*/
-			break;
-		}
-		/*
-		case ShotType::Throw:
-		//TODO//弾生成クラスのnewとstart, shotListへの挿入
-		interval = 1000;
-		break;
-		*/
-		case ShotType::Green:
-			//遅延ショットではないのでここで直接撃つ(update)
-			interval = 1000;
-			chaseShot.update(m_pos, m_v);
-			break;
-		case ShotType::Blue:
-		{
-			//遅延ショットではないのでここで直接撃つ(update)
-			interval = 10;
-			ougiShot.update(m_pos, m_v);
-			break;
-		}
-		default:
-			assert(false);
-			break;
-		}
+		m_shotManager.shot();
 	}
 
-	void update()
-	{
-		m_v.r = Input::KeyX.pressed? 3.0 : 1.8;
 
-		collisionPlayerWithObject();
+	void update();
 
-		for (auto& s : shotList)
-		{
-			s->update(m_pos, m_v);
-		}
-
-		Erase_if(shotList, [=](const std::shared_ptr<ShotGenerator>& sh){ return sh->isDead; });
-
-		if (Input::MouseL.pressed || Input::KeyZ.pressed)
-		{
-			shot();
-		}
-
-		if (const int wh = Mouse::Wheel() != 0)
-		{
-			vehicleType = static_cast<ShotType>((static_cast<int>(vehicleType)+wh) % (static_cast<int>(ShotType::NumOfType)));
-		}
-
-	}
 	void wallDebugDraw()const;
+
+	inline void addShotExp(const ItemRecord& ir)
+	{
+		assert(ir.m_color != ShimiColors::ColorNum);
+
+		size_t index = static_cast<size_t>(ir.m_color);
+
+		m_shotManager.m_shotPropertys[index].exp += ir.m_value;
+	}
 };
 
 }

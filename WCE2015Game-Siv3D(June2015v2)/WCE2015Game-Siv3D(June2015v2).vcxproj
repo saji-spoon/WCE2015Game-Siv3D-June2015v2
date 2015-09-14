@@ -12,13 +12,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AscAnime.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MyAnime.cpp" />
     <ClCompile Include="MyResource.cpp" />
     <ClCompile Include="ShimiColors.cpp" />
-    <ClCompile Include="ShotGenerator.cpp" />
+    <ClCompile Include="Shot.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
+    <ClCompile Include="ShotGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\splash.png" />
@@ -173,6 +177,7 @@
     <ClInclude Include="AscAnime.hpp" />
     <ClInclude Include="BalletManager.hpp" />
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Config.hpp" />
     <ClInclude Include="Effect.hpp" />
     <ClInclude Include="EffectManager.hpp" />
     <ClInclude Include="Enemy.hpp" />
@@ -181,8 +186,10 @@
     <ClInclude Include="ImageAsset.hpp" />
     <ClInclude Include="Ballet.hpp" />
     <ClInclude Include="ItemDatabase.hpp" />
+    <ClInclude Include="MyAnime.hpp" />
     <ClInclude Include="MyResource.hpp" />
     <ClInclude Include="ShimiColors.hpp" />
+    <ClInclude Include="Shot.hpp" />
     <ClInclude Include="ShotGenerator.hpp" />
     <ClInclude Include="MyVehicle.hpp" />
     <ClInclude Include="Obstacle.hpp" />
@@ -219,13 +226,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SIV3D_20150602)\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SIV3D_20150602)\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SIV3D_20150602)\Inc;$(IncludePath);$(BOOST_PATH);</IncludePath>
+    <LibraryPath>$(SIV3D_20150602)\Lib;$(LibraryPath);$(BOOST_PATH)\stage\lib;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SIV3D_20150602)\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SIV3D_20150602)\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SIV3D_20150602)\Inc;$(IncludePath);$(BOOST_PATH);</IncludePath>
+    <LibraryPath>$(SIV3D_20150602)\Lib;$(LibraryPath);$(BOOST_PATH)\stage\lib;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -260,6 +267,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

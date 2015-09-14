@@ -1,9 +1,7 @@
 ﻿# include <Siv3D.hpp>
 #include<algorithm>
-#include"Camera.hpp"
-#include"MyVehicle.hpp"
-#include"GameBase.hpp"
 #include"MyResource.hpp"
+#include"GameBase.hpp"
 
 using namespace shimi;
 

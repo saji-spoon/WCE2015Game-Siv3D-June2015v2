@@ -1,8 +1,7 @@
 #pragma once
+#pragma warning( disable : 4100 )
 #include<Siv3D.hpp>
 #include"Camera.hpp"
-#include"ImageAsset.hpp"
-
 
 namespace shimi
 {
@@ -63,7 +62,7 @@ public:
 
 	virtual void drop(Image& img)
 	{
-		ImageAsset::inst()->access(m_balletPictureLabel).write(img, m_pos.asPoint() - TextureAsset(m_balletPictureLabel).size / 2, Alpha(128));
+		//ImageAsset::inst()->access(m_balletPictureLabel).write(img, m_pos.asPoint() - TextureAsset(m_balletPictureLabel).size / 2, Alpha(128));
 	}
 
 	virtual void update()

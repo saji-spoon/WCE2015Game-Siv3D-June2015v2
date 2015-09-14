@@ -1,6 +1,5 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"Effect.hpp"
 
 class EffectManager{
 public:

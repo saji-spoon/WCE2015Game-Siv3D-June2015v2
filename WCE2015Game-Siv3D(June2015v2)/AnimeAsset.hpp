@@ -1,33 +1,20 @@
 #pragma once
 #include<Siv3D.hpp>
-#include"AscAnime.hpp"
+#include"MyAnime.hpp"
 
 namespace shimi
 {
-	using namespace asc;
-
-//for Debug
-struct taggedAnime
-{
-	taggedAnime(){}
-
-	taggedAnime(const String& t, const FilePath& path) :m_anime(), tag(t)
-	{}
-
-	std::shared_ptr<Anime> m_anime;
-
-	String tag;
-};
-
 class AnimeAsset
 {
-public:
-	std::unordered_map<String, Anime> m_animes;
+typedef std::pair<String, MyAnime> sa;
 
-	taggedAnime errorAnime;
+public:
+	std::unordered_map<String, MyAnime> m_animes;
+
+	MyAnime errorAnime;
 
 private:
-	AnimeAsset() :errorAnime(L"Error", L"Resource/Error.png")
+	AnimeAsset() :errorAnime(MyAnime(L"Error", 1, 60))
 	{}
 
 public:
@@ -40,24 +27,28 @@ public:
 		return &ia;
 	}
 
-	bool assetRegister(const String& tag, const Anime& anime)
+	
+	bool Register(const String& tag, const MyAnime& anime)
 	{
-		m_animes[tag] = anime;
+		auto res = m_animes.insert(sa{ tag, anime });
 
-		return exists;
-	}
+#ifdef _DEBUG
+		LOG_DEBUG(L"AnimeAsset Register:", tag, L" - ", (res.second ? L"Success" : L"Failed" ));
+#endif
+		return res.second;
+	}	
 
-	const Anime& access(const String& tag)
+	const MyAnime& Asset(const String& tag)
 	{
-		const std::vector<taggedAnime>::iterator it = std::find_if(Animes.begin(), Animes.end(), [&](const taggedAnime& target){return target.tag == tag; });
+		const auto it = m_animes.find(tag);
 
-		if (it != Animes.end())
+		if (it != m_animes.end())
 		{
-			return *((*it).Anime);
+			return (*it).second;
 		}
 		else
 		{
-			return *errorAnime.Anime;
+			return errorAnime;
 		}
 	}
 
