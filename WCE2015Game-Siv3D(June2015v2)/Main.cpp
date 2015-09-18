@@ -17,14 +17,6 @@ void Main()
 
 	while (System::Update())
 	{
-
-		gb.draw();
-
 		gb.update();
-
-		if (Input::MouseL.pressed)
-		{
-
-		}
 	}
 }

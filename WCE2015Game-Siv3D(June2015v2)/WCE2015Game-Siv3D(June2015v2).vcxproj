@@ -17,12 +17,14 @@
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MyAnime.cpp" />
     <ClCompile Include="MyResource.cpp" />
     <ClCompile Include="ShimiColors.cpp" />
     <ClCompile Include="Shot.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
     <ClCompile Include="ShotGenerator.cpp" />
+    <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\splash.png" />
@@ -186,6 +188,7 @@
     <ClInclude Include="ImageAsset.hpp" />
     <ClInclude Include="Ballet.hpp" />
     <ClInclude Include="ItemDatabase.hpp" />
+    <ClInclude Include="Menu.hpp" />
     <ClInclude Include="MyAnime.hpp" />
     <ClInclude Include="MyResource.hpp" />
     <ClInclude Include="ShimiColors.hpp" />
@@ -193,6 +196,7 @@
     <ClInclude Include="ShotGenerator.hpp" />
     <ClInclude Include="MyVehicle.hpp" />
     <ClInclude Include="Obstacle.hpp" />
+    <ClInclude Include="State.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{01EBD207-CEBE-4DA3-A9A9-7D6E6169945A}</ProjectGuid>

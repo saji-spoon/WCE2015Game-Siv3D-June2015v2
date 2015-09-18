@@ -9,10 +9,11 @@
 #include"AnimeAsset.hpp"
 #include"EffectManager.hpp"
 #include"Effect.hpp"
+#include"State.hpp"
+#include"Menu.hpp"
 
 namespace shimi
 {
-
 class GameBase
 {
 private:
@@ -30,9 +31,18 @@ public:
 
 	std::vector<Obstacle> m_obstacles;
 
+	Menu m_menu;
+
+	std::shared_ptr<state::GBState> m_state;
+
 	GameBase();
 
-	void update();
+	void update()
+	{
+		m_state->execute(this);
+	}
+
+	void mainGameUpdate();
 
 	inline Vec2 getMyVehiclePos()
 	{
@@ -51,6 +61,8 @@ public:
 	void collisionBalletWithObstacle();
 
 	void draw()const;
+
+	void changeState(const std::shared_ptr<state::GBState>& state);
 
 
 };

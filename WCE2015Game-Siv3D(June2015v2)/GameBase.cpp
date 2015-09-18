@@ -1,7 +1,7 @@
 #include "GameBase.hpp"
 
 shimi::GameBase::GameBase() :
-	m_tex(L"Resource/Paper2.png")
+m_tex(L"Resource/Paper2.png"), m_state(new state::MainGame()), m_menu(this, m_mv.m_shotManager)
 {
 	/*
 	m_EM.m_enemies.push_back(std::shared_ptr<Enemy>(new Enemy(&m_EM, { 720.0, 2250.0 }, Anime(TextureAsset(L"enemy1"), 6, 2), ItemRecord{ShimiColors::Blue, 50} )));
@@ -30,7 +30,7 @@ shimi::GameBase::GameBase() :
 	m_obstacles.push_back(Obstacle({ 0, 0 }, L"Resource/Object/Stage1.png", 3.0));
 }
 
-void shimi::GameBase::update()
+void shimi::GameBase::mainGameUpdate()
 {
 	m_EM.pop();
 
@@ -38,16 +38,6 @@ void shimi::GameBase::update()
 
 	m_mv.update();
 
-	if (Mouse::RightClicked())
-	{
-		for (auto& b : m_myBM.m_ballets)
-		{
-			const Image img(0, 0);
-			b->drop(Image(img));
-		}
-	}
-
-	//std::for_each(m_myBM.m_ballets.begin(), m_myBM.m_ballets.end(), [](const std::shared_ptr<Ballet>& b){ b->update(); });
 	for (auto& b : m_myBM.m_ballets)
 	{
 		b->update();
@@ -70,6 +60,11 @@ void shimi::GameBase::update()
 	EffectManager::I()->effect.update();
 
 	m_EM.depop();
+
+	if (Input::KeyS.clicked)
+	{
+		changeState(std::shared_ptr<state::GBState>(new state::Menu()));
+	}
 }
 
 void shimi::GameBase::draw()const
@@ -170,4 +165,11 @@ void shimi::GameBase::collisionPlayerWithEnemy()const
 	{
 		//Println(L"Attacked!");
 	}
+}
+
+void shimi::GameBase::changeState(const std::shared_ptr<state::GBState>& state)
+{
+	m_state->exit(this);
+	m_state = state;
+	m_state->enter(this);
 }

@@ -35,8 +35,6 @@ public:
 
 	ShotType vehicleType;//自機の弾タイプ
 
-private:
-
 	//Shot管理クラス
 	class ShotManager
 	{
