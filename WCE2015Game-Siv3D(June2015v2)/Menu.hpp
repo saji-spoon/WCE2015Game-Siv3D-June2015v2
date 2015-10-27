@@ -3,6 +3,7 @@
 #include"MyVehicle.hpp"
 #include"State.hpp"
 
+
 namespace shimi
 {
 class GameBase;
@@ -10,13 +11,13 @@ class GameBase;
 class Menu
 {
 public:
-	MyVehicle::ShotManager m_shotData;
+	MyVehicle m_mvData;
 
 	GameBase* m_gb;
 
-	Menu(GameBase* gb, const MyVehicle::ShotManager& shotData) :m_gb(gb), m_shotData(shotData)
-	{
-	}
+	int m_select = 0;
+
+	Menu(GameBase* gb, const MyVehicle& mvData);
 
 	void draw()const;
 	void update();

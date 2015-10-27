@@ -1,101 +1,35 @@
 #include"ShotGenerator.hpp"
 #include"GameBase.hpp"
+#include"Camera.hpp"
 
 
 using namespace shimi;
 
-void ShotRound::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
+
+void BlueShot1Generator::draw(const Vec2& vehiclePos, const Vec2& vehicleV)
 {
-	if (wait.elapsed() > 10)
-	{
-		for (int i = 0; i < 4; ++i)
-		{
-			//EntityManager::GetInstance()->createBallet(std::shared_ptr<Ballet>(new BalletAVR(
-			m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new Ballet(
-				&(m_gb->m_myBM),
-				L"ballet1",
-				vehiclePos
-				/*
-				0.23,
-				(7.0 / 640.0*pos.x + (20.0*i) / 360) * 2 * Pi,
-				0.2,
-				0.08*/)));
-		}
-		wait.restart();
-	}
+	Circle(D2Camera::I()->getDrawPos(m_pos), 16).draw(ToColor(ShimiColors::Blue).setAlpha(155));
 }
 
-void ShotSakura::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
+void BlueShot1Generator::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
 {
-	if (wait.elapsed() > 10)
+	if (m_waitTimer > 80)
 	{
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < 6; ++i)
 		{
-			m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
+			m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletLimit(
 				&(m_gb->m_myBM),
-				L"ballet3",
-				vehiclePos,
-				0.23,
-				(7.0 / 640.0*vehiclePos.x + 0.2*i) * 2 * Pi,
-				0.2,
-				0.08)));
+				L"blueBallet",
+				ShimiColors::Blue,
+				m_pos,
+				120,
+				3.0,
+				(60.0*i) / 360.0 * 2.0 * Pi
+				)));
 		}
-
-
-		wait.restart();
-	}
-}
-
-void ShotChase::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
-{
-	const Vec2 target = m_gb->m_mv.m_pos;//‚±‚±‚Å’Ç”ö‚·‚é“GÀ•W‚ğæ“¾
-
-	for (int i = 0; i < 5; ++i)
-	{
-		const Vec2 balletPos = Circular0(60, 0.05 * i * 2 * Pi) + vehiclePos;
-
-		m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
-			&(m_gb->m_myBM),
-			L"ballet2", 
-			balletPos.asPoint(),
-			3.0,
-			Circular(target - balletPos).theta - Pi / 2.0,
-			0)));
+		m_waitTimer = 0;
 	}
 
-	/*
-	for (int i = 0; i < 40; ++i)
-	{
-		const Vec2 balletPos = Circular0(90, 0.025 * i * 2 * Pi) + vehiclePos;
-
-		m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
-			&(m_gb->m_myBM),
-			L"ballet2",
-			balletPos.asPoint(),
-			3.0,
-			Circular(target - balletPos).theta - Pi / 2.0,
-			0)));
-	}*/
-}
-
-void ShotOugi::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
-{
-	if (wait.elapsed() > 100)
-	{
-		for (int i = 0; i < 3; ++i)
-		{
-			m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
-				&(m_gb->m_myBM),
-				L"ballet3",
-				vehiclePos,
-				5.00,
-				Circular3(vehicleV).theta + (i-1) * Pi / 36.0,
-				0.0,
-				0.0)));
-		}
-
-
-		wait.restart();
-	}
+	++m_waitTimer;
 
 }

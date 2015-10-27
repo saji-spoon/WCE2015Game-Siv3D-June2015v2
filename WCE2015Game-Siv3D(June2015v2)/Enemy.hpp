@@ -6,6 +6,7 @@
 #include"ItemDatabase.hpp"
 #include"Config.hpp"
 #include"Camera.hpp"
+#include"EnemyShot.hpp"
 
 
 
@@ -15,6 +16,7 @@ namespace shimi
 {
 class EnemyManager;
 class GameBase;
+
 class Enemy
 {
 public:
@@ -90,14 +92,14 @@ public:
 	
 	
 	//ユーザー定義コピーコンストラクタ
-	CoEnemy(const CoEnemy& rhs) :m_id(rhs.m_id), co(move), m_enemy(rhs.m_enemy->clone())
+	CoEnemy(const CoEnemy& rhs) :m_id(rhs.m_id), co(move), m_enemy(rhs.m_enemy->clone()) 
 	{
 		LOG_DEBUG(L"CopyCtor");
 	}
 
 
 	///ユーザー定義コピー代入演算子
-	CoEnemy& operator =(const CoEnemy & rhs)
+	CoEnemy& operator =(const CoEnemy & rhs) _NOEXCEPT
 	{
 		m_id = rhs.m_id;
 
@@ -105,7 +107,7 @@ public:
 
 		co = boco::coroutine<Enemy*>::push_type(move);
 
-		LOG_DEBUG(L"Copy=");
+		//LOG_DEBUG(L"Copy=");
 	}
 	
 	
@@ -120,10 +122,10 @@ public:
 			m_enemy = rhs.m_enemy;
 			rhs.m_enemy.reset();
 			co = std::move(rhs.co);
-			LOG_DEBUG(L"shared_ptr:", m_enemy.use_count());
+			//LOG_DEBUG(L"shared_ptr:", m_enemy.use_count());
 		}
 
-		LOG_DEBUG(L"Move=");
+		//LOG_DEBUG(L"Move=");
 
 		return *this;
 	}
@@ -134,7 +136,7 @@ public:
 	{
 		*this = std::move(rhs);
 
-		LOG_DEBUG(L"MoveCtor");
+		//LOG_DEBUG(L"MoveCtor");
 	}
 
 	~CoEnemy() = default;
@@ -159,6 +161,27 @@ public:
 	}
 };
 
+class StopEnemy : public Enemy
+{
+public:
+
+	std::shared_ptr<EnemyShot> m_shot;
+
+	StopEnemy(){}
+	StopEnemy(EnemyManager* manager, const Vec2& pos, const shimi::MyAnime& anime, const std::shared_ptr<EnemyShot> enemyShot, ShimiColors sColor, const Optional<ItemRecord>& ir = none)
+		:Enemy(manager, pos, anime, sColor, ir),
+		m_shot(enemyShot)
+	{}
+
+	//敵の動きの実装
+	void moveImpl(boco::coroutine<Enemy*>::pull_type& yield);
+
+	std::shared_ptr<Enemy> clone()override
+	{
+		return std::shared_ptr<Enemy>(new StopEnemy(*this));
+	}
+
+};
 
 class BasicEnemy : public Enemy
 {

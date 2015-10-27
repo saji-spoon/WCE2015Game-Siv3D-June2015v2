@@ -6,10 +6,24 @@ namespace shimi
 {
 
 class GameBase;
+
+class MyVehicle;
+
+class Boss1;
 	
 namespace state
 {
 
+template <typename T>
+class StateBase
+{
+public:
+	virtual void enter(T& gb) = 0;
+
+	virtual void execute(T& gb) = 0;
+
+	virtual void exit(T& gb) = 0;
+};
 
 class GBState
 {
@@ -36,12 +50,125 @@ public:
 class Menu : public GBState
 {
 public:
-	void enter(GameBase* gb){}
+	void enter(GameBase* gb);
 
 	void execute(GameBase* gb);
 
-	void exit(GameBase* gb){}
+	void exit(GameBase* gb);
 };
 
+namespace myvehicle
+{
+class MVState
+{
 
-}}
+public:
+	enum StateID
+	{
+		Normal,
+		Damaged
+	};
+
+	virtual void enter(MyVehicle& mv) = 0;
+
+	virtual void execute(MyVehicle& mv) = 0;
+
+	virtual void exit(MyVehicle& mv) = 0;
+
+	virtual StateID getStateID()const  = 0;
+};
+
+class Normal : public MVState
+{
+public:
+	void enter(MyVehicle& mv)override{}
+
+	void execute(MyVehicle& mv)override;
+
+	void exit(MyVehicle& mv)override{}
+
+	StateID getStateID()const override
+	{
+		return StateID::Normal;
+	}
+};
+
+class Damaged : public MVState
+{
+	//無敵時間を測るタイマー
+	int m_damagedTimer = 120;
+
+public:
+	void enter(MyVehicle& mv)override;
+
+	void execute(MyVehicle& mv)override;
+
+	void exit(MyVehicle& mv)override;
+
+	StateID getStateID()const override
+	{
+		return StateID::Damaged;
+	}
+
+
+};
+
+}
+
+namespace boss1
+{
+using Boss1Base = StateBase<Boss1>;
+
+class Normal : public Boss1Base
+{
+	int m_timer = 0;
+
+	void enter(Boss1& gb)override;
+
+	void execute(Boss1& gb)override;
+
+	void exit(Boss1& gb)override;
+};
+
+class Run : public Boss1Base
+{
+	void enter(Boss1& gb)override;
+
+	void execute(Boss1& gb)override;
+
+	void exit(Boss1& gb)override;
+};
+
+class Stay : public Boss1Base
+{
+	int m_timer = 0;
+
+	void enter(Boss1& gb)override;
+
+	void execute(Boss1& gb)override;
+
+	void exit(Boss1& gb)override;
+};
+
+class Damaged : public Boss1Base
+{
+	int m_timer = 0;
+
+	void enter(Boss1& gb)override;
+
+	void execute(Boss1& gb)override;
+
+	void exit(Boss1& gb)override;
+};
+
+class Vanish : public Boss1Base
+{
+	int m_timer = 0;
+
+	void enter(Boss1& gb)override;
+
+	void execute(Boss1& gb)override;
+
+	void exit(Boss1& gb)override;
+};
+}}}

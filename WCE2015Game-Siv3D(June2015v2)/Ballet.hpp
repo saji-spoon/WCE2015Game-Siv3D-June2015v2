@@ -2,6 +2,7 @@
 #pragma warning( disable : 4100 )
 #include<Siv3D.hpp>
 #include"Camera.hpp"
+#include"ShimiColors.hpp"
 
 namespace shimi
 {
@@ -40,8 +41,8 @@ class Ballet : public Entity
 public:
 	bool m_isDead = false;
 
+	ShimiColors m_shimiColor;
 
-protected:
 	//TextureとImageを一度に指定するタグ
 	String m_balletPictureLabel;
 
@@ -51,7 +52,8 @@ public:
 
 	Ballet(){}
 
-	Ballet(BalletManager* bm, const String& bpl, const Vec2& p) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl){}
+	Ballet(BalletManager* bm, const String& bpl, const Vec2& p, const ShimiColors& col) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl), m_shimiColor(col)
+	{}
 
 	void draw() const override
 	{
@@ -78,11 +80,51 @@ public:
 	inline Vec2 getPos()const
 	{ return m_pos; }
 
+	virtual bool isDead()
+	{
+		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
+	}
+};
+/*
+class Razer : public Ballet
+{
+	Razer(){}
+
+	Razer(BalletManager* bm, const String& bpl, const Vec2& p) :Ballet(bm, bpl, p){}
+
+	void draw() const override
+	{
+		//Circle(pos, 5).draw(Palette::Green);
+		TextureAsset(m_balletPictureLabel).drawAt(D2Camera::I()->getDrawPos(m_pos));
+
+	}
+
+	virtual void drop(Image& img)
+	{
+		//ImageAsset::inst()->access(m_balletPictureLabel).write(img, m_pos.asPoint() - TextureAsset(m_balletPictureLabel).size / 2, Alpha(128));
+	}
+
+	virtual void update()
+	{
+		move();
+	}
+
+	virtual void move() override
+	{
+		m_pos.y -= 5;
+	}
+
+	inline Vec2 getPos()const
+	{
+		return m_pos;
+	}
+
 	bool isDead()
 	{
 		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
 	}
 };
+*/
 
 class BalletAVR : public Ballet
 {
@@ -98,9 +140,9 @@ protected:
 
 public:
 
-	BalletAVR(BalletManager* bm, const String& btl, const Vec2& p, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
+	BalletAVR(BalletManager* bm, const String& btl, const ShimiColors& col, const Vec2& p, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
 		:
-		Ballet(bm, btl, p),
+		Ballet(bm, btl, p, col),
 		velocity(v),
 		accel(a),
 		dir(d),
@@ -121,6 +163,44 @@ public:
 
 		dir += dirv;
 	}
+
+	bool isDead()override
+	{
+
+		return !Rect(0, 0, 8000, 6500).intersects(m_pos) || m_isDead;
+		//return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
+	}
+};
+
+class BalletLimit : public BalletAVR
+{
+public:
+	int m_timer;
+
+	BalletLimit(BalletManager* bm, const String& btl, const ShimiColors& col, const Vec2& p, int deadLine, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
+		:
+		BalletAVR(bm, btl, col, p, v, d, a, dv),
+		m_timer(deadLine)
+	{}
+
+	void update()override
+	{
+		if (m_timer <= 0)
+		{
+			return;
+		}
+
+		move();
+
+		--m_timer;
+	
+	}
+
+	bool isDead()override
+	{
+		return (m_timer <= 0) || m_isDead;
+	}
+
 };
 
 /*保留

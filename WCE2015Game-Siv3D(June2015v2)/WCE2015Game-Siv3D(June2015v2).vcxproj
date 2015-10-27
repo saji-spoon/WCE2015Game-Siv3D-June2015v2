@@ -12,19 +12,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AscAnime.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyShot.cpp" />
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MyAnime.cpp" />
     <ClCompile Include="MyResource.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="PartAnimation.cpp" />
     <ClCompile Include="ShimiColors.cpp" />
     <ClCompile Include="Shot.cpp" />
     <ClCompile Include="MyVehicle.cpp" />
     <ClCompile Include="ShotGenerator.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="TempValue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\splash.png" />
@@ -178,19 +184,27 @@
     <ClInclude Include="AnimeAsset.hpp" />
     <ClInclude Include="AscAnime.hpp" />
     <ClInclude Include="BalletManager.hpp" />
+    <ClInclude Include="BGMManager.hpp" />
+    <ClInclude Include="Boss.hpp" />
+    <ClInclude Include="Boss1Anime.hpp" />
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="AwakePlayerAttack.hpp" />
     <ClInclude Include="Config.hpp" />
+    <ClInclude Include="DebugPoint.hpp" />
     <ClInclude Include="Effect.hpp" />
     <ClInclude Include="EffectManager.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="EnemyManager.hpp" />
+    <ClInclude Include="EnemyShot.hpp" />
     <ClInclude Include="GameBase.hpp" />
+    <ClInclude Include="HitState.hpp" />
     <ClInclude Include="ImageAsset.hpp" />
     <ClInclude Include="Ballet.hpp" />
     <ClInclude Include="ItemDatabase.hpp" />
     <ClInclude Include="Menu.hpp" />
     <ClInclude Include="MyAnime.hpp" />
     <ClInclude Include="MyResource.hpp" />
+    <ClInclude Include="PartAnimation.hpp" />
     <ClInclude Include="ShimiColors.hpp" />
     <ClInclude Include="Shot.hpp" />
     <ClInclude Include="ShotGenerator.hpp" />
@@ -265,6 +279,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -1,5 +1,6 @@
 #pragma once
 #include<Siv3D.hpp>
+#include"Config.hpp"
 
 namespace shimi
 {
@@ -21,7 +22,13 @@ public:
 	//全体マップの座標から、カメラセンターのとき、画面上でどこに位置するかの座標を返す
 	inline Vec2 getDrawPos(const Vec2& globalPos)const
 	{
-		return Vec2{ 640.0, 400.0 } +globalPos - m_pos;
+		return ConfigParam::CAMERA_POSITION + globalPos - m_pos;
+	}
+
+	//画面内での位置から、全体マップの座標を返す。
+	inline Vec2 getGlobalPos(const Vec2& drawPos)const
+	{
+		return m_pos - ConfigParam::CAMERA_POSITION + drawPos;
 	}
 
 	Vec2 m_pos;

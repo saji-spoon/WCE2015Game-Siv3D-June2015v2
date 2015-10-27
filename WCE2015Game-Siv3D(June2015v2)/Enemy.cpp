@@ -26,3 +26,19 @@ void Enemy::update()
 
 	if (m_depopCount >= ConfigParam::DEPOP_COUNT) m_isDead = true;
 }
+
+void StopEnemy::moveImpl(boco::coroutine<Enemy*>::pull_type& yield)
+{
+	for (;;)
+	{
+		m_shot->update(m_pos, Vec2(0.0, -1.0));
+
+		yield();
+	}
+
+
+	for (;;)
+	{
+		yield();
+	}
+}

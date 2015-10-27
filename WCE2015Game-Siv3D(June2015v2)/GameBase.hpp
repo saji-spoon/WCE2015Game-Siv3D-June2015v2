@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning (disable : 4239)
+
 #include<Siv3D.hpp>
 #include"BalletManager.hpp"
 #include"EnemyManager.hpp"
@@ -8,12 +10,17 @@
 #include"Camera.hpp"
 #include"AnimeAsset.hpp"
 #include"EffectManager.hpp"
-#include"Effect.hpp"
-#include"State.hpp"
 #include"Menu.hpp"
+#include"DebugPoint.hpp"
+#include"Boss.hpp"
 
 namespace shimi
 {
+namespace state
+{
+class GBState;
+}
+
 class GameBase
 {
 private:
@@ -22,6 +29,10 @@ public:
 
 	//myBalletManager;
 	BalletManager m_myBM = BalletManager(this);
+
+	//enemyBalletManager
+	BalletManager m_enemyBM = BalletManager(this);
+
 	//EnemyManager
 	EnemyManager m_EM = EnemyManager(this);
 
@@ -30,6 +41,8 @@ public:
 	ItemDetabase m_idb;
 
 	std::vector<Obstacle> m_obstacles;
+
+	std::vector<std::shared_ptr<Boss>> m_bosses;
 
 	Menu m_menu;
 
@@ -44,9 +57,14 @@ public:
 
 	void mainGameUpdate();
 
-	inline Vec2 getMyVehiclePos()
+	inline Vec2 getMyVehiclePos()const
 	{
 		return m_mv.m_pos;
+	}
+
+	inline Vec2 getMyVehicleV()const 
+	{
+		return m_mv.m_v;
 	}
 
 	void updateCamera(const Vec2& cPos)
@@ -54,7 +72,7 @@ public:
 		D2Camera::I()->m_pos = cPos;
 	}
 
-	void collisionPlayerWithEnemy()const;
+	void collisionPlayerWithEnemy();
 
 	void collisionEnemyWithBallet();
 
@@ -64,7 +82,35 @@ public:
 
 	void changeState(const std::shared_ptr<state::GBState>& state);
 
+	Optional<Vec2> getNearestEnemyPos()const
+	{
+		if (!(m_EM.m_enemies.size()==0))
+		{
+			auto& enemy = std::min_element(m_EM.m_enemies.begin(), m_EM.m_enemies.end(), [this](const CoEnemy& a, const CoEnemy& b)
+			{
+				return a.m_enemy->m_pos.distanceFrom(getMyVehiclePos()) < b.m_enemy->m_pos.distanceFrom(getMyVehiclePos());
+			});
 
+			return enemy->m_enemy->m_pos;
+		}
+		else
+		{
+			return none;
+		}
+	}
+
+	void collisionPlayerWithBallet();
+
+	template <typename T>
+	bool collisionSomethingWithObstacle(const T& shape)
+	{
+		return AnyOf(m_obstacles, [&shape](const Obstacle& o){return o.m_pols.intersects(shape);});
+	}
+
+#ifdef _DEBUG
+	DebugPoint m_debugP;
+#endif
 };
+
 
 }

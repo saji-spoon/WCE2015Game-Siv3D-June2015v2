@@ -11,100 +11,48 @@ class ShotGenerator
 protected:
 	GameBase* m_gb;
 
-	TimerMillisec timer;//処理の時間の終わり管理用
-
-	unsigned int deadLine;//終わりの時間
+	int m_timer;//処理の時間の終わり管理用
 
 public:
-	bool isDead;//削除して良い状態かどうか
 
 	ShotGenerator();
 
-	ShotGenerator(GameBase* gb, unsigned int dl) :isDead(false), deadLine(dl), m_gb(gb)
+	ShotGenerator(GameBase* gb, int deadLine) :m_gb(gb), m_timer(deadLine)
 	{}
-
-	void start(){ timer.restart(); }
 
 	virtual void generate(const Vec2& vehiclePos, const Vec2& vehicleV) = 0;
 
-	void update(const Vec2& vehiclePos, const Vec2& vehicleV)
+	virtual void update(const Vec2& vehiclePos, const Vec2& vehicleV)
 	{
-		if (isDead) return;
-
-		if (timer.elapsed() > deadLine)
-		{
-			isDead = true;
-			return;
-		}
-
 		generate(vehiclePos, vehicleV);
+		--m_timer;
+	}
+
+	virtual void draw(const Vec2& vehiclePos, const Vec2& vehicleV) = 0;
+
+	virtual bool isDead()
+	{ 
+		return m_timer <= 0;
 	}
 };
 
-class ShotRound : public ShotGenerator
+class BlueShot1Generator : public ShotGenerator
 {
 public:
 
-	ShotRound(){}
+	Vec2 m_pos;
 
-	ShotRound(GameBase* gb, unsigned int dl, const Vec2& p) :ShotGenerator(gb, dl), pos(p)
+	int m_waitTimer;
+
+	BlueShot1Generator(){}
+
+	BlueShot1Generator(GameBase* gb, int dl, const Vec2& p) :ShotGenerator(gb, dl), m_pos(p)
 	{
-		wait.start();
 	}
 
-	void generate(const Vec2& vehiclePos, const Vec2& vehicleV)override;
-private:
-	TimerMillisec wait;
-
-	Vec2 pos;//発射基準点
-};
-
-class ShotSakura : public ShotGenerator
-{
-public:
-
-	ShotSakura(){}
-
-	ShotSakura(GameBase* gb, unsigned int dl) :ShotGenerator(gb, dl)
-	{
-		wait.start();
-	}
+	void draw(const Vec2& vehiclePos, const Vec2& vehicleV);
 
 	void generate(const Vec2& vehiclePos, const Vec2& vehicleV)override;
-private:
-	TimerMillisec wait;
-};
-
-class ShotChase : public ShotGenerator
-{
-public:
-
-	ShotChase(){}
-
-	ShotChase(GameBase* gb, unsigned int dl) :ShotGenerator(gb, dl)
-	{
-		wait.start();
-	}
-
-	void generate(const Vec2& vehiclePos, const Vec2& vehicleV)override;
-
-private:
-	TimerMillisec wait;
-};
-
-class ShotOugi : public ShotGenerator
-{
-public:
-	ShotOugi(){}
-	ShotOugi(GameBase* gb, unsigned int dl) :ShotGenerator(gb, dl)
-	{
-		wait.start();
-	}
-
-	void generate(const Vec2& vehiclePos, const Vec2& vehicleV)override;
-
-private:
-	TimerMillisec wait;
 };
 
 }

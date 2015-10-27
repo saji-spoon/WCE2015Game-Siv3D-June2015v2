@@ -33,30 +33,13 @@ namespace shimi
 
 		GameBase* m_gb;
 
-		void registerEnemy(std::shared_ptr<Enemy>&& enemyPtr)
-		{
-			m_enemyDatabase.emplace_back(std::move(CoEnemy{static_cast<int>(m_enemyDatabase.size()), std::move(enemyPtr)}));
-		}
+		void registerEnemy(std::shared_ptr<Enemy>&& enemyPtr);
 
 		void pop();
 
 		void popForce(const Vec2& center, double r);
 
-		void depop()
-		{
-			Erase_if(m_enemies, [&](const CoEnemy& e){
-				const bool f = e.m_enemy->isDead();
-
-				if (f)
-				{
-					const int id = e.m_id;
-
-					m_enemyDatabase[id].m_isPop = false;
-				}
-
-				return f; 
-			});
-		}
+		void depop();
 
 	private:
 

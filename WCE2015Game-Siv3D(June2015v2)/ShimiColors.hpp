@@ -26,6 +26,17 @@ namespace shimi
 		L"ColorNum:Not ShimiColor"
 	};
 
+
+	static const std::array<Color, static_cast<size_t>(ShimiColors::ColorNum)+1> ShimiColorsColor =
+	{
+		Color(224, 0, 0),
+		Color(255, 166, 0),
+		Color(72, 212, 12),
+		Color(55, 122, 238),
+		Color(130, 77, 243),
+		Color(255, 255, 255),//><
+	};
+
 	//ˆÊ’u“Iã‰ºŠÖŒW
 	static const std::array<ShimiColors, static_cast<size_t>(ShimiColors::ColorNum)> ShimiColorsHierarchy =
 	{
@@ -36,10 +47,16 @@ namespace shimi
 		ShimiColors::Purple
 	};
 
-	String ToSString(ShimiColors col);
+	String ToSString(const ShimiColors& col);
 
 	//ã‰º‡‚Å‚Ì‡ˆÊ‚ğæ“¾
-	int ToHierarchy(ShimiColors col);
+	int ToHierarchy(const ShimiColors& col);
 
+	Color ToColor(const ShimiColors& col);
 
+	ShimiColors NextColor(const ShimiColors& col);
+
+	ShimiColors PreviousColor(const ShimiColors& col);
+
+	std::shared_ptr<Shot> ToShot(ShimiColors col, int level);
 }

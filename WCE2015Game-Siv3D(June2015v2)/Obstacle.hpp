@@ -10,12 +10,10 @@ public:
 
 	Obstacle(){}
 
-	Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.0) : m_pols(Imaging::FindExternalContours(Image(imagePath), true).simplified(simp) + pos), m_tex(imagePath), m_pos(pos)
-	{
-#ifdef _DEBUG
-		LOG_DEBUG(L"Obstacle Constracted:", Format(m_pols));
-#endif
-	}
+	//imagePathから表示するダンジョン画像を取得かつその画像からダンジョンPolを生成
+	//ダンジョンPolは始めて生成するときは画像から作成しテキストに保存、2回目以降はテキストから読み込み
+	//構成を変えた場合はテキストを消せば再度画像から読み込む
+	Obstacle(const Point& pos, const FilePath& imagePath, double simp);
 
 	MultiPolygon m_pols;
 
@@ -28,22 +26,7 @@ public:
 		m_tex.draw(D2Camera::I()->getDrawPos(m_pos));
 	}
 
-	void drawDebug()const
-	{
-		const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
-
-		m_pols.drawFrame(drawPos, 2, Color(40, 200, 200, 30));
-
-		for (const auto& p : m_pols)
-		{
-			const auto& outer = p.outer();
-
-			for (const auto& o : outer)
-			{
-				Circle(drawPos + o, 5).draw(Color(255, 0, 0, 40));
-			}
-		}
-	}
+	void drawDebug()const;
 };
 
 }
