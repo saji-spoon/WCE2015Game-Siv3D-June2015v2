@@ -2,7 +2,7 @@
 
 using namespace shimi;
 
-Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.0) : m_tex(imagePath), m_pos(pos)
+Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.0) : ObstacleBase(pos, MultiPolygon()), m_tex(imagePath)
 {
 	if (!FileSystem::Exists(imagePath))
 	{
@@ -35,19 +35,37 @@ Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.
 #endif
 }
 
-void Obstacle::drawDebug()const
+BreakableObstacle::BreakableObstacle(const Rect& rect, const ShimiColors& col)
+	:ObstacleBase(rect.pos, MultiPolygon({rect.asPolygon()})),
+	m_rect(rect),
+	m_col(col)
 {
-	const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
-
-	m_pols.drawFrame(drawPos, 2, Color(40, 200, 200, 30));
-
-	for (const auto& p : m_pols)
-	{
-		const auto& outer = p.outer();
-
-		for (const auto& o : outer)
-		{
-			Circle(drawPos + o, 5).draw(Color(255, 0, 0, 40));
-		}
-	}
 }
+
+void BreakableObstacle::draw()const
+{
+	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).draw(ToColor(m_col).setAlpha(128));
+	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, ToColor(m_col));
+}
+
+bool BreakableObstacle::shotByColor(const Optional<ShimiColors>& col)
+{
+	if (!col) return false;
+
+	return col.value() == m_col;
+}
+
+TriggerBreakableObject::TriggerBreakableObject(const Rect& rect, const String& tag)
+	:ObstacleBase(rect.pos, MultiPolygon({ rect.asPolygon() }), tag),
+	m_rect(rect)
+{
+
+}
+
+void TriggerBreakableObject::draw()const
+{
+	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).draw(Color(120, 120, 120).setAlpha(128));
+	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, Color(120, 120, 120));
+}
+
+

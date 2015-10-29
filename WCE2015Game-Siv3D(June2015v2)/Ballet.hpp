@@ -41,7 +41,7 @@ class Ballet : public Entity
 public:
 	bool m_isDead = false;
 
-	ShimiColors m_shimiColor;
+	Optional<ShimiColors> m_shimiColor;
 
 	//TextureとImageを一度に指定するタグ
 	String m_balletPictureLabel;
@@ -52,7 +52,7 @@ public:
 
 	Ballet(){}
 
-	Ballet(BalletManager* bm, const String& bpl, const Vec2& p, const ShimiColors& col) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl), m_shimiColor(col)
+	Ballet(BalletManager* bm, const String& bpl, const Vec2& p, const Optional<ShimiColors>& col) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl), m_shimiColor(col)
 	{}
 
 	void draw() const override
@@ -62,10 +62,7 @@ public:
 		
 	}
 
-	virtual void drop(Image& img)
-	{
-		//ImageAsset::inst()->access(m_balletPictureLabel).write(img, m_pos.asPoint() - TextureAsset(m_balletPictureLabel).size / 2, Alpha(128));
-	}
+	virtual void drop() = 0;
 
 	virtual void update()
 	{
@@ -85,46 +82,6 @@ public:
 		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
 	}
 };
-/*
-class Razer : public Ballet
-{
-	Razer(){}
-
-	Razer(BalletManager* bm, const String& bpl, const Vec2& p) :Ballet(bm, bpl, p){}
-
-	void draw() const override
-	{
-		//Circle(pos, 5).draw(Palette::Green);
-		TextureAsset(m_balletPictureLabel).drawAt(D2Camera::I()->getDrawPos(m_pos));
-
-	}
-
-	virtual void drop(Image& img)
-	{
-		//ImageAsset::inst()->access(m_balletPictureLabel).write(img, m_pos.asPoint() - TextureAsset(m_balletPictureLabel).size / 2, Alpha(128));
-	}
-
-	virtual void update()
-	{
-		move();
-	}
-
-	virtual void move() override
-	{
-		m_pos.y -= 5;
-	}
-
-	inline Vec2 getPos()const
-	{
-		return m_pos;
-	}
-
-	bool isDead()
-	{
-		return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
-	}
-};
-*/
 
 class BalletAVR : public Ballet
 {
@@ -140,7 +97,7 @@ protected:
 
 public:
 
-	BalletAVR(BalletManager* bm, const String& btl, const ShimiColors& col, const Vec2& p, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
+	BalletAVR(BalletManager* bm, const String& btl, const Optional<ShimiColors>& col, const Vec2& p, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0, const Optional<ScheduleTimer>& dropSchdl = none)
 		:
 		Ballet(bm, btl, p, col),
 		velocity(v),
@@ -155,6 +112,11 @@ public:
 		TextureAsset(m_balletPictureLabel).rotate(dir + Pi / 2.0).drawAt(D2Camera::I()->getDrawPos(m_pos));
 	}
 
+	virtual void update()override
+	{
+		move();
+	}
+
 	void move() override
 	{
 		m_pos += velocity * Vec2(Cos(dir), Sin(dir));
@@ -163,6 +125,9 @@ public:
 
 		dir += dirv;
 	}
+
+	void drop()override;
+
 
 	bool isDead()override
 	{
@@ -177,7 +142,7 @@ class BalletLimit : public BalletAVR
 public:
 	int m_timer;
 
-	BalletLimit(BalletManager* bm, const String& btl, const ShimiColors& col, const Vec2& p, int deadLine, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
+	BalletLimit(BalletManager* bm, const String& btl, const Optional<ShimiColors>& col, const Vec2& p, int deadLine, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
 		:
 		BalletAVR(bm, btl, col, p, v, d, a, dv),
 		m_timer(deadLine)
@@ -203,39 +168,4 @@ public:
 
 };
 
-/*保留
-class BalletXY : public Ballet
-{
-public:
-
-	BalletXY(const Point& p, const Vec2& v, const Vec2& a = { 0.0, 0.0 })
-		:Ballet(p),
-		posD(p),
-		velocity(v),
-		accel(a)
-	{}
-
-	void draw() const override
-	{
-		//Circle(pos, 5).draw(Palette::Green);
-		TextureAsset(L"mame").rotate(Circular(posD).theta).draw(pos);
-	}
-
-	void move() override
-	{
-		posD += velocity;
-
-		velocity += accel;
-
-		pos = posD.asPoint();
-	}
-
-protected:
-	Vec2 posD;
-
-	Vec2 velocity;
-
-	Vec2 accel;
-};
-*/
 }

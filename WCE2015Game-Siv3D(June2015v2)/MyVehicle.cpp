@@ -17,7 +17,7 @@ void MyVehicle::collisionPlayerWithObject()
 
 	for (const auto& obstacle : m_gb->m_obstacles)
 	{
-		for (const s3d::Polygon& wall : obstacle.m_pols)
+		for (const s3d::Polygon& wall : obstacle->m_pols)
 		{
 			const auto& outer = wall.outer();
 
@@ -32,6 +32,7 @@ void MyVehicle::collisionPlayerWithObject()
 			}
 		}
 	}
+
 	//リストを、当たり判定円の中心と交差した壁へのclosestの距離が近い順にならべる
 	std::sort(wallLines.begin(), wallLines.end(), [&futurePos](const Line& wallA, const Line& wallB)
 	{
@@ -90,7 +91,7 @@ void MyVehicle::wallDebugDraw()const
 {
 	for (const auto& o : m_gb->m_obstacles)
 	{
-		o.drawDebug();
+		o->drawDebug();
 	}
 
 }
@@ -154,7 +155,7 @@ void MyVehicle::damageUpdate()
 	m_isDamaged = false;
 }
 
-MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(2), m_blankShot(gb)
+MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(1), m_blankShot(gb)
 {
 	for (size_t i = 0; i < m_shotPropertys.size(); ++i)
 	{
@@ -169,6 +170,8 @@ MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(2), m_bl
 	m_shotPropertys[static_cast<int>(ShimiColors::Green)].exp = 50;
 	m_shotPropertys[static_cast<int>(ShimiColors::Orange)].exp = 50;
 	m_shotPropertys[static_cast<int>(ShimiColors::Purple)].exp = 50;
+
+	m_equipNum = 3;
 #endif	
 
 }
@@ -176,7 +179,7 @@ MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(2), m_bl
 void MyVehicle::ShotManager::update()
 {
 	//上キーが押されたら上の装備、下キーが押されたら下の装備にフォーカスする
-	const int add = Input::KeyUp.clicked ? 1 : (Input::KeyDown.clicked ? -1 : 0);
+	const int add = Input::KeyUp.clicked ? -1 : (Input::KeyDown.clicked ? 1 : 0);
 
 	for (;;)
 	{

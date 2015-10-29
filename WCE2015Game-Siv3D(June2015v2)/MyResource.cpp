@@ -35,9 +35,11 @@ void shimi::ResourceRegister()
 	SoundAsset(L"BossBattle").setLoop(true);
 
 
+	/***SE‚Ì“o˜^***/
 	SoundAsset::Register(L"MyBallet", ResourcePath + L"SE/" + L"tissue.mp3");
-	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" + L"button05.mp3");
-	SoundAsset::Register(L"Select", ResourcePath + L"SE/" + L"sel8.mp3");
+	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" + L"button03b.mp3");
+	SoundAsset::Register(L"Select", ResourcePath + L"SE/" + L"button40.mp3");
+	SoundAsset::Register(L"Start", ResourcePath + L"SE/" + L"decision4.mp3");
 
 	SoundAsset::Register(L"Boss1Voice1", ResourcePath + L"SE/" + L"mushi.wav");
 

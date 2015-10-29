@@ -14,5 +14,7 @@ const int ConfigParam::TIME_GREENBURST = 5;
 
 const int ConfigParam::R_OF_MYVEHICLE = 20;
 
+const Size ConfigParam::SIZE_OF_WORLD = Size(8500, 7300);
+
 
 

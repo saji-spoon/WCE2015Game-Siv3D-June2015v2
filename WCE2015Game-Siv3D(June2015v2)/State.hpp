@@ -29,6 +29,8 @@ class GBState
 {
 
 public:
+	virtual void draw(const GameBase* gb)const = 0;
+
 	virtual void enter(GameBase* gb) = 0;
 
 	virtual void execute(GameBase* gb) = 0;
@@ -40,21 +42,25 @@ class MainGame : public GBState
 {
 
 public:
-	void enter(GameBase* gb){}
+	void draw(const GameBase* gb)const override;
 
-	void execute(GameBase* gb);
+	void enter(GameBase* gb)override{}
 
-	void exit(GameBase* gb){}
+	void execute(GameBase* gb)override;
+
+	void exit(GameBase* gb)override{}
 };
 
 class Menu : public GBState
 {
 public:
-	void enter(GameBase* gb);
+	void draw(const GameBase* gb)const override;
 
-	void execute(GameBase* gb);
+	void enter(GameBase* gb)override;
 
-	void exit(GameBase* gb);
+	void execute(GameBase* gb)override;
+
+	void exit(GameBase* gb)override;
 };
 
 namespace myvehicle

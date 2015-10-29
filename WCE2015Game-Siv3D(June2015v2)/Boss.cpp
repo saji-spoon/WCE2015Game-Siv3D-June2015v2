@@ -29,6 +29,9 @@ void Boss1::draw()const
 
 	m_anime.draw(D2Camera::I()->getDrawPos(m_pos), Circular6(m_v).theta);
 
+#ifdef _Debug
+	getBossArea().draw(Palette::Red.setAlpha(60));
+#endif
 }
 
 bool Boss1::run()

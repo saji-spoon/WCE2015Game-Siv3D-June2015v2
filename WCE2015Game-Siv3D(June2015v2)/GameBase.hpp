@@ -40,7 +40,7 @@ public:
 
 	ItemDetabase m_idb;
 
-	std::vector<Obstacle> m_obstacles;
+	std::vector<std::shared_ptr<ObstacleBase>> m_obstacles;
 
 	std::vector<std::shared_ptr<Boss>> m_bosses;
 
@@ -67,6 +67,9 @@ public:
 		return m_mv.m_v;
 	}
 
+	//ƒQ[ƒ€‚ðÅ‰‚ÉŽn‚ß‚éŽž
+	void init();
+
 	void updateCamera(const Vec2& cPos)
 	{
 		D2Camera::I()->m_pos = cPos;
@@ -77,6 +80,8 @@ public:
 	void collisionEnemyWithBallet();
 
 	void collisionBalletWithObstacle();
+
+	void mainGameDraw()const;
 
 	void draw()const;
 
@@ -104,8 +109,16 @@ public:
 	template <typename T>
 	bool collisionSomethingWithObstacle(const T& shape)
 	{
-		return AnyOf(m_obstacles, [&shape](const Obstacle& o){return o.m_pols.intersects(shape);});
+		return AnyOf(m_obstacles, [&shape](const std::shared_ptr<ObstacleBase>& op){return op->m_pols.intersects(shape); });
 	}
+
+	void collisionMyBalletWithBreakableObstacle();
+
+	void breakObstacleByTag(const String& tag)
+	{
+		Erase_if(m_obstacles, [&tag](const std::shared_ptr<ObstacleBase>& o){ return o->m_tag && (o->m_tag.value() == tag); });
+	}
+
 
 #ifdef _DEBUG
 	DebugPoint m_debugP;

@@ -16,6 +16,8 @@ struct ConfigParam
 	const static int TIME_GREENCHARGE;
 	const static int TIME_GREENBURST;
 	const static int R_OF_MYVEHICLE;
+
+	const static Size SIZE_OF_WORLD;
 };
 
 }

@@ -34,7 +34,7 @@ void Menu::update()
 	}
 
 	//欄の選択は上下キー
-	const int selectAdd = Input::KeyUp.clicked ? 1 : (Input::KeyDown.clicked ? -1 : 0);
+	const int selectAdd = Input::KeyUp.clicked ? -1 : (Input::KeyDown.clicked ? 1 : 0);
 
 	//色の選択は左右キー
 	const int colorAdd = Input::KeyRight.clicked ? 1 : (Input::KeyLeft.clicked ? -1 : 0);

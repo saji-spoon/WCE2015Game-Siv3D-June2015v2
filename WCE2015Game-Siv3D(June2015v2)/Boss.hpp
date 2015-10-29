@@ -24,11 +24,11 @@ public:
 	Boss(GameBase* gb, const Vec2& pos);
 
 	//PlayerAttackÇ∆ÇÃcollisionÇ≈åƒÇŒÇÍÇÈ
-	virtual HitState damage(const Circle& collision, const ShimiColors& col, int value) = 0;
+	virtual HitState damage(const Circle& collision, const Optional<ShimiColors>& col, int value) = 0;
 
-	virtual HitState damage(const Quad& collision, const ShimiColors& col, int value) = 0;
+	virtual HitState damage(const Quad& collision, const Optional<ShimiColors>& col, int value) = 0;
 
-	virtual HitState damage(const Vec2& collision, const ShimiColors& col, int value) = 0;
+	virtual HitState damage(const Vec2& collision, const Optional<ShimiColors>& col, int value) = 0;
 
 	virtual void update() = 0;
 
@@ -96,7 +96,7 @@ public:
 
 	//É_ÉÅÅ[ÉWéûÇÃèàóù
 	template<typename T>
-	HitState damageImpl(const T& collision, const ShimiColors& col, int value)
+	HitState damageImpl(const T& collision, const Optional<ShimiColors>& col, int value)
 	{
 		if (getMyCollision(m_pos).intersects(collision))
 		{
@@ -120,17 +120,17 @@ public:
 		return HitState::Avoid;
 	}
 
-	HitState damage(const Circle& collision, const ShimiColors& col, int value)override
+	HitState damage(const Circle& collision, const Optional<ShimiColors>& col, int value)override
 	{
 		return damageImpl(collision, col, value);
 	}
 
-	HitState damage(const Quad& collision, const ShimiColors& col, int value)override
+	HitState damage(const Quad& collision, const Optional<ShimiColors>& col, int value)override
 	{
 		return damageImpl(collision, col, value);
 	}
 
-	HitState damage(const Vec2& collision, const ShimiColors& col, int value)override
+	HitState damage(const Vec2& collision, const Optional<ShimiColors>& col, int value)override
 	{
 		return damageImpl(collision, col, value);
 	}

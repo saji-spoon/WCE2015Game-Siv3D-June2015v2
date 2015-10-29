@@ -235,7 +235,7 @@ void GreenShot1::beamUpdate()
 
 	for (const auto& walls : m_gb->m_obstacles)
 	{
-		for (const auto& wall : walls.m_pols)
+		for (const auto& wall : walls->m_pols)
 		{
 			const auto& outer = wall.outer();
 
@@ -250,7 +250,6 @@ void GreenShot1::beamUpdate()
 					m_beam.end = cross.value();
 				}
 			}
-
 		}
 	}
 }
@@ -399,7 +398,7 @@ void WhiteShot::shot(const Vec2& pos, const Vec2& v)
 	m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
 		&(m_gb->m_myBM),
 		L"whiteBallet",
-		ShimiColors::Red,
+		none,
 		m_gb->getMyVehiclePos(),
 		5.00,
 		Circular3(m_gb->m_mv.m_v).theta,

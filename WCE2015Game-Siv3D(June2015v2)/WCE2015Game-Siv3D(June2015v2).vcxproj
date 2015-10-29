@@ -12,8 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AscAnime.cpp" />
+    <ClCompile Include="Ballet.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
@@ -31,6 +33,7 @@
     <ClCompile Include="ShotGenerator.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="TempValue.cpp" />
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\splash.png" />
@@ -187,10 +190,12 @@
     <ClInclude Include="BGMManager.hpp" />
     <ClInclude Include="Boss.hpp" />
     <ClInclude Include="Boss1Anime.hpp" />
+    <ClInclude Include="BreakableObstacle.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="AwakePlayerAttack.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="DebugPoint.hpp" />
+    <ClInclude Include="DropManager.hpp" />
     <ClInclude Include="Effect.hpp" />
     <ClInclude Include="EffectManager.hpp" />
     <ClInclude Include="Enemy.hpp" />
@@ -211,6 +216,7 @@
     <ClInclude Include="MyVehicle.hpp" />
     <ClInclude Include="Obstacle.hpp" />
     <ClInclude Include="State.hpp" />
+    <ClInclude Include="Title.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{01EBD207-CEBE-4DA3-A9A9-7D6E6169945A}</ProjectGuid>

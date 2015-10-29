@@ -7,19 +7,25 @@
 
 using namespace shimi;
 
+void state::MainGame::draw(const GameBase* gb)const
+{
+	gb->mainGameDraw();
+}
+
 void state::MainGame::execute(GameBase* gb)
 {
-	gb->draw();
-
 	gb->mainGameUpdate();
+}
+
+void state::Menu::draw(const GameBase* gb)const
+{
+	gb->mainGameDraw();
+
+	gb->m_menu.draw();
 }
 
 void state::Menu::execute(GameBase* gb)
 {
-	gb->draw();
-
-	gb->m_menu.draw();
-
 	//ゲームのUpdateはせずにメニューのupdateとゲーム・メニューの描画のみ
 
 	gb->m_menu.update();
@@ -27,7 +33,6 @@ void state::Menu::execute(GameBase* gb)
 
 void state::Menu::enter(GameBase* gb)
 {
-
 	//m_menuはMenuに切り替わるたびに更新する（m_mvをロードする）
 	gb->m_menu = ::shimi::Menu(gb, gb->m_mv);
 }
@@ -130,6 +135,8 @@ void state::boss1::Stay::enter(Boss1& gb)
 	EffectManager::I()->effect.add<BossWarp>(gb.m_pos, 250);
 
 	BGMManager::I()->changeBGM(L"NormalStage");
+
+	gb.m_v = Vec2(0, 1);
 }
 
 void state::boss1::Stay::execute(Boss1& gb)
@@ -193,6 +200,8 @@ void state::boss1::Vanish::enter(Boss1& gb)
 	gb.m_anime.m_mode = Boss1AnimeMode::Vanished;
 
 	BGMManager::I()->changeBGM(L"NormalStage");
+
+	gb.m_gb->breakObstacleByTag(L"Boss1Exit");
 
 }
 
