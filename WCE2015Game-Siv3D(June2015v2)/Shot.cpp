@@ -21,7 +21,6 @@ Vec2 getPosFromRelativeLocationFromMV(GameBase* gb, const Vec2& relPos)
 	return getPosFromRelativeLocationFromMV(gb->getMyVehiclePos(), gb->getMyVehicleV(), relPos);
 }
 
-
 //装備画像texを位置pos, 向きvの自機の周りに、パーツを描画
 //rotPos…画像中での回転の支点となる座標 relPos…自機中心からrotPosまでの相対位置 isMirror…同じものを左右対称に描画するかどうか
 void DrawTexAsShot(const Vec2& vPos, const Vec2& v, const Texture& tex, const Vec2& rotPos, const Vec2 relPos, bool isMirror)
@@ -90,7 +89,8 @@ void RedShot1::shot(const Vec2& pos, const Vec2& v)
 			5.00,
 			Circular3(m_gb->m_mv.m_v).theta + (i - 1) * Pi / 36.0,
 			0.0,
-			0.0)));
+			0.0,
+			ScheduleTimer({ 30, 80 }))));
 	}
 
 	SoundAsset(L"MyBallet").playMulti();

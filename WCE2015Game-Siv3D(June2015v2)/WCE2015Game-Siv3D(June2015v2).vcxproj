@@ -193,6 +193,7 @@
     <ClInclude Include="BreakableObstacle.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="AwakePlayerAttack.hpp" />
+    <ClInclude Include="CoEnemy.hpp" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="DebugPoint.hpp" />
     <ClInclude Include="DropManager.hpp" />

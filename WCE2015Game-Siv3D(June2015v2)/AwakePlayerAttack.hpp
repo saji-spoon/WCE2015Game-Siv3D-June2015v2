@@ -12,26 +12,26 @@ namespace shimi
 	template<typename T>
 	bool AwakePlayerAttack(GameBase* gb, const T& collision, const Optional<ShimiColors>& col, int value)
 	{		
-		const bool enemyHit = AnyOf(gb->m_EM.m_enemies, [gb, &collision](const CoEnemy& e)
+		const bool enemyHit = AnyOf(gb->m_EM.m_enemies, [gb, &collision](const std::shared_ptr<Enemy>& e)
 		{
-			const bool f = collision.intersects(Circle(e.m_enemy->m_pos, 30));
+			const bool f = collision.intersects(Circle(e->m_pos, 30));
 
 			if (f)
 			{
-				if (!e.m_enemy->m_isDead)
+				if (!e->m_isDead)
 				{
 					EffectManager::I()->effect.add<VanishingEnemy>(e.m_enemy->m_pos.asPoint(), 25.0, 0.5);
 					SoundAsset(L"EnemyVanish").playMulti();
 				}
 
-				e.m_enemy->m_isDead = true;
+				e->m_isDead = true;
 
 
-				if (e.m_enemy->m_itemID && !gb->m_idb.isgot(e.m_enemy->m_itemID.value()))
+				if (e->m_itemID && !gb->m_idb.isgot(e->m_itemID.value()))
 				{
-					EffectManager::I()->effect.add<ItemGet>(gb, e.m_enemy->m_pos);
+					EffectManager::I()->effect.add<ItemGet>(gb, e->m_pos);
 
-					const int index = e.m_enemy->m_itemID.value();
+					const int index = e->m_itemID.value();
 
 					gb->m_mv.addShotExp(gb->m_idb.m_list[index]);
 

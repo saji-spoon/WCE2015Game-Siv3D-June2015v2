@@ -91,12 +91,12 @@ public:
 	{
 		if (!(m_EM.m_enemies.size()==0))
 		{
-			auto& enemy = std::min_element(m_EM.m_enemies.begin(), m_EM.m_enemies.end(), [this](const CoEnemy& a, const CoEnemy& b)
+			auto& enemy = std::min_element(m_EM.m_enemies.begin(), m_EM.m_enemies.end(), [this](const std::shared_ptr<Enemy>& a, const std::shared_ptr<Enemy>& b)
 			{
-				return a.m_enemy->m_pos.distanceFrom(getMyVehiclePos()) < b.m_enemy->m_pos.distanceFrom(getMyVehiclePos());
+				return a->m_pos.distanceFrom(getMyVehiclePos()) < b->m_pos.distanceFrom(getMyVehiclePos());
 			});
 
-			return enemy->m_enemy->m_pos;
+			return enemy->m_pos;
 		}
 		else
 		{

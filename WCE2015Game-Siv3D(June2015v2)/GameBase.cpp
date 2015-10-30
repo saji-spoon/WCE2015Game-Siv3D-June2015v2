@@ -5,6 +5,7 @@
 #include"EnemyShot.hpp"
 #include"BGMManager.hpp"
 #include"Config.hpp"
+#include"DropManager.hpp"
 
 shimi::GameBase::GameBase() :
 m_tex(L"Resource/Paper2.png"), m_state(new state::MainGame()), m_menu(this, m_mv)
@@ -142,6 +143,8 @@ void shimi::GameBase::mainGameDraw()const
 {
 	m_tex.map(ConfigParam::SIZE_OF_WORLD + Vec2(800, 600)).draw(D2Camera::I()->getDrawPos({ -800, -600 }), Alpha(70));
 
+	DropManager::I()->draw();
+
 	m_mv.draw();
 
 	for (auto& boss : m_bosses)
@@ -173,9 +176,10 @@ void shimi::GameBase::mainGameDraw()const
 
 #ifdef _DEBUG
 	m_idb.debug();
-	FontAsset(L"Debug").draw(Format(m_EM.m_enemies.size()), { (0, 0), (0, 0) }, Palette::Black);
 
 	FontAsset(L"Debug").draw(Format(m_mv.m_pos.asPoint()), D2Camera::I()->getGlobalPos(m_mv.m_pos), Palette::Black);
+
+	FontAsset(L"Debug").draw(Format(DropManager::I()->m_drops.size()), { 0.0, 100.0 }, Palette::Black);
 
 	m_debugP.draw();
 

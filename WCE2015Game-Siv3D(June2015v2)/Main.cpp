@@ -65,8 +65,11 @@ void Main()
 	manager.add<TitleScene>(L"TitleScene");
 	manager.add<GameScene>(L"GameScene");
 
+#ifdef _DEBUG
+	manager.changeScene(L"GameScene", 0, false);
+#elif
 	manager.changeScene(L"TitleScene", 0, false);
-
+#endif
 	Window::Resize(1280, 800);
 
 	manager.setFadeColor(Palette::Black);

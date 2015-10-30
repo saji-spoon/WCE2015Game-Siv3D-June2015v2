@@ -3,6 +3,7 @@
 #include<Siv3D.hpp>
 #include"Camera.hpp"
 #include"ShimiColors.hpp"
+#include"DropManager.hpp"
 
 namespace shimi
 {
@@ -95,6 +96,8 @@ protected:
 
 	double dirv;
 
+	Optional<ScheduleTimer> m_dropSchedule;
+
 public:
 
 	BalletAVR(BalletManager* bm, const String& btl, const Optional<ShimiColors>& col, const Vec2& p, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0, const Optional<ScheduleTimer>& dropSchdl = none)
@@ -103,7 +106,8 @@ public:
 		velocity(v),
 		accel(a),
 		dir(d),
-		dirv(dv)
+		dirv(dv),
+		m_dropSchedule(dropSchdl)
 	{}
 
 	void draw() const override
@@ -115,6 +119,14 @@ public:
 	virtual void update()override
 	{
 		move();
+
+		if (m_dropSchedule)
+		{
+			m_dropSchedule.value().update();
+
+			if (m_dropSchedule.value().isDropTime()) drop();
+		}
+
 	}
 
 	void move() override

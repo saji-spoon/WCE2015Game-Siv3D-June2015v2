@@ -34,6 +34,8 @@ public:
 
 	virtual void draw()const = 0;
 
+	virtual void debugDraw()const = 0;
+
 	virtual bool isInBossBattle()const = 0;
 
 	virtual bool isVanished()const = 0;
@@ -77,6 +79,8 @@ public:
 	void update() override;
 
 	void draw() const override;
+
+	void debugDraw()const override;
 
 	//自機に向けてm_vをセット
 	void setVtoMV();

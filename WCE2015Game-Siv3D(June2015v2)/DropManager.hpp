@@ -49,21 +49,21 @@ namespace shimi
 
 	class ScheduleTimer
 	{
+	public:
+		ScheduleTimer(){}
+
+		ScheduleTimer(const std::vector<int>& schedules)
+			:m_schedule(schedules)
+		{}
+
 		int m_timer = 0;
 
 		int m_phase = 0;
 
 		std::vector<int> m_schedule;
 
-		bool isDropTime()
-		{
-			return (m_phase < m_schedule.size() && m_schedule[m_phase] == m_timer);
-		}
-
-		void update()
-		{
-			++m_timer;
-		}
+		bool isDropTime()const;
+		void update();
 	};
 
 }

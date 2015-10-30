@@ -15,17 +15,10 @@ namespace shimi
 
 		EnemyManager(GameBase* gb) :m_gb(gb){}
 
-		std::vector<CoEnemy> m_enemies;
+		std::vector<std::shared_ptr<Enemy>> m_enemies;
 
 		struct EnemyData{
-			EnemyData(CoEnemy&& enemy) :m_data(std::move(enemy)){}
-			EnemyData(const EnemyData& enemy) = default;
-			EnemyData(EnemyData&& enemy)  _NOEXCEPT
-			: m_data(std::move(enemy.m_data))
-			{}
-			~EnemyData() = default;
-
-			CoEnemy m_data;
+			std::shared_ptr<Enemy> m_data;
 			bool m_isPop = false;
 		};
 
@@ -33,8 +26,8 @@ namespace shimi
 
 		GameBase* m_gb;
 
-		void registerEnemy(std::shared_ptr<Enemy>&& enemyPtr);
-
+		int registerEnemy(std::shared_ptr<Enemy>& enemyPtr);
+		
 		void pop();
 
 		void popForce(const Vec2& center, double r);

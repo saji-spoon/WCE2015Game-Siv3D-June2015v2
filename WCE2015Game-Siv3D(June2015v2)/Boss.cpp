@@ -13,7 +13,6 @@ void Boss1::update()
 	m_state->execute(*this);
 
 	AwakeEnemyAttack(m_gb, getMyCollision(m_pos), ShimiColors::Red, 1);
-
 }
 
 void Boss1::setVtoMV()
@@ -29,9 +28,14 @@ void Boss1::draw()const
 
 	m_anime.draw(D2Camera::I()->getDrawPos(m_pos), Circular6(m_v).theta);
 
-#ifdef _Debug
-	getBossArea().draw(Palette::Red.setAlpha(60));
+}
+
+void Boss1::debugDraw()const
+{
+#ifdef _DEBUG
+	getBossArea().draw(Alpha(128) * Palette::Red);
 #endif
+
 }
 
 bool Boss1::run()
