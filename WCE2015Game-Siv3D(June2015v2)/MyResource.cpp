@@ -19,10 +19,20 @@ void shimi::ResourceRegister()
 	TextureAsset::Register(L"re", L"ballet.png", {}, AssetFlag::Default);
 
 	const FilePath EnemyRegister = ResourcePath + L"Enemy/";
-	TextureAsset::Register(L"enemy1", EnemyRegister + L"shimi_enemy_01.png");
-	TextureAsset::Register(L"enemy2", EnemyRegister + L"shimi_enemy_02.png");
-	TextureAsset::Register(L"enemy3", EnemyRegister + L"shimi_enemy_03.png");
+	TextureAsset::Register(L"blueDia", EnemyRegister + L"shimi_enemy_01.png");
+	TextureAsset::Register(L"greenMushi", EnemyRegister + L"shimi_enemy_02.png");
+	TextureAsset::Register(L"mossEye", EnemyRegister + L"shimi_enemy_03.png");
+	TextureAsset::Register(L"blueLotus", EnemyRegister + L"shimi_enemy_04.png");
+	TextureAsset::Register(L"purpleCutter", EnemyRegister + L"shimi_enemy_05.png");
+	TextureAsset::Register(L"orangeCircle", EnemyRegister + L"shimi_enemy_06.png");
 	TextureAsset::Register(L"redDia", EnemyRegister + L"shimi_enemy_07.png");
+	TextureAsset::Register(L"sunFlower", EnemyRegister + L"shimi_enemy_08.png");
+	TextureAsset::Register(L"heartFish", EnemyRegister + L"shimi_enemy_09.png");
+	TextureAsset::Register(L"ikachan", EnemyRegister + L"shimi_enemy_10.png");
+	TextureAsset::Register(L"sunsetTentou", EnemyRegister + L"shimi_enemy_11.png");
+	TextureAsset::Register(L"shadowCircle", EnemyRegister + L"shimi_enemy_12.png");
+	TextureAsset::Register(L"darkAmeba", EnemyRegister + L"shimi_enemy_13.png");
+	TextureAsset::Register(L"flightBee", EnemyRegister + L"shimi_enemy_90.png");
 	/*
 	ImageAsset::inst()->assetRegister(L"ballet1", L"ballet.png");
 	ImageAsset::inst()->assetRegister(L"ballet2", L"ballet.png");
@@ -45,9 +55,19 @@ void shimi::ResourceRegister()
 
 	FontAsset::Register(L"Debug", 12, Typeface::Default);
 
-	AnimeAsset::I()->Register(L"blueFly", MyAnime(L"enemy1", 6, 2));
-	AnimeAsset::I()->Register(L"green-mushi", MyAnime(L"enemy2", 13, 2));
-	AnimeAsset::I()->Register(L"mossEye", MyAnime(L"enemy3", 8, 4));
-	AnimeAsset::I()->Register(L"redDia", MyAnime(L"redDia", 12, 5));
+	AnimeAsset::I()->Register(L"blueDia", MyAnime(L"blueDia", 6, 2));
+	AnimeAsset::I()->Register(L"greenMushi", MyAnime(L"greenMushi", 13, 7));
+	AnimeAsset::I()->Register(L"mossEye", MyAnime(L"mossEye", 8, 12));
+	AnimeAsset::I()->Register(L"blueLotus", MyAnime(L"blueLotus", 8, 5));
+	AnimeAsset::I()->Register(L"purpleCutter", MyAnime(L"purpleCutter", 16, 22));
+	AnimeAsset::I()->Register(L"orangeCircle", MyAnime(L"orangeCircle", 4, 20));
+	AnimeAsset::I()->Register(L"redDia", MyAnime(L"redDia", 12, 4));
+	AnimeAsset::I()->Register(L"sunFlower", MyAnime(L"sunFlower", 8, 4));
+	AnimeAsset::I()->Register(L"heartFish", MyAnime(L"heartFish", 8, 6));
+	AnimeAsset::I()->Register(L"ikachan", MyAnime(L"ikachan", 6, 4));
+	AnimeAsset::I()->Register(L"sunsetTentou", MyAnime(L"sunsetTentou", 8, 7));
+	AnimeAsset::I()->Register(L"shadowCircle", MyAnime(L"shadowCircle", 11, 2));
+	AnimeAsset::I()->Register(L"darkAmeba", MyAnime(L"darkAmeba", 8, 5));
+	AnimeAsset::I()->Register(L"flightBee", MyAnime(L"flightBee", 6, 4));
 
 }

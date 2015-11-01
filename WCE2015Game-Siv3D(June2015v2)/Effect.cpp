@@ -122,7 +122,6 @@ bool BossWarp::update(double t)
 
 bool BossVanish::update(double t) 
 {
-	const double end = m_size;
 	const Color col = Color(20, 20, 20, 180);
 
 	const Vec2 DrawPos = D2Camera::I()->getDrawPos(m_pos);

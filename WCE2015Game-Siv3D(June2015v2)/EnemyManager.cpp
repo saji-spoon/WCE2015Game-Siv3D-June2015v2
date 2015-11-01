@@ -39,9 +39,13 @@ void shimi::EnemyManager::popForce(const Vec2& center, double r)
 
 int shimi::EnemyManager::registerEnemy(std::shared_ptr<Enemy>& enemyPtr)
 {
-	enemyPtr->m_id = static_cast<int>(m_enemyDatabase.size());
+	const int id = static_cast<int>(m_enemyDatabase.size());
 
-	m_enemyDatabase.emplace_back(enemyPtr, false);
+	enemyPtr->m_id = id;
+
+	m_enemyDatabase.emplace_back(enemyPtr);
+
+	return id;
 }
 
 void shimi::EnemyManager::depop()

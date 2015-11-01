@@ -58,12 +58,6 @@ void state::myvehicle::Damaged::enter(MyVehicle& mv)
 
 void state::myvehicle::Damaged::execute(MyVehicle& mv)
 {
-#ifdef _DEBUG
-	mv.m_v.r = Input::KeyA.pressed ? 20.0 : (Input::KeyX.pressed ? 3.0 : 1.8);
-#else
-	mv.m_v.r = Input::KeyX.pressed ? 3.0 : 1.8;
-#endif
-
 	mv.GameUpdate(false, true);
 
 	if (m_damagedTimer <= 0) mv.changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Normal()));

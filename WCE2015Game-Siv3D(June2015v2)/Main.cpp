@@ -4,6 +4,8 @@
 #include"MyResource.hpp"
 #include"GameBase.hpp"
 #include"Title.hpp"
+#include"GamePadCheck.hpp"
+#include"Config.hpp"
 
 using namespace shimi;
 struct GameData
@@ -66,9 +68,9 @@ void Main()
 	manager.add<GameScene>(L"GameScene");
 
 #ifdef _DEBUG
-	manager.changeScene(L"GameScene", 0, false);
+	manager.init(L"GameScene");
 #elif
-	manager.changeScene(L"TitleScene", 0, false);
+	manager.init(L"TitleScene");
 #endif
 	Window::Resize(1280, 800);
 
@@ -80,5 +82,7 @@ void Main()
 	{
 		if (!manager.updateAndDraw())
 			break;
+
+		GamepadCheck::I()->update();
 	}
 }

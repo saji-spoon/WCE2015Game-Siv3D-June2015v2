@@ -96,7 +96,7 @@ public:
 				return a->m_pos.distanceFrom(getMyVehiclePos()) < b->m_pos.distanceFrom(getMyVehiclePos());
 			});
 
-			return enemy->m_pos;
+			return (*enemy)->m_pos;
 		}
 		else
 		{

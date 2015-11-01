@@ -14,9 +14,13 @@ m_tex(L"Resource/Paper2.png"), m_state(new state::MainGame()), m_menu(this, m_mv
 
 void shimi::GameBase::init()
 {
-	StraightShot case1(this, { { Vec2{ 0, 2.0 }, 180 } }, BalletAVR(&m_enemyBM, L"enemyBallet1", ShimiColors::Red, Vec2(0, 0), 0.0, 0.0), true);
+	/*どのショットか？　ショットに必要なスケジュール配列　どの弾か？弾のテクスチャラベル弾の色　スケジュールがループかどうか*/
 
-	const std::shared_ptr<EnemyShot> push1(new StraightShot(this, { { Vec2{ 0, 1 }, 180 } }, BalletAVR(&m_enemyBM, L"enemyBallet1", ShimiColors::Red, Vec2(0, 0), 0.0, 0.0), true));
+	//StraightShot case1(this, { { Vec2{ 0, 2.0 }, 180 } }, BalletAVR(&m_enemyBM, L"enemyBallet1", ShimiColors::Red, Vec2(0, 0), 0.0, 0.0), true);
+
+	/*どのEnemyか？位置　AnimeAsset ショット 敵自身の色　アイテム（あれば）*/
+
+	/*
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 600, 4900.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 	case1.m_schedule = { { Vec2{ -2.0, 0 }, 180 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 898, 5140.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
@@ -24,11 +28,16 @@ void shimi::GameBase::init()
 	case1.m_schedule = { { Vec2{ -2.0, 0 }, 180 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1400, 5256.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 
-	case1.m_schedule = { { Vec2{ 0.0, 2.0 }, 180 } };
+	case1.m_schedule = { { Vec2{ 0.0, 2.0 }, 180 }, { Vec2{ -1.0, 2.0 }, 0 }, { Vec2{ 1.0, 2.0 }, 0 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1062, 4982.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 	case1.m_schedule = { { Vec2{ 0.0, -2.0 }, 180 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1272, 5423.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 
+	MVAimShot case2(this, { { 1.0, 360.0, 20, 60} }, BalletAVR(&m_enemyBM, L"enemyBallet1", ShimiColors::Red, Vec2(0, 0), 0.0, 0.0), true);
+
+	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StraightEnemy(&m_EM, { Vec2{ 546, 5423.0 }, Vec2{ 1400, 5423.0 }, Vec2{ 1300, 5023.0 } }, 3.0, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new MVAimShot(case2)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
+	*/
+	/*
 	case1.m_schedule = { { Vec2{ -2.0, 0.0 }, 180 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1853, 5650.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1853, 5750.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
@@ -41,29 +50,17 @@ void shimi::GameBase::init()
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1062, 5700.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
 	case1.m_schedule = { { Vec2{ 0.0, 2.0 }, 180 } };
 	m_EM.registerEnemy(std::shared_ptr<Enemy>(new StopEnemy(&m_EM, { 1362, 5700.0 }, AnimeAsset::I()->Asset(L"redDia"), std::shared_ptr<EnemyShot>(new StraightShot(case1)), ShimiColors::Red, ItemRecord{ ShimiColors::Red, 1 })));
-
-	/*
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new AdvanceEnemy(&m_EM, { 1000.0, 2000.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Blue, ItemRecord{ ShimiColors::Blue, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new BasicEnemy(&m_EM, { 1300.0, 2200.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Blue, ItemRecord{ ShimiColors::Blue, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new AdvanceEnemy(&m_EM, { 1700.0, 2300.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Blue, ItemRecord{ ShimiColors::Blue, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new BasicEnemy(&m_EM, { 1650.0, 2450.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Blue, ItemRecord{ ShimiColors::Blue, 50 })));
-
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new BasicEnemy(&m_EM, { 850.0, 850.0 }, AnimeAsset::I()->Asset(L"mossEye"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new BasicEnemy(&m_EM, { 960.0, 820.0 }, AnimeAsset::I()->Asset(L"mossEye"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new BasicEnemy(&m_EM, { 1050.0, 690.0 }, AnimeAsset::I()->Asset(L"mossEye"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new AdvanceEnemy(&m_EM, { 1100.0, 1000.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new AdvanceEnemy(&m_EM, { 1100.0, 1100.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
-	m_EM.registerEnemy(std::shared_ptr<Enemy>(new AdvanceEnemy(&m_EM, { 650.0, 950.0 }, AnimeAsset::I()->Asset(L"blueFly"), ShimiColors::Green, ItemRecord{ ShimiColors::Red, 50 })));
 	*/
 
 	m_EM.popForce(m_mv.m_pos, ConfigParam::POP_DISTANCE_IN);
 	
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new Obstacle({ 62, 3176 }, L"Resource/Stage/stage_start.png", 12.0)));
+	/*
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new Obstacle({ 0, 0 }, L"Resource/Stage/stage_beehive.png", 12.0)));
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new Obstacle(Point{ 1757, 0 }*2, L"Resource/Stage/stage_planet.png", 12.0)));
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new Obstacle(Point{ 1311, 1454 }*2, L"Resource/Stage/stage_crystal.png", 12.0)));
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new Obstacle(Point{ 1002, 1551 }*2, L"Resource/Stage/stage_fish_and_vine.png", 12.0)));
-	
+	*/
 
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new BreakableObstacle(Rect(1076, 4175, 50, 200), ShimiColors::Red)));
 
@@ -76,7 +73,7 @@ void shimi::GameBase::init()
 	m_obstacles.push_back(Obstacle(Point{ 1002, 1551 }*2, L"Resource/Stage_temp/stage_fish_and_vine.png", 12.0));
 	*/
 
-	m_bosses.push_back(std::shared_ptr<Boss>(new Boss1(this, Vec2(1565, 3698))));
+	//m_bosses.push_back(std::shared_ptr<Boss>(new Boss1(this, Vec2(1565, 3698))));
 
 	BGMManager::I()->changeBGM(L"NormalStage");
 }
@@ -106,7 +103,7 @@ void shimi::GameBase::mainGameUpdate()
 
 	for (auto& e : m_EM.m_enemies)
 	{
-		e.update();
+		e->update();
 	}
 
 	collisionEnemyWithBallet();
@@ -129,7 +126,7 @@ void shimi::GameBase::mainGameUpdate()
 
 	m_EM.depop();
 
-	if (Input::KeyS.clicked)
+	if ((Input::KeyS | Gamepad(0).button(11)).clicked)
 	{
 		changeState(std::shared_ptr<state::GBState>(new state::Menu()));
 	}
@@ -159,7 +156,7 @@ void shimi::GameBase::mainGameDraw()const
 
 	for (const auto& e : m_EM.m_enemies)
 	{
-		e.draw();
+		e->draw();
 	}
 
 	for (const auto& b : m_myBM.m_ballets)
@@ -254,7 +251,7 @@ void shimi::GameBase::collisionPlayerWithEnemy()
 {
 	for (const auto& e : m_EM.m_enemies)
 	{
-		AwakeEnemyAttack(this, Circle(e.m_enemy->m_pos, 20), e.m_enemy->m_shimiColor, 1);
+		AwakeEnemyAttack(this, Circle(e->m_pos, 20), e->m_shimiColor, 1);
 	}
 
 	/*

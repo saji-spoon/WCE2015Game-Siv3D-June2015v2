@@ -20,7 +20,7 @@ namespace shimi
 			{
 				if (!e->m_isDead)
 				{
-					EffectManager::I()->effect.add<VanishingEnemy>(e.m_enemy->m_pos.asPoint(), 25.0, 0.5);
+					EffectManager::I()->effect.add<VanishingEnemy>(e->m_pos.asPoint(), 25.0, 0.5);
 					SoundAsset(L"EnemyVanish").playMulti();
 				}
 

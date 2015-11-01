@@ -1,5 +1,7 @@
 #include"MyVehicle.hpp"
 #include"GameBase.hpp"
+#include"Config.hpp"
+
 
 #define NO_WALLDEBUG 1
 
@@ -105,22 +107,22 @@ void MyVehicle::update()
 void MyVehicle::controll(bool shotable)
 {
 #ifdef _DEBUG
-	m_v.r = Input::KeyA.pressed ? 20.0 : (Input::KeyX.pressed ? 4.0 : 1.8);
+	m_v.r = Input::KeyA.pressed ? 20.0 : (ConfigParam::KEY_B_PRESSED() ? 4.0 : 1.8);
 #else
-	m_v.r = Input::KeyX.pressed ? 4.0 : 1.8;
+	m_v.r = ConfigParam::KEY_B_PRESSED() ? 4.0 : 1.8;
 #endif
 
-	if (Input::KeyZ.pressed && shotable)
+	if (ConfigParam::KEY_A_PRESSED() && shotable)
 	{
 		shot();
 	}
 
-	if (Input::KeyRight.pressed)
+	if (ConfigParam::KEY_RIGHT_PRESSED())
 	{
 		m_v.theta += 0.08;
 	}
 
-	if (Input::KeyLeft.pressed)
+	if (ConfigParam::KEY_LEFT_PRESSED())
 	{
 		m_v.theta -= 0.08;
 	}
@@ -179,7 +181,7 @@ MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(1), m_bl
 void MyVehicle::ShotManager::update()
 {
 	//上キーが押されたら上の装備、下キーが押されたら下の装備にフォーカスする
-	const int add = Input::KeyUp.clicked ? -1 : (Input::KeyDown.clicked ? 1 : 0);
+	const int add = ConfigParam::KEY_DOWN_CLICKED() ? 1 : (ConfigParam::KEY_UP_CLICKED() ? -1 : 0);
 
 	for (;;)
 	{

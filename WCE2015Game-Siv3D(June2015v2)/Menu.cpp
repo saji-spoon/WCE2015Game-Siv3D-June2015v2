@@ -1,6 +1,7 @@
 #include"Menu.hpp"
 #include"GameBase.hpp"
 #include"Camera.hpp"
+#include"Config.hpp"
 
 using namespace shimi;
 
@@ -8,6 +9,8 @@ Menu::Menu(GameBase* gb, const MyVehicle& mvData) :m_gb(gb), m_mvData(mvData)
 {
 	m_mvData.m_pos = D2Camera::I()->getGlobalPos(Vec2(520, 307));
 	m_mvData.m_v = Vec2(0, -1);
+
+	m_mvData.changeState(std::shared_ptr<shimi::state::myvehicle::MVState>( new shimi::state::myvehicle::Normal()));
 	
 	for (auto& tempShot : m_mvData.m_shotManager.m_equipShot)
 	{
@@ -28,16 +31,16 @@ Menu::Menu(GameBase* gb, const MyVehicle& mvData) :m_gb(gb), m_mvData(mvData)
 void Menu::update()
 {
 	//Sキーを押したら抜ける
-	if (Input::KeyS.clicked)
+	if ((Input::KeyS | Gamepad(0).button(11)).clicked)
 	{
 		m_gb->changeState(std::shared_ptr<state::GBState>(new state::MainGame()));
 	}
 
 	//欄の選択は上下キー
-	const int selectAdd = Input::KeyUp.clicked ? -1 : (Input::KeyDown.clicked ? 1 : 0);
+	const int selectAdd = ConfigParam::KEY_UP_CLICKED() ? -1 : (ConfigParam::KEY_DOWN_CLICKED() ? 1 : 0);
 
 	//色の選択は左右キー
-	const int colorAdd = Input::KeyRight.clicked ? 1 : (Input::KeyLeft.clicked ? -1 : 0);
+	const int colorAdd = ConfigParam::KEY_RIGHT_CLICKED() ? 1 : (ConfigParam::KEY_LEFT_CLICKED() ? -1 : 0);
 
 	if (selectAdd != 0 || colorAdd != 0) SoundAsset(L"Select").playMulti();
 

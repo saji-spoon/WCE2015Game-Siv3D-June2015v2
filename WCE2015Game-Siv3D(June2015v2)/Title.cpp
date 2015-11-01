@@ -1,4 +1,5 @@
 #include"Title.hpp"
+#include"Config.hpp"
 
 using namespace shimi;
 
@@ -12,8 +13,7 @@ void Title::update()
 	//決定したら操作などは受け付けない
 	if (m_titleSelect != TitleSelect::Executing) return;
 
-	//Sキーを押したら抜ける
-	if (Input::KeyZ.clicked)
+	if (ConfigParam::KEY_A_CLICKED())
 	{
 		switch (m_select)
 		{
@@ -31,7 +31,7 @@ void Title::update()
 	}
 
 	//欄の選択は上下キー
-	const int selectAdd = Input::KeyUp.clicked ? 1 : (Input::KeyDown.clicked ? -1 : 0);
+	const int selectAdd = ConfigParam::KEY_UP_CLICKED() ? -1 : (ConfigParam::KEY_DOWN_CLICKED() ? 1 : 0);
 
 	if (selectAdd != 0) SoundAsset(L"Select").playMulti();
 

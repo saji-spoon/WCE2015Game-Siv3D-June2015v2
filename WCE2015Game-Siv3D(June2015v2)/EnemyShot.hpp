@@ -12,6 +12,17 @@ struct Schedule1
 	int delay;
 };
 
+struct Schedule2
+{
+	double speed;
+
+	double SectorDegree;
+
+	int num;
+
+	int delay;
+};
+
 class EnemyShot
 {
 public:
@@ -65,4 +76,27 @@ public:
 	void shot(const Vec2& pos, const Vec2& dir);
 };
 
+class MVAimShot : public EnemyShot
+{
+
+public:
+	std::vector<Schedule2> m_schedule;
+
+	//このBalletの情報を本に弾を生成
+	BalletAVR m_copiedBallet;
+
+	//スケジュールの最後まで行った時ループするか
+	bool m_loop;
+
+	MVAimShot(GameBase* gb, const std::vector<Schedule2>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb), m_schedule(schedule), m_copiedBallet(copiedBallet), m_loop(loop)
+	{
+	}
+
+	void update(const Vec2& pos, const Vec2& v)override;
+
+	//theta度の扇形に自機狙い弾をnum個発射
+	//thetaは度数法で！
+	void shot(const Vec2& pos, double dosuu, double speed, int num);
+
+};
 }

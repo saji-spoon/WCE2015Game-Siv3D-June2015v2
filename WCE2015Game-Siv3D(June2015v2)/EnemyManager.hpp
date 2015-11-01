@@ -18,6 +18,10 @@ namespace shimi
 		std::vector<std::shared_ptr<Enemy>> m_enemies;
 
 		struct EnemyData{
+			EnemyData(const std::shared_ptr<Enemy>& data) :m_data(data)
+			{
+			}
+
 			std::shared_ptr<Enemy> m_data;
 			bool m_isPop = false;
 		};

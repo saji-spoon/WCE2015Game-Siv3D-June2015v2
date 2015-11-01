@@ -530,7 +530,7 @@
     <ClInclude Include="DropManager.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CoEnemy.hpp">
+    <ClInclude Include="GamePadCheck.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

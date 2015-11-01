@@ -1,5 +1,6 @@
 #pragma once
 #include<Siv3D.hpp>
+#include"GamePadCheck.hpp"
 
 namespace shimi
 {
@@ -18,6 +19,19 @@ struct ConfigParam
 	const static int R_OF_MYVEHICLE;
 
 	const static Size SIZE_OF_WORLD;
+
+	const static bool KEY_UP_CLICKED();
+	const static bool KEY_RIGHT_CLICKED();
+	const static bool KEY_LEFT_CLICKED();
+	const static bool KEY_DOWN_CLICKED();
+	const static bool KEY_RIGHT_PRESSED();
+	const static bool KEY_LEFT_PRESSED();
+	const static bool KEY_A_CLICKED();
+	const static bool KEY_A_PRESSED();
+	const static bool KEY_B_CLICKED();
+	const static bool KEY_B_PRESSED();
+
 };
+
 
 }
