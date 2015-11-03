@@ -44,6 +44,8 @@ public:
 
 	int m_waitTimer;
 
+	int m_count = 0;
+
 	BlueShot1Generator(){}
 
 	BlueShot1Generator(GameBase* gb, int dl, const Vec2& p) :ShotGenerator(gb, dl), m_pos(p)

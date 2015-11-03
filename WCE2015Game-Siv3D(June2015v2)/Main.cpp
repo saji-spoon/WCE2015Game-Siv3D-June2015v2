@@ -60,6 +60,8 @@ struct GameScene : MyApp::Scene
 
 void Main()
 {
+
+
 	ResourceRegister();
 
 	MyApp manager;
@@ -69,7 +71,7 @@ void Main()
 
 #ifdef _DEBUG
 	manager.init(L"GameScene");
-#elif
+#else
 	manager.init(L"TitleScene");
 #endif
 	Window::Resize(1280, 800);

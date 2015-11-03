@@ -24,9 +24,12 @@ void BlueShot1Generator::generate(const Vec2& vehiclePos, const Vec2& vehicleV)
 				m_pos,
 				120,
 				3.0,
-				(60.0*i) / 360.0 * 2.0 * Pi
-				)));
+				(60.0*i) / 360.0 * 2.0 * Pi,
+				0.0,
+				0.0,
+				ScheduleTimer({ (m_count+1)*30 }))));
 		}
+		++m_count;
 		m_waitTimer = 0;
 	}
 

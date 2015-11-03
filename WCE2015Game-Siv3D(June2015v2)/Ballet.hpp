@@ -19,6 +19,8 @@ public:
 	Entity(const Vec2& p) :m_pos(p)
 	{}
 
+	virtual ~Entity(){}
+
 	virtual void draw()const = 0;
 
 	virtual void move() = 0;
@@ -55,6 +57,8 @@ public:
 
 	Ballet(BalletManager* bm, const String& bpl, const Vec2& p, const Optional<ShimiColors>& col) :Entity(p), m_manager(bm), m_balletPictureLabel(bpl), m_shimiColor(col)
 	{}
+
+	virtual ~Ballet(){}
 
 	void draw() const override
 	{
@@ -110,6 +114,8 @@ public:
 		m_dropSchedule(dropSchdl)
 	{}
 
+	virtual ~BalletAVR(){}
+
 	void draw() const override
 	{
 		//Circle(pos, 5).draw(Palette::Green);
@@ -154,11 +160,13 @@ class BalletLimit : public BalletAVR
 public:
 	int m_timer;
 
-	BalletLimit(BalletManager* bm, const String& btl, const Optional<ShimiColors>& col, const Vec2& p, int deadLine, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0)
+	BalletLimit(BalletManager* bm, const String& btl, const Optional<ShimiColors>& col, const Vec2& p, int deadLine, double v = 0.0, double d = 90.0 / 360.0 * Pi, double a = 0.0, double dv = 0.0, const Optional<ScheduleTimer>& dropSchdl = none)
 		:
-		BalletAVR(bm, btl, col, p, v, d, a, dv),
+		BalletAVR(bm, btl, col, p, v, d, a, dv, dropSchdl),
 		m_timer(deadLine)
 	{}
+
+	virtual ~BalletLimit(){}
 
 	void update()override
 	{
@@ -168,6 +176,13 @@ public:
 		}
 
 		move();
+
+		if (m_dropSchedule)
+		{
+			m_dropSchedule.value().update();
+
+			if (m_dropSchedule.value().isDropTime()) drop();
+		}
 
 		--m_timer;
 	

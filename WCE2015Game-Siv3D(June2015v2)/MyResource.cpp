@@ -18,6 +18,21 @@ void shimi::ResourceRegister()
 
 	TextureAsset::Register(L"re", L"ballet.png", {}, AssetFlag::Default);
 
+	SoundAsset::Register(L"NormalStage", ResourcePath + L"BGM/" + L"Wake_Myself.mp3");
+	SoundAsset(L"NormalStage").setLoop(true);
+	SoundAsset::Register(L"BossBattle", ResourcePath + L"BGM/" + L"Boss_Battle.mp3");
+	SoundAsset(L"BossBattle").setLoop(true);
+
+	/***SE‚Ì“o˜^***/
+	SoundAsset::Register(L"MyBallet", ResourcePath + L"SE/" + L"tissue.mp3");
+	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" + L"button03b.mp3");
+	SoundAsset::Register(L"Select", ResourcePath + L"SE/" + L"button40.mp3");
+	SoundAsset::Register(L"Start", ResourcePath + L"SE/" + L"decision4.mp3");
+
+	SoundAsset::Register(L"Boss1Voice1", ResourcePath + L"SE/" + L"mushi.wav");
+
+	FontAsset::Register(L"Debug", 12, Typeface::Default);
+
 	const FilePath EnemyRegister = ResourcePath + L"Enemy/";
 	TextureAsset::Register(L"blueDia", EnemyRegister + L"shimi_enemy_01.png");
 	TextureAsset::Register(L"greenMushi", EnemyRegister + L"shimi_enemy_02.png");
@@ -32,28 +47,12 @@ void shimi::ResourceRegister()
 	TextureAsset::Register(L"sunsetTentou", EnemyRegister + L"shimi_enemy_11.png");
 	TextureAsset::Register(L"shadowCircle", EnemyRegister + L"shimi_enemy_12.png");
 	TextureAsset::Register(L"darkAmeba", EnemyRegister + L"shimi_enemy_13.png");
+	TextureAsset::Register(L"bloodEye", EnemyRegister + L"shimi_enemy_14.png");
+	TextureAsset::Register(L"nightSun", EnemyRegister + L"shimi_enemy_15.png");
 	TextureAsset::Register(L"flightBee", EnemyRegister + L"shimi_enemy_90.png");
-	/*
-	ImageAsset::inst()->assetRegister(L"ballet1", L"ballet.png");
-	ImageAsset::inst()->assetRegister(L"ballet2", L"ballet.png");
-	ImageAsset::inst()->assetRegister(L"ballet3", L"ballet.png");
-	*/
 
-	SoundAsset::Register(L"NormalStage", ResourcePath + L"BGM/" + L"Wake_Myself.mp3");
-	SoundAsset(L"NormalStage").setLoop(true);
-	SoundAsset::Register(L"BossBattle", ResourcePath + L"BGM/" + L"Boss_Battle.mp3");
-	SoundAsset(L"BossBattle").setLoop(true);
-
-
-	/***SE‚Ì“o˜^***/
-	SoundAsset::Register(L"MyBallet", ResourcePath + L"SE/" + L"tissue.mp3");
-	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" + L"button03b.mp3");
-	SoundAsset::Register(L"Select", ResourcePath + L"SE/" + L"button40.mp3");
-	SoundAsset::Register(L"Start", ResourcePath + L"SE/" + L"decision4.mp3");
-
-	SoundAsset::Register(L"Boss1Voice1", ResourcePath + L"SE/" + L"mushi.wav");
-
-	FontAsset::Register(L"Debug", 12, Typeface::Default);
+	TextureAsset::Register(L"boss2Baby", EnemyRegister + L"baby_1.png");
+	
 
 	AnimeAsset::I()->Register(L"blueDia", MyAnime(L"blueDia", 6, 2));
 	AnimeAsset::I()->Register(L"greenMushi", MyAnime(L"greenMushi", 13, 7));
@@ -65,9 +64,13 @@ void shimi::ResourceRegister()
 	AnimeAsset::I()->Register(L"sunFlower", MyAnime(L"sunFlower", 8, 4));
 	AnimeAsset::I()->Register(L"heartFish", MyAnime(L"heartFish", 8, 6));
 	AnimeAsset::I()->Register(L"ikachan", MyAnime(L"ikachan", 6, 4));
-	AnimeAsset::I()->Register(L"sunsetTentou", MyAnime(L"sunsetTentou", 8, 7));
+	AnimeAsset::I()->Register(L"sunsetTentou", MyAnime(L"sunsetTentou", 8, 3));
 	AnimeAsset::I()->Register(L"shadowCircle", MyAnime(L"shadowCircle", 11, 2));
 	AnimeAsset::I()->Register(L"darkAmeba", MyAnime(L"darkAmeba", 8, 5));
 	AnimeAsset::I()->Register(L"flightBee", MyAnime(L"flightBee", 6, 4));
+	AnimeAsset::I()->Register(L"bloodEye", MyAnime(L"bloodEye", 8, 12));
+	AnimeAsset::I()->Register(L"nightSun", MyAnime(L"nightSun", 4, 20));
+
+	AnimeAsset::I()->Register(L"boss2Baby", MyAnime(L"boss2Baby", 2, 2));
 
 }

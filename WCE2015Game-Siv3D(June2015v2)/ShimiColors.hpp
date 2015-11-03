@@ -49,6 +49,8 @@ namespace shimi
 
 	String ToSString(const ShimiColors& col);
 
+	ShimiColors ToShimiColors(const String& str);
+
 	//ã‰º‡‚Å‚Ì‡ˆÊ‚ğæ“¾
 	int ToHierarchy(const ShimiColors& col);
 

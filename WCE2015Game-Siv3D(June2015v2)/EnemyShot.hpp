@@ -32,6 +32,7 @@ public:
 	EnemyShot(GameBase* gb) :m_gb(gb)
 	{
 	}
+	virtual ~EnemyShot(){}
 
 	//updateするとスケジュールに応じて弾が発射される
 	virtual void update(const Vec2& pos, const Vec2& v) = 0;
@@ -70,6 +71,7 @@ public:
 	StraightShot(GameBase* gb, const std::vector<Schedule1>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb), m_schedule(schedule), m_copiedBallet(copiedBallet), m_loop(loop)
 	{
 	}
+	virtual ~StraightShot(){}
 
 	void update(const Vec2& pos, const Vec2& v)override;
 
@@ -91,6 +93,8 @@ public:
 	MVAimShot(GameBase* gb, const std::vector<Schedule2>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb), m_schedule(schedule), m_copiedBallet(copiedBallet), m_loop(loop)
 	{
 	}
+
+	virtual ~MVAimShot(){}
 
 	void update(const Vec2& pos, const Vec2& v)override;
 

@@ -109,7 +109,23 @@ public:
 	template <typename T>
 	bool collisionSomethingWithObstacle(const T& shape)
 	{
-		return AnyOf(m_obstacles, [&shape](const std::shared_ptr<ObstacleBase>& op){return op->m_pols.intersects(shape); });
+		bool flg = false;
+
+		for (const auto& mulPol : m_obstacles)
+		{
+			for (const auto& polygon : mulPol->m_pols)
+			{
+				if (polygon.intersects(shape))
+				{
+					flg = true;
+					break;
+				}
+
+				if (flg) break;
+			}
+		}
+
+		return flg;// AnyOf(m_obstacles, [&shape](const std::shared_ptr<ObstacleBase>& op){return op->m_pols.intersects(shape); });
 	}
 
 	void collisionMyBalletWithBreakableObstacle();
@@ -118,6 +134,8 @@ public:
 	{
 		Erase_if(m_obstacles, [&tag](const std::shared_ptr<ObstacleBase>& o){ return o->m_tag && (o->m_tag.value() == tag); });
 	}
+
+	void readEnemyData(const FilePath& path);
 
 
 #ifdef _DEBUG

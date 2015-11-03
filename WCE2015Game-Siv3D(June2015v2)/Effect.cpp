@@ -23,14 +23,14 @@ bool VanishingEnemy::update(double t)
 
 	const double diffuse = 255.0 * Saturate((1.0 - rate));
 
-	Circle(drawPos, m_r*rate).drawFrame(7.0, 0.0, ToColor(ShimiColors::Red).setAlpha(TOUINT(0.8*diffuse)));
-	Circle(drawPos, m_r*rate).drawFrame(0.0, 7.0, ToColor(ShimiColors::Red).setAlpha(TOUINT(0.4*diffuse)));
+	Circle(drawPos, m_r*rate).drawFrame(7.0, 0.0, ToColor(m_col).setAlpha(TOUINT(0.8*diffuse)));
+	Circle(drawPos, m_r*rate).drawFrame(0.0, 7.0, ToColor(m_col).setAlpha(TOUINT(0.4*diffuse)));
 
 	return t < m_limitTime;
 }
 
-ItemGet::ItemGet(GameBase* gb, const Vec2& pos)
-	:m_gb(gb)
+ItemGet::ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col)
+	:m_gb(gb), m_col(col)
 {
 	for (int i = 0; i < 6; ++i)
 	{
@@ -42,7 +42,7 @@ bool ItemGet::update(double t)
 {
 	for (const auto& p : m_particles)
 	{
-		Circle(D2Camera::I()->getDrawPos(p.m_pos), 10).draw(ToColor(ShimiColors::Red).setAlpha(128));
+		Triangle(D2Camera::I()->getDrawPos(p.m_pos), 15).draw(ToColor(m_col).setAlpha(128));
 	}
 
 	const Vec2 mvPos = m_gb->getMyVehiclePos();

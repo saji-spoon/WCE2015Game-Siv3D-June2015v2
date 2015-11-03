@@ -2,9 +2,6 @@
 #include"GameBase.hpp"
 #include"Config.hpp"
 
-
-#define NO_WALLDEBUG 1
-
 using namespace shimi;
 
 MyVehicle::MyVehicle(GameBase* base) :m_gb(base), m_pos(588, 5864), interval(0), m_shotManager(base), m_state(new state::myvehicle::Normal()), m_isDamaged(false)
@@ -80,12 +77,6 @@ void MyVehicle::draw()const
 	}
 
 #ifdef _DEBUG
-
-	
-#ifndef NO_WALLDEBUG
-	wallDebugDraw();
-#endif
-
 #endif
 }
 

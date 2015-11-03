@@ -38,7 +38,9 @@ public:
 
 	double m_limitTime;
 
-	VanishingEnemy(const Point& pos, double size, double limit) :m_pos(pos), m_r(size), m_limitTime(limit)
+	ShimiColors m_col;
+
+	VanishingEnemy(const Point& pos, double size, double limit, const ShimiColors& col) :m_pos(pos), m_r(size), m_limitTime(limit), m_col(col)
 	{
 
 	}
@@ -66,9 +68,11 @@ public:
 
 	double m_speed = 8.0;
 
+	ShimiColors m_col;
+
 	std::vector<Particle> m_particles;
 
-	ItemGet(GameBase* gb, const Vec2& pos);
+	ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col);
 
 	bool update(double t) override;
 

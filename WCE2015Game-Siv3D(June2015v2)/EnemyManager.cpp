@@ -4,6 +4,7 @@
 
 void shimi::EnemyManager::pop()
 {
+
 	const Vec2 myPos = m_gb->getMyVehiclePos();
 
 	for (auto& record : m_enemyDatabase)
@@ -37,15 +38,17 @@ void shimi::EnemyManager::popForce(const Vec2& center, double r)
 
 }
 
-int shimi::EnemyManager::registerEnemy(std::shared_ptr<Enemy>& enemyPtr)
+int shimi::EnemyManager::registerEnemy(std::shared_ptr<Enemy>& enemyPtr, const Optional<ItemRecord>& item)
 {
 	const int id = static_cast<int>(m_enemyDatabase.size());
 
 	enemyPtr->m_id = id;
 
-	m_enemyDatabase.emplace_back(enemyPtr);
+	if (item) enemyPtr->m_itemID = m_gb->m_idb.Register(item.value());
 
-	return id;
+	m_enemyDatabase.push_back(enemyPtr);
+
+	return 0;
 }
 
 void shimi::EnemyManager::depop()

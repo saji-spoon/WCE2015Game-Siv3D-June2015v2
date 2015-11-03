@@ -3,10 +3,10 @@
 #include"PartAnimation.hpp"
 #pragma warning (disable : 4018)
 
+const static String texPath1 = L"Resource/Boss/Boss1/";
 namespace shimi
 {
 
-const static String texPath = L"Resource/Boss/Boss1/";
 
 enum class Boss1AnimeMode
 {
@@ -18,12 +18,12 @@ enum class Boss1AnimeMode
 class Boss1Anime
 {
 public:
-	PTexture m_body = PTexture{ Texture(texPath + L"dou.png"), {0, 0}, {61, 181}, false };
+	PTexture m_body = PTexture{ Texture(texPath1 + L"dou.png"), {0, 0}, {61, 181}, false };
 	PTexture m_headUpper;
 	PTexture m_headDowner;
-	PTexture m_leftBackHand;// = PTexture{ Texture(texPath + L"ushiroashi.png"), {}, { 0, 0 }, false };
-	PTexture m_leftMiddleHand;// = PTexture{ Texture(texPath + L"nakaashi.png"), {}, { 0, 0 }, false };
-	PTexture m_leftFrontHand;// = PTexture{ Texture(texPath + L"maeashi.png"), {}, { -72, 155 }, false };
+	PTexture m_leftBackHand;// = PTexture{ Texture(texPath1 + L"ushiroashi.png"), {}, { 0, 0 }, false };
+	PTexture m_leftMiddleHand;// = PTexture{ Texture(texPath1 + L"nakaashi.png"), {}, { 0, 0 }, false };
+	PTexture m_leftFrontHand;// = PTexture{ Texture(texPath1 + L"maeashi.png"), {}, { -72, 155 }, false };
 	PTexture m_rightBackHand;// = m_leftBackHand.getMirrored();
 	PTexture m_rightMiddleHand;// = m_leftMiddleHand.getMirrored();
 	PTexture m_rightFrontHand;// = m_leftFrontHand.getMirrored();
@@ -50,12 +50,12 @@ public:
 		m_biteData.m_values.push_back({ 20, 0 });
 		m_biteData.m_values.push_back({ 20, 10 });
 
-		m_headUpper = PTexture{ Texture(texPath + L"uwaago.png"), { 0, 0 }, { 65, 31 }, false };
-		m_headDowner = PTexture{ Texture(texPath + L"ago.png"), { 0, 0 }, { 63, 0 }, false };
+		m_headUpper = PTexture{ Texture(texPath1 + L"uwaago.png"), { 0, 0 }, { 65, 31 }, false };
+		m_headDowner = PTexture{ Texture(texPath1 + L"ago.png"), { 0, 0 }, { 63, 0 }, false };
 
-		m_leftBackHand = PTexture{ Texture(texPath + L"ushiroashi.png"), { 0, 0 }, Vec2{ 139, 222 }*0.65, false };
-		m_leftMiddleHand = PTexture{ Texture(texPath + L"nakaashi.png"), { 0, 0 }, Vec2{ 253, 145 }*0.65, false };
-		m_leftFrontHand = PTexture{ Texture(texPath + L"maeashi.png"), { 0, 0 }, Vec2{ 148, 33 }*0.65, false };
+		m_leftBackHand = PTexture{ Texture(texPath1 + L"ushiroashi.png"), { 0, 0 }, Vec2{ 139, 222 }*0.65, false };
+		m_leftMiddleHand = PTexture{ Texture(texPath1 + L"nakaashi.png"), { 0, 0 }, Vec2{ 253, 145 }*0.65, false };
+		m_leftFrontHand = PTexture{ Texture(texPath1 + L"maeashi.png"), { 0, 0 }, Vec2{ 148, 33 }*0.65, false };
 
 		m_headUpper = Attach(m_body, m_headUpper, Vec2(61, 230));
 		m_headDowner = Attach(m_body, m_headDowner, Vec2(61, 263));

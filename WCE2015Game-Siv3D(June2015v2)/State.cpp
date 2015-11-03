@@ -4,6 +4,7 @@
 #include"EffectManager.hpp"
 #include"Effect.hpp"
 #include"BGMManager.hpp"
+#include"Boss2.hpp"
 
 using namespace shimi;
 
@@ -60,7 +61,11 @@ void state::myvehicle::Damaged::execute(MyVehicle& mv)
 {
 	mv.GameUpdate(false, true);
 
-	if (m_damagedTimer <= 0) mv.changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Normal()));
+	if (m_damagedTimer <= 0)
+	{
+		mv.changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Normal()));
+		return;
+	}
 
 	--m_damagedTimer;
 }
@@ -82,7 +87,7 @@ void state::boss1::Normal::execute(Boss1& gb)
 	{
 		++m_timer;
 	}
-	else if (!gb.getBossArea().intersects(gb.m_gb->getMyVehiclePos()))
+	else if (!gb.isInBossBattle())
 	{
 		gb.changeState(std::shared_ptr<Boss1Base>(new Stay()));
 		return;
@@ -112,12 +117,12 @@ void state::boss1::Run::execute(Boss1& gb)
 	//•Ç‚É‚Ô‚Â‚©‚Á‚Ä‚¢‚ê‚Îfalse
 	bool isCompleted = gb.run();
 
+	gb.m_anime.update();
+
 	if (!isCompleted)
 	{
 		gb.changeState(std::shared_ptr<state::boss1::Boss1Base>(new state::boss1::Normal()));
 	}
-
-	gb.m_anime.update();
 }
 
 void state::boss1::Run::exit(Boss1& gb)
@@ -130,7 +135,7 @@ void state::boss1::Stay::enter(Boss1& gb)
 
 	BGMManager::I()->changeBGM(L"NormalStage");
 
-	gb.m_v = Vec2(0, 1);
+	gb.m_v = Vec2(0, -1);
 }
 
 void state::boss1::Stay::execute(Boss1& gb)
@@ -144,6 +149,7 @@ void state::boss1::Stay::execute(Boss1& gb)
 		if (gb.getBossArea().intersects(gb.m_gb->getMyVehiclePos()))
 		{
 			gb.changeState(std::shared_ptr<state::boss1::Boss1Base>(new Run()));
+			return;
 		}
 	}
 
@@ -204,3 +210,144 @@ void state::boss1::Vanish::execute(Boss1& gb)
 }
 
 void state::boss1::Vanish::exit(Boss1& gb){}
+
+void state::boss2::Normal::enter(Boss2& gb)
+{
+}
+
+void state::boss2::Normal::execute(Boss2& gb)
+{
+	gb.m_anime.update();
+
+	if (m_timer > 120)
+	{
+		gb.changeState(std::shared_ptr<state::boss2::Boss2Base>( new state::boss2::Barrier()));
+		return;
+	}
+
+	++m_timer;
+}
+
+void state::boss2::Normal::exit(Boss2& gb){}
+
+void state::boss2::Barrier::enter(Boss2& gb)
+{
+	gb.putBaby();
+	gb.m_damagable = false;
+	gb.m_barrier = true;
+}
+
+void state::boss2::Barrier::execute(Boss2& gb)
+{
+	gb.m_anime.update();
+
+	for (auto& baby : gb.m_babys)
+	{
+		baby.update();
+	}
+
+	if (!(gb.isInBossBattle()))
+	{
+		gb.changeState(std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Stay()));
+		return;
+	}
+
+	if (AllOf(gb.m_babys, [](const Boss2Baby& baby){ return baby.m_isDead; }))
+	{
+		gb.changeState(std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Damagable()));
+		return;
+	}
+}
+
+void state::boss2::Barrier::exit(Boss2& gb)
+{
+	gb.m_barrier = false;
+}
+
+void state::boss2::Damagable::enter(Boss2& gb)
+{
+	gb.m_damagable = true;
+}
+
+void state::boss2::Damagable::execute(Boss2& gb)
+{
+	if (m_timer > 300)
+	{
+		gb.changeState(std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Barrier()));
+		return;
+	}
+
+	++m_timer;
+}
+
+void state::boss2::Damagable::exit(Boss2& gb)
+{
+	gb.m_damagable = false;
+}
+
+void state::boss2::Damaged::enter(Boss2& gb)
+{
+	gb.m_anime.m_mode = Boss2AnimeMode::Damaged;
+}
+
+void state::boss2::Damaged::execute(Boss2& gb)
+{
+	if (m_timer > 100)
+	{
+		gb.changeState(std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Barrier()));
+		return;
+	}
+
+	++m_timer;
+}
+
+void state::boss2::Damaged::exit(Boss2& gb)
+{
+	gb.m_anime.m_mode = Boss2AnimeMode::Normal;
+}
+
+void state::boss2::Vanish::enter(Boss2& gb)
+{
+	gb.m_damagable = false;
+
+	EffectManager::I()->effect.add<BossVanish>(gb.m_pos, 250);
+
+	gb.m_anime.m_mode = Boss2AnimeMode::Vanished;
+
+	BGMManager::I()->changeBGM(L"NormalStage");
+}
+
+void state::boss2::Vanish::execute(Boss2& gb)
+{
+}
+
+void state::boss2::Vanish::exit(Boss2& gb){}
+
+void state::boss2::Stay::enter(Boss2& gb)
+{
+	gb.killBaby();
+
+	BGMManager::I()->changeBGM(L"NormalStage");
+}
+
+void state::boss2::Stay::execute(Boss2& gb)
+{
+	if (m_timer >= 60)
+	{
+		if (gb.m_bossArea.m_pols.intersects(Circle(gb.m_gb->getMyVehiclePos(), 10)))
+		{
+			gb.changeState(std::shared_ptr<state::boss2::Boss2Base>(new Normal()));
+			return;
+		}
+	}
+
+	if (m_timer <= 500)
+	{
+		++m_timer;
+	}
+}
+
+void state::boss2::Stay::exit(Boss2& gb)
+{
+	BGMManager::I()->changeBGM(L"BossBattle");
+}

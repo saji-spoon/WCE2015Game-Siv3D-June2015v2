@@ -13,6 +13,8 @@ struct ItemRecord
 
 	ShimiColors m_color;
 
+	ItemRecord(){}
+
 	ItemRecord(ShimiColors col, int value) :m_value(value), m_color(col)
 	{
 	}

@@ -23,6 +23,8 @@ public:
 
 	Boss(GameBase* gb, const Vec2& pos);
 
+	virtual ~Boss(){}
+
 	//PlayerAttackÇ∆ÇÃcollisionÇ≈åƒÇŒÇÍÇÈ
 	virtual HitState damage(const Circle& collision, const Optional<ShimiColors>& col, int value) = 0;
 
@@ -64,7 +66,9 @@ public:
 		
 	}
 
-	void changeState(std::shared_ptr<state::boss1::Boss1Base> newState)
+	virtual ~Boss1(){}
+
+	void changeState(const std::shared_ptr<state::boss1::Boss1Base>& newState)
 	{
 		m_state->exit(*this);
 		m_state = newState;
@@ -87,7 +91,7 @@ public:
 
 	inline Rect getBossArea()const
 	{
-		return Rect(Vec2(1082, 3395).asPoint(), (Vec2(1915, 4317) - Vec2(1082, 3395)).asPoint());
+		return Rect(Vec2(1082, 3395).asPoint(), (Vec2(2300, 4317) - Vec2(1082, 3395)).asPoint());
 	}
 
 	//åªç›ÇÃë¨ìxÇ≈ëñÇÈÅ@Ç‘Ç¬Ç©Ç¡ÇΩÇÁfalse
@@ -142,7 +146,6 @@ public:
 	bool isInBossBattle()const;
 
 	bool isVanished()const;
-
 
 	void checkMyVehicleAway();
 	

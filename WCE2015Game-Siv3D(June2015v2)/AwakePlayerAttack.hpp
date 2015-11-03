@@ -20,7 +20,7 @@ namespace shimi
 			{
 				if (!e->m_isDead)
 				{
-					EffectManager::I()->effect.add<VanishingEnemy>(e->m_pos.asPoint(), 25.0, 0.5);
+					EffectManager::I()->effect.add<VanishingEnemy>(e->m_pos.asPoint(), 25.0, 0.5, e->m_shimiColor);
 					SoundAsset(L"EnemyVanish").playMulti();
 				}
 
@@ -29,7 +29,7 @@ namespace shimi
 
 				if (e->m_itemID && !gb->m_idb.isgot(e->m_itemID.value()))
 				{
-					EffectManager::I()->effect.add<ItemGet>(gb, e->m_pos);
+					EffectManager::I()->effect.add<ItemGet>(gb, e->m_pos, e->m_shimiColor);
 
 					const int index = e->m_itemID.value();
 
@@ -50,7 +50,23 @@ namespace shimi
 			return hit != HitState::Avoid;
 		});
 
-		return enemyHit || bossHit;
+		const bool obsHit = AnyOf(gb->m_obstacles, [&collision, &col](const std::shared_ptr<ObstacleBase>& obs)
+		{
+			const bool isColled = obs->m_pols.intersects(collision);
+
+			const bool isCrashed = obs->shotByColor(col) && isColled;
+
+			if (isCrashed && !obs->m_isDead)
+			{
+				obs->m_isDead = true;
+
+				//破壊アニメーション
+			}
+
+			return isColled;
+		});
+
+		return enemyHit || bossHit || obsHit;
 		
 	}
 

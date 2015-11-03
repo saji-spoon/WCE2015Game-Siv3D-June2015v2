@@ -28,11 +28,50 @@ Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.
 
 		writer.write(Format(m_pols));
 	}
+	/*
+	const auto& outer = m_pols.outer
+
+	for (auto& pols : m_pols)
+	{
+
+	}
+	*/
 
 
 #ifdef _DEBUG
 	//LOG_DEBUG(L"Obstacle Constracted:", Format(m_pols));
 #endif
+}
+
+void ObstacleBase::drawDebug()const
+{
+	const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
+
+	m_pols.draw(D2Camera::I()->getDrawPos(Vec2(0,0)), Color(40, 200, 200, 30));
+
+	//m_pols.boundingRect.movedBy(drawPos).draw(Alpha(128)*Palette::Red);
+
+	for (const auto& p : m_pols)
+	{
+		p.boundingRect.movedBy(drawPos).draw(Alpha(60)*Palette::Gray);
+	}
+
+	for (const auto& p : m_pols)
+	{
+		const auto& outer = p.outer();
+		/*	//‘S‚Ä‚Ì•Ç‚ÌLine‚É‚Â‚¢‚ÄAwallLines‚Ö
+		for (size_t i = 0; i < outer.size(); ++i)
+		{
+			const Line line(outer[i], outer[(i + 1) % outer.size()]);
+
+			line.movedBy(drawPos).drawArrow(2, Vec2(6.0, 10.0), Palette::Greenyellow);
+		}*/
+
+		for (const auto& o : outer)
+		{
+			Circle(drawPos + o, 5).draw(Color(255, 0, 0, 40));
+		}
+	}
 }
 
 BreakableObstacle::BreakableObstacle(const Rect& rect, const ShimiColors& col)

@@ -10,6 +10,8 @@ class GameBase;
 class MyVehicle;
 
 class Boss1;
+
+class Boss2;
 	
 namespace state
 {
@@ -23,6 +25,8 @@ public:
 	virtual void execute(T& gb) = 0;
 
 	virtual void exit(T& gb) = 0;
+
+	virtual ~StateBase(){}
 };
 
 class GBState
@@ -36,6 +40,8 @@ public:
 	virtual void execute(GameBase* gb) = 0;
 
 	virtual void exit(GameBase* gb) = 0;
+
+	virtual ~GBState(){}
 };
 
 class MainGame : public GBState
@@ -49,6 +55,8 @@ public:
 	void execute(GameBase* gb)override;
 
 	void exit(GameBase* gb)override{}
+
+	virtual ~MainGame(){}
 };
 
 class Menu : public GBState
@@ -61,7 +69,10 @@ public:
 	void execute(GameBase* gb)override;
 
 	void exit(GameBase* gb)override;
+
+	virtual ~Menu(){}
 };
+
 
 namespace myvehicle
 {
@@ -82,6 +93,8 @@ public:
 	virtual void exit(MyVehicle& mv) = 0;
 
 	virtual StateID getStateID()const  = 0;
+
+	virtual ~MVState(){}
 };
 
 class Normal : public MVState
@@ -97,6 +110,9 @@ public:
 	{
 		return StateID::Normal;
 	}
+
+	virtual ~Normal(){}
+
 };
 
 class Damaged : public MVState
@@ -116,6 +132,7 @@ public:
 		return StateID::Damaged;
 	}
 
+	virtual ~Damaged(){}
 
 };
 
@@ -127,6 +144,7 @@ using Boss1Base = StateBase<Boss1>;
 
 class Normal : public Boss1Base
 {
+public:
 	int m_timer = 0;
 
 	void enter(Boss1& gb)override;
@@ -134,19 +152,28 @@ class Normal : public Boss1Base
 	void execute(Boss1& gb)override;
 
 	void exit(Boss1& gb)override;
+
+	virtual ~Normal(){}
 };
 
 class Run : public Boss1Base
 {
+public:
+
 	void enter(Boss1& gb)override;
 
 	void execute(Boss1& gb)override;
 
 	void exit(Boss1& gb)override;
+
+	virtual ~Run(){}
+
 };
 
 class Stay : public Boss1Base
 {
+public:
+
 	int m_timer = 0;
 
 	void enter(Boss1& gb)override;
@@ -154,10 +181,15 @@ class Stay : public Boss1Base
 	void execute(Boss1& gb)override;
 
 	void exit(Boss1& gb)override;
+
+	virtual ~Stay(){}
+
 };
 
 class Damaged : public Boss1Base
 {
+public:
+
 	int m_timer = 0;
 
 	void enter(Boss1& gb)override;
@@ -165,10 +197,15 @@ class Damaged : public Boss1Base
 	void execute(Boss1& gb)override;
 
 	void exit(Boss1& gb)override;
+
+	virtual ~Damaged(){}
+
 };
 
 class Vanish : public Boss1Base
 {
+public:
+
 	int m_timer = 0;
 
 	void enter(Boss1& gb)override;
@@ -176,5 +213,104 @@ class Vanish : public Boss1Base
 	void execute(Boss1& gb)override;
 
 	void exit(Boss1& gb)override;
+
+	virtual ~Vanish(){}
+
 };
+}
+
+namespace boss2
+{
+using Boss2Base = StateBase<Boss2>;
+
+class Normal : public Boss2Base
+{
+	int m_timer = 0;
+
+public:
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Normal(){}
+};
+
+class Barrier : public Boss2Base
+{
+public:
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Barrier(){}
+};
+
+class Stay : public Boss2Base
+{
+public:
+
+	int m_timer = 0;
+
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Stay(){}
+
+};
+
+class Damagable : public Boss2Base
+{
+	int m_timer = 0;
+
+public:
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Damagable(){}
+};
+
+class Damaged : public Boss2Base
+{
+public:
+
+	int m_timer = 0;
+
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Damaged(){}
+
+};
+
+class Vanish : public Boss2Base
+{
+public:
+
+	int m_timer = 0;
+
+	void enter(Boss2& gb)override;
+
+	void execute(Boss2& gb)override;
+
+	void exit(Boss2& gb)override;
+
+	virtual ~Vanish(){}
+
+};
+
+
+
 }}}

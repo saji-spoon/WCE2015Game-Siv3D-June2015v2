@@ -298,7 +298,8 @@ void OrangeShot1::shot(const Vec2& pos, const Vec2& v)
 	-3.00,
 	Circular3(targetPos - burstPos1).theta,
 	1.2,
-	0.0)));
+	0.0,
+	ScheduleTimer({10, 20, 30}))));
 
 	m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
 		&(m_gb->m_myBM),
@@ -308,7 +309,8 @@ void OrangeShot1::shot(const Vec2& pos, const Vec2& v)
 		-3.00,
 		Circular3(targetPos - burstPos2).theta,
 		1.2,
-		0.0)));
+		0.0,
+		ScheduleTimer({ 10, 20, 30 }))));
 
 	SoundAsset(L"MyBallet").playMulti();
 
@@ -365,7 +367,10 @@ void PurpleShot1::shot(const Vec2& pos, const Vec2& v)
 		m_color.value(),
 		pos,
 		5.00,
-		Circular3(v).theta)));
+		Circular3(v).theta,
+		0.0,
+		0.0,
+		ScheduleTimer({ 20, 40, 60, 80, 100 }))));
 
 	SoundAsset(L"MyBallet").playMulti();
 

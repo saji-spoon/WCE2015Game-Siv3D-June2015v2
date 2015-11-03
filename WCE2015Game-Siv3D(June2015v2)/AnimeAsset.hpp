@@ -48,6 +48,8 @@ public:
 		}
 		else
 		{
+			LOG_ERROR(L"There's no anime:",tag);
+
 			return errorAnime;
 		}
 	}

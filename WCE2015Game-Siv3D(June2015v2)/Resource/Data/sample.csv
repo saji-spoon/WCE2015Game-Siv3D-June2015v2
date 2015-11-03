@@ -1,0 +1,6 @@
+Enemy,Stop,"(500,5500)",,shadowCircle,Purple,1,,
+Ballet,Str,"(1,2)+180_(2,1)+60",enemyBallet1,Red,true,,,
+Diff,"(800,5000)",1,Str,"(1,2)+180_(2,1)+60",,,,
+Enemy,Str,"(0,2)+(0,30)",3,redDia,Red,1,false,false
+Ballet,MV,3+60+3+180,enemyBallet1,Red,true,,,
+Diff,"(0,3000)+(0,3500)",1,MV,3+60+3+180,true,,,

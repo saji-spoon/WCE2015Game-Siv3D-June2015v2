@@ -3,10 +3,18 @@
 
 using namespace shimi;
 
-const double ConfigParam::POP_DISTANCE_IN = 760.0;
-const double ConfigParam::POP_DISTANCE_OUT = 850.0;
-const double ConfigParam::DEPOP_DISTANCE = 900.0;
+#ifdef _DEBUG
+const double ConfigParam::POP_DISTANCE_IN = 1500.0;
+const double ConfigParam::POP_DISTANCE_OUT = 1800.0;
+const double ConfigParam::DEPOP_DISTANCE = 2000.0;
 const int ConfigParam::DEPOP_COUNT = 60;
+#else
+const double ConfigParam::POP_DISTANCE_IN = 1500.0;
+const double ConfigParam::POP_DISTANCE_OUT = 1800.0;
+const double ConfigParam::DEPOP_DISTANCE = 2000.0;
+const int ConfigParam::DEPOP_COUNT = 1800;
+#endif
+
 const Vec2 ConfigParam::CAMERA_POSITION = Vec2(640, 400);
 
 const int ConfigParam::TIME_GREENCHARGE = 60;

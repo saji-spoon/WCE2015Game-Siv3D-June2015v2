@@ -69,7 +69,7 @@ public:
 	Texture m_tex = Texture(L"Resource/Hero//Equip/blue-1.png");
 	Texture m_frameTex = Texture(L"Resource/Hero//Equip/FrameLine/blueline_1.png");
 
-	BlueShot1(GameBase* gb) :Shot(gb, 30, ShimiColors::Blue)
+	BlueShot1(GameBase* gb) :Shot(gb, 120, ShimiColors::Blue)
 	{}
 
 	void draw(const Vec2& pos, const Vec2& v)const override;

@@ -5,7 +5,7 @@ using namespace shimi;
 
 void StraightShot::update(const Vec2& pos, const Vec2& v)
 {
-	//今回vは使わない（本体の向きにかかわらずスケジュールに設定されたdirの通りに発射する）
+	if (m_schedule.size() == 0) return;
 
 	if (m_phase >= m_schedule.size())
 	{
@@ -23,6 +23,7 @@ void StraightShot::update(const Vec2& pos, const Vec2& v)
 	++m_timer;
 }
 
+
 void StraightShot::shot(const Vec2& pos, const Vec2& dir)
 {
 	m_gb->m_enemyBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
@@ -39,6 +40,7 @@ void StraightShot::shot(const Vec2& pos, const Vec2& dir)
 void MVAimShot::update(const Vec2& pos, const Vec2& v)
 {
 	//今回vは使わない（本体の向きにかかわらずスケジュールに設定されたdirの通りに発射する）
+	if (m_schedule.size() == 0) return;
 
 	if (m_phase >= m_schedule.size())
 	{
@@ -59,11 +61,26 @@ void MVAimShot::shot(const Vec2& pos, double dosuu, double speed, int num)
 {
 	const Vec2 BaseDir = (m_gb->getMyVehiclePos() - pos).normalized();
 
-	const double theta = dosuu / 360.0 * 2 * Pi;
+	if (num != 1)
+	{
+		const double theta = dosuu / 360.0 * 2 * Pi;
 
-	const double thetaBetweenBallet = theta / static_cast<double>(num - 1);
+		const double thetaBetweenBallet = theta / static_cast<double>(num - 1);
 
-	for (int i = 0; i < num; ++i)
+		for (int i = 0; i < num; ++i)
+		{
+			m_gb->m_enemyBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
+				&(m_gb->m_enemyBM),
+				m_copiedBallet.m_balletPictureLabel,
+				m_copiedBallet.m_shimiColor,
+				pos,
+				speed,
+				Circular3(BaseDir).theta - theta / 2.0 + thetaBetweenBallet*i,
+				0.0,
+				0.0)));
+		}
+	} 
+	else
 	{
 		m_gb->m_enemyBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
 			&(m_gb->m_enemyBM),
@@ -71,9 +88,7 @@ void MVAimShot::shot(const Vec2& pos, double dosuu, double speed, int num)
 			m_copiedBallet.m_shimiColor,
 			pos,
 			speed,
-			Circular3(BaseDir).theta - theta / 2.0 + thetaBetweenBallet*i,
-			0.0,
-			0.0)));
+			Circular3(BaseDir).theta
+			)));
 	}
-
 }

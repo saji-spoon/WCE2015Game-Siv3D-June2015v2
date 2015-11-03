@@ -191,3 +191,5 @@ ModelManifest.xml
 #Siv3D Engine and Example is ignored
 Engine/
 Example/
+/WCE2015Game-Siv3D(June2015v2)/Screenshot
+/WCE2015Game-Siv3D(June2015v2)/Enemy(old).cpp

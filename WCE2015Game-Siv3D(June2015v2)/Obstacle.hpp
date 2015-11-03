@@ -31,22 +31,7 @@ public:
 
 	virtual void draw()const = 0;
 
-	virtual void drawDebug()const
-	{
-		const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
-
-		m_pols.drawFrame(drawPos, 2, Color(40, 200, 200, 30));
-
-		for (const auto& p : m_pols)
-		{
-			const auto& outer = p.outer();
-
-			for (const auto& o : outer)
-			{
-				Circle(drawPos + o, 5).draw(Color(255, 0, 0, 40));
-			}
-		}
-	}
+	virtual void drawDebug()const;
 
 	bool m_isDead = false;
 

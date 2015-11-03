@@ -30,7 +30,7 @@ namespace shimi
 
 		GameBase* m_gb;
 
-		int registerEnemy(std::shared_ptr<Enemy>& enemyPtr);
+		int registerEnemy(std::shared_ptr<Enemy>& enemyPtr, const Optional<ItemRecord>& item);
 		
 		void pop();
 
