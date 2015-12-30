@@ -1,5 +1,6 @@
 #include"Effect.hpp"
 #include"GameBase.hpp"
+#include"EffectManager.hpp"
 using namespace shimi;
 
 bool VanishingBallet::update(double t)
@@ -29,8 +30,66 @@ bool VanishingEnemy::update(double t)
 	return t < m_limitTime;
 }
 
-ItemGet::ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col)
-	:m_gb(gb), m_col(col)
+NotifyStr::NotifyStr(const String& str, const Color& col, int stopTime) :m_str(str), m_col(col), m_stopTime(stopTime)
+{
+}
+
+void NotifyStr::draw(const Vec2& pos)const
+{
+	const double vanishTimeRate = Saturate(static_cast<double>(m_timer - m_stopTime) / 30.0);
+
+	FontAsset(L"Notify1").drawCenter(m_str, D2Camera::I()->getDrawPos(pos + m_flow), AlphaF(1.0 - vanishTimeRate)*m_col);
+}
+
+void NotifyStr::update()
+{
+	if (m_timer < m_stopTime)
+	{
+	}
+	else
+	{
+		m_flow -= Vec2(0, 1.5);
+	}
+
+	++m_timer;
+}
+
+
+NotifyStr2::NotifyStr2(const String& str1, const String& str2, const Color& col1, int stopTime, const Color& col2) 
+	:m_str1(str1),
+	m_str2(str2),
+	m_col1(col1),
+	m_col2(col2),
+	m_stopTime(stopTime),
+	m_font(20, L"02‚¤‚Â‚­‚µ–¾’©‘Ì", FontStyle::Outline)
+{
+	m_font.changeOutlineStyle(TextOutlineStyle(col2, col1, 1.0));
+}
+
+void NotifyStr2::draw(const Vec2& pos)const
+{
+	const double vanishTimeRate = Saturate(static_cast<double>(m_timer - m_stopTime) / 30.0);
+
+	m_font.drawCenter(m_str1, D2Camera::I()->getDrawPos(pos + m_flow), AlphaF(1.0 - vanishTimeRate));
+	m_font.drawCenter(m_str2, D2Camera::I()->getDrawPos(pos + Vec2(0, -30) + m_flow), AlphaF(1.0 - vanishTimeRate));
+}
+
+void NotifyStr2::update()
+{
+	if (m_timer < m_stopTime)
+	{
+	}
+	else
+	{
+		m_flow -= Vec2(0, 1.5);
+	}
+
+	++m_timer;
+}
+
+
+ItemGet::ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col, int val)
+	:m_gb(gb), m_col(col), m_val(val), m_str(L"+" + Format(val), ToColor(col), 15)
 {
 	for (int i = 0; i < 6; ++i)
 	{
@@ -57,6 +116,28 @@ bool ItemGet::update(double t)
 	}
 
 	Erase_if(m_particles, [](const Particle& p){ return p.m_isDead; });
+	
+	if (m_particles.size() == 0)
+	{
+		m_str.draw(m_gb->getMyVehiclePos()-Vec2(0, 55));
+
+		m_str.update();
+	}
+
+	return t < 10;
+}
+
+Notify::Notify(GameBase* gb, const NotifyStr2& notify)
+	:m_gb(gb),
+	m_str(notify)
+{
+}
+
+bool Notify::update(double t)
+{
+	m_str.draw(m_gb->getMyVehiclePos() - Vec2(0, 55));
+
+	m_str.update();
 
 	return t < 10;
 }
@@ -117,7 +198,7 @@ bool BossWarp::update(double t)
 
 	m_s.update();
 
-	return true;
+	return t < 10;
 }
 
 bool BossVanish::update(double t) 
@@ -154,5 +235,64 @@ bool BossVanish::update(double t)
 
 	m_s.update();
 
-	return true;
+	return t < 10;
+}
+
+bool Vanishing::update(double t)
+{
+	progress += speed;
+
+	double progressRate = Saturate(progress / (1.0*m_size));
+
+	for (int i = 0; i < 6; ++i)
+	{
+		//Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).drawFrame(0.0, 6.0, Color(180,180,180));
+		//Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).draw(Palette::White);
+		Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).movedBy(D2Camera::I()->getDrawPos(Vec2(0, 0))).draw(m_col);
+		Circle(EaseInOut(m_pos, m_pos + Circular0(m_size*0.6, Pi / 6.0 + 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), 20.0 * (1.0 - progressRate)).movedBy(D2Camera::I()->getDrawPos(Vec2(0, 0))).draw(m_col);
+	}
+
+	return t < 10 && progressRate < 1.0;
+}
+
+bool VanishingMV::update(double t)
+{
+	progress += speed;
+
+	double progressRate = Saturate(progress / (1.0*m_size));
+
+	for (int i = 0; i < 6; ++i)
+	{
+		Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).movedBy(D2Camera::I()->getDrawPos(Vec2(0,0))).drawFrame(0.0, 6.0, Color(180, 180, 180));
+		Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).movedBy(D2Camera::I()->getDrawPos(Vec2(0, 0))).draw(Palette::White);
+		//Circle(EaseInOut(m_pos, m_pos + Circular0(m_size, 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), (30.0 / 100.0*m_size) * (1.0 - progressRate)).draw(m_col);
+		//Circle(EaseInOut(m_pos, m_pos + Circular0(m_size*0.6, Pi / 6.0 + 1.0 * i * Pi / 3.0), Easing::Linear, progressRate), 20.0 * (1.0 - progressRate)).draw(m_col);
+	}
+
+	return t < 10 && progressRate < 1.0;
+}
+
+bool Charging::update(double t)
+{
+	const int firstLimit = 80;
+	const int secondLimit = 20;
+
+	if (m_timer < firstLimit)
+	{
+		const double progressRate = Saturate(1.0*m_timer / firstLimit);
+
+		Circle(m_pos, 150 * (1.0 - progressRate)).movedBy(D2Camera::I()->getDrawPos(Vec2(0, 0))).drawFrame(3.0, 0.0, Color(120, 120, 120));
+	}
+	else
+	{
+		const double progressRate = Saturate(1.0*(m_timer - firstLimit) / secondLimit);
+
+		Circle(m_pos, 80 * progressRate).movedBy(D2Camera::I()->getDrawPos(Vec2(0, 0))).drawFrame(10.0, .0, Color(200, 200, 200, TOUINT((1.0 - progressRate) * 255)));
+
+	}
+
+	++m_timer;
+
+	return t < 10;
+
 }

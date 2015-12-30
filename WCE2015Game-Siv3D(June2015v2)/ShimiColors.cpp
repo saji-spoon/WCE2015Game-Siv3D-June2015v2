@@ -13,6 +13,7 @@ String shimi::ToSString(const ShimiColors& col)
 
 ShimiColors shimi::ToShimiColors(const String& str)
 {
+	
 	const auto& it = std::find(ShimiColorsStr.begin(), ShimiColorsStr.end(), str);
 
 	if (it == ShimiColorsStr.end())
@@ -20,7 +21,7 @@ ShimiColors shimi::ToShimiColors(const String& str)
 		LOG_ERROR(L"No Such ShimiColorStr:", str);
 		return ShimiColors::Red;
 	}
-
+	
 	size_t index = std::distance(ShimiColorsStr.begin(), it);
 
 	return static_cast<ShimiColors>(index);

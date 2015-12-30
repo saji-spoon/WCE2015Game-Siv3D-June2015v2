@@ -7,8 +7,6 @@ namespace shimi
 
 	struct Drop
 	{
-
-
 		Drop(){}
 		Drop(const String& tag, const Vec2& pos, double theta, double scale = 1.0)
 			:m_tag(tag),
@@ -21,6 +19,16 @@ namespace shimi
 		Vec2 m_pos;
 		double m_theta;
 		double m_scale;
+	};
+
+	struct RectDrop
+	{
+		RectDrop(){}
+		RectDrop(const Quad& quad, const Color& col) :m_rect(quad), m_col(col)
+		{}
+
+		Quad m_rect;
+		Color m_col;
 	};
 
 	class DropManager
@@ -38,6 +46,8 @@ namespace shimi
 		DropManager& operator=(const DropManager& rhs) = delete;
 
 		std::vector<Drop> m_drops;
+
+		std::vector<RectDrop> m_rectDrops;
 
 		void draw()const;
 

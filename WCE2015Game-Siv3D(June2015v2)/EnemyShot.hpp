@@ -29,13 +29,15 @@ public:
 	GameBase* m_gb;
 
 	EnemyShot(){}
-	EnemyShot(GameBase* gb) :m_gb(gb)
+	EnemyShot(GameBase* gb, bool loop) :m_gb(gb), m_loop(loop)
 	{
 	}
 	virtual ~EnemyShot(){}
 
 	//updateするとスケジュールに応じて弾が発射される
 	virtual void update(const Vec2& pos, const Vec2& v) = 0;
+
+	virtual bool isFinished()const = 0;
 
 	virtual void reset()
 	{
@@ -55,6 +57,8 @@ public:
 	//phase…m_scheduleのどの要素まで進行しているか
 	int m_phase = 0;
 
+	bool m_loop;
+
 };
 
 class StraightShot : public EnemyShot
@@ -65,13 +69,16 @@ public:
 	//このBalletの情報を本に弾を生成
 	BalletAVR m_copiedBallet;
 
-	//スケジュールの最後まで行った時ループするか
-	bool m_loop;
 
-	StraightShot(GameBase* gb, const std::vector<Schedule1>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb), m_schedule(schedule), m_copiedBallet(copiedBallet), m_loop(loop)
+	StraightShot(GameBase* gb, const std::vector<Schedule1>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb, loop), m_schedule(schedule), m_copiedBallet(copiedBallet)
 	{
 	}
 	virtual ~StraightShot(){}
+
+	bool isFinished()const override
+	{
+		return !m_loop && (m_phase >= static_cast<int>(m_schedule.size()));
+	}
 
 	void update(const Vec2& pos, const Vec2& v)override;
 
@@ -87,10 +94,7 @@ public:
 	//このBalletの情報を本に弾を生成
 	BalletAVR m_copiedBallet;
 
-	//スケジュールの最後まで行った時ループするか
-	bool m_loop;
-
-	MVAimShot(GameBase* gb, const std::vector<Schedule2>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb), m_schedule(schedule), m_copiedBallet(copiedBallet), m_loop(loop)
+	MVAimShot(GameBase* gb, const std::vector<Schedule2>& schedule, BalletAVR copiedBallet, bool loop) :EnemyShot(gb, loop), m_schedule(schedule), m_copiedBallet(copiedBallet)
 	{
 	}
 
@@ -102,5 +106,9 @@ public:
 	//thetaは度数法で！
 	void shot(const Vec2& pos, double dosuu, double speed, int num);
 
+	bool isFinished()const override
+	{
+		return !m_loop && (m_phase >= static_cast<int>(m_schedule.size()));
+	}
 };
 }

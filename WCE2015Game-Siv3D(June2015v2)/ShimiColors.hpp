@@ -29,9 +29,9 @@ namespace shimi
 
 	static const std::array<Color, static_cast<size_t>(ShimiColors::ColorNum)+1> ShimiColorsColor =
 	{
-		Color(224, 0, 0),
+		Color(223, 52, 52),
 		Color(255, 166, 0),
-		Color(72, 212, 12),
+		Color(118, 224, 72),
 		Color(55, 122, 238),
 		Color(130, 77, 243),
 		Color(255, 255, 255),//><
@@ -61,4 +61,25 @@ namespace shimi
 	ShimiColors PreviousColor(const ShimiColors& col);
 
 	std::shared_ptr<Shot> ToShot(ShimiColors col, int level);
+
+	template <class Char> // 出力ストリーム
+	inline std::basic_ostream<Char>& operator <<(std::basic_ostream<Char>& os, const ShimiColors& col)
+	{
+		return os << Char('(') << static_cast<int>(col) << Char(')');
+	}
+
+	template <class Char> // 入力ストリーム
+	inline std::basic_istream<Char>& operator >>(std::basic_istream<Char>& is, ShimiColors& col)
+	{
+		Char unused;
+
+		int c;
+
+		is >> unused >> c >> unused;
+
+		col = static_cast<ShimiColors>(c);
+
+		return is;
+
+	}
 }

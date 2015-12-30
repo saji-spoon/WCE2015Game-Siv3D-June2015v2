@@ -9,9 +9,13 @@ Menu::Menu(GameBase* gb, const MyVehicle& mvData) :m_gb(gb), m_mvData(mvData)
 {
 	m_mvData.m_pos = D2Camera::I()->getGlobalPos(Vec2(520, 307));
 	m_mvData.m_v = Vec2(0, -1);
+	m_mvData.m_life = 3;
 
 	m_mvData.changeState(std::shared_ptr<shimi::state::myvehicle::MVState>( new shimi::state::myvehicle::Normal()));
 	
+	m_mvData.m_shotManager.resetEquipShot();
+
+	/*
 	for (auto& tempShot : m_mvData.m_shotManager.m_equipShot)
 	{
 		//白ショットではない装備がされているとき、メニューを開く際にインスタンス作り直し（緑のチャージなどが解除）
@@ -22,7 +26,7 @@ Menu::Menu(GameBase* gb, const MyVehicle& mvData) :m_gb(gb), m_mvData(mvData)
 			tempShot = m_mvData.m_shotManager.ShimiColorsToShot(targetColor, level);
 		}
 	}
-
+	*/
 	m_mvData.shotList.clear();
 	
 
@@ -34,6 +38,7 @@ void Menu::update()
 	if ((Input::KeyS | Gamepad(0).button(11)).clicked)
 	{
 		m_gb->changeState(std::shared_ptr<state::GBState>(new state::MainGame()));
+		return;
 	}
 
 	//欄の選択は上下キー
@@ -92,6 +97,29 @@ void Menu::draw()const
 	m_mvData.draw();
 	m_mvData.drawShotEquipAsPreview();
 
+	Rect(419, 495, 13, 49).draw(Palette::White);
+
+	int i = 0;
+
+	for (const auto& sh : m_mvData.m_shotManager.m_shotPropertys)
+	{
+		const double rate = Saturate(1.0 * sh.exp / 10.0);
+
+		Rect(439 + i * 34, 542, 11, -39 * rate).draw(ToColor(sh.color));
+
+		++i;
+	}
+
+	//高さは39
+	//Line(430, 503, 608, 503).draw(Palette::White);
+	Rect(430, 503, 178, 2).draw(Palette::White);
+
+	//Line(430, 542, 608, 542).draw(Palette::White);
+	Rect(430, 542, 178, 2).draw(Palette::White);
+
+	FontAsset(L"Notify2").draw(L"Exp",Vec2(350, 512), Palette::White);
+
+	FontAsset(L"Notify2").drawCenter(L"# of Slot - "+Format(m_mvData.m_shotManager.m_equipNum), Vec2(874, 160), Palette::White);
 
 	//選択UI描画
 	for (int i = 0; i < 3; ++i)

@@ -18,7 +18,12 @@ struct ConfigParam
 	const static int TIME_GREENBURST;
 	const static int R_OF_MYVEHICLE;
 
+	const static Size SIZE_OF_NORMALWORLD;
+	const static Size SIZE_OF_WORLDMARGIN;
+	const static Size SIZE_OF_BOSSWORLD;
 	const static Size SIZE_OF_WORLD;
+	//ƒ[ƒ‹ƒh‚ğˆÍ‚Ş•Ç‚Ìc‚Æ‰¡
+
 
 	const static bool KEY_UP_CLICKED();
 	const static bool KEY_RIGHT_CLICKED();

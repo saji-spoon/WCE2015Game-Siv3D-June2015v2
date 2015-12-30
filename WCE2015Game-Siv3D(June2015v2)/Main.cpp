@@ -6,12 +6,15 @@
 #include"Title.hpp"
 #include"GamePadCheck.hpp"
 #include"Config.hpp"
+#include"Ending.hpp"
+#include"Save.hpp"
 
 using namespace shimi;
 struct GameData
 {
 	Title ti;
 	GameBase gb;
+	Ending ed;
 };
 
 using MyApp = SceneManager<String, GameData>;
@@ -27,7 +30,8 @@ struct TitleScene : MyApp::Scene
 	{
 		m_data->ti.update();
 
-		if (m_data->ti.getSelect() == TitleSelect::NewGame)
+		if (m_data->ti.getSelect() == TitleSelect::NewGame ||
+			m_data->ti.getSelect() == TitleSelect::Continue)
 		{
 			changeScene(L"GameScene", 3000);
 		}
@@ -45,11 +49,23 @@ struct GameScene : MyApp::Scene
 	{
 		m_data->gb.init();
 		m_data->gb.update();
+
+		if (m_data->ti.getSelect() == TitleSelect::Continue)
+		{
+			Save::I()->load(m_data->gb);
+			m_data->gb.update();
+		}
+
 	}
 
 	void update() override
 	{
 		m_data->gb.update();
+
+		if (m_data->gb.m_isCleared)
+		{
+			changeScene(L"EndingScene", 3000);
+		}
 	}
 
 	void draw() const override
@@ -58,16 +74,36 @@ struct GameScene : MyApp::Scene
 	}
 };
 
+
+struct EndingScene : MyApp::Scene
+{
+	void init()override
+	{
+		m_data->ed = Ending(m_data->gb.m_obstacles);
+	}
+
+	void update() override
+	{
+		m_data->ed.update();
+	}
+
+	void draw() const override
+	{
+		m_data->ed.draw();
+	}
+};
+
+#undef _DEBUG
+
 void Main()
 {
-
-
 	ResourceRegister();
 
 	MyApp manager;
 
 	manager.add<TitleScene>(L"TitleScene");
 	manager.add<GameScene>(L"GameScene");
+	manager.add<EndingScene>(L"EndingScene");
 
 #ifdef _DEBUG
 	manager.init(L"GameScene");
@@ -82,7 +118,9 @@ void Main()
 
 	while (System::Update())
 	{
-		if (!manager.updateAndDraw())
+		manager.draw();
+
+		if (!manager.update())
 			break;
 
 		GamepadCheck::I()->update();

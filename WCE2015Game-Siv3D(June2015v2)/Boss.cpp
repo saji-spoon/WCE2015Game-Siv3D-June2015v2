@@ -1,8 +1,9 @@
 #include"Boss.hpp"
+#include"Boss2.hpp"
 #include"GameBase.hpp"
 #include"Camera.hpp"
 #include"AwakePlayerAttack.hpp"
-#include"Boss2.hpp"
+
 
 using namespace shimi;
 
@@ -12,6 +13,8 @@ Boss::Boss(GameBase* gb, const Vec2& pos)
 void Boss1::update()
 {
 	m_state->execute(*this);
+
+	if (m_isDead) return;
 
 	AwakeEnemyAttack(m_gb, getMyCollision(m_pos), ShimiColors::Red, 1);
 }
@@ -68,9 +71,13 @@ bool Boss1::isInBossBattle()const
 	return getBossArea().intersects(m_gb->getMyVehiclePos());
 }
 
-bool Boss1::isVanished()const
+void Boss1::killedSilent()
 {
-	return typeid(m_state) == typeid(state::boss1::Vanish);
+	m_damagable = false;
+
+	m_anime.m_mode = Boss1AnimeMode::Vanished;
+
+	m_isDead = true;
 }
 
 Boss2::Boss2(GameBase* gb, const Vec2& pos, std::shared_ptr<state::boss2::Boss2Base> state) :Boss(gb, pos), m_state(state)
@@ -83,6 +90,10 @@ Boss2::Boss2(GameBase* gb, const Vec2& pos, std::shared_ptr<state::boss2::Boss2B
 	putBaby();
 	killBaby();
 
+#ifdef _DEBUG
+	m_life = 0;
+	m_state = std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Damagable());
+#endif
 }
 
 void Boss2::draw()const
@@ -102,6 +113,8 @@ void Boss2::update()
 {
 	m_state->execute(*this);
 
+	if (m_isDead) return;
+
 	AwakeEnemyAttack(m_gb, getMyCollision(m_pos), ShimiColors::Orange, 1);
 }
 
@@ -116,11 +129,6 @@ void Boss2::debugDraw()const
 bool Boss2::isInBossBattle()const
 {
 	return m_bossArea.m_pols.intersects(Circle(m_gb->getMyVehiclePos(), 10));
-}
-
-bool Boss2::isVanished()const
-{
-	return typeid(m_state) == typeid(state::boss2::Vanish);
 }
 
 void Boss2::putBaby()
@@ -156,4 +164,13 @@ void Boss2::drawBarrier()const
 {
 	Circle(D2Camera::I()->getDrawPos( m_pos), 200).drawFrame(0, 5.0, ToColor(ShimiColors::Orange));
 	Circle(D2Camera::I()->getDrawPos(m_pos), 200).draw(Alpha(80) * ToColor(ShimiColors::Orange));
+}
+
+void Boss2::killedSilent()
+{
+	m_damagable = false;
+
+	m_isDead = true;
+
+	m_anime.m_mode = Boss2AnimeMode::Vanished;
 }

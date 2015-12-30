@@ -8,6 +8,7 @@
 #include"MyAnime.hpp"
 #include"EffectManager.hpp"
 #include"Effect.hpp"
+#include"AnimeAsset.hpp"
 
 namespace shimi
 {
@@ -102,9 +103,11 @@ public:
 	template<typename T>
 	HitState damageImpl(const T& collision, const Optional<ShimiColors>& col, int value)
 	{
+		if (m_isDead) return HitState::Avoid;
+
 		const bool babyShot = AnyOf(m_babys, [this, &collision](Boss2Baby& b)
 		{
-			const bool shotB = !b.m_isDead && Circle(b.m_pos, 10).intersects(collision);
+			const bool shotB = !b.m_isDead && Circle(b.m_pos, 20).intersects(collision);
 
 			if (shotB)
 			{
@@ -123,6 +126,8 @@ public:
 
 		if (getMyCollision(m_pos).intersects(collision))
 		{
+			bool dm = m_damagable;
+
 			if (m_damagable)
 			{
 				--m_life;
@@ -138,7 +143,7 @@ public:
 				
 			}
 
-			return m_damagable ? HitState::Damage : HitState::NoDamage;
+			return dm ? HitState::Damage : HitState::NoDamage;
 		}
 		return HitState::Avoid;
 	}
@@ -160,8 +165,6 @@ public:
 
 	bool isInBossBattle()const;
 
-	bool isVanished()const;
-
 	void putBaby();
 	
 	void killBaby()
@@ -177,6 +180,13 @@ public:
 	bool IsBabyAllDead()const
 	{
 		return AllOf(m_babys, [this](const Boss2Baby& b){ return b.m_isDead; });
+	}
+
+	void killedSilent() override;
+
+	void setVanish()override
+	{
+		m_state = std::shared_ptr<state::boss2::Boss2Base>(new state::boss2::Vanish());
 	}
 
 };

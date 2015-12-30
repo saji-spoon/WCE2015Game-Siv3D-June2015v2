@@ -4,25 +4,28 @@
 using namespace shimi;
 
 #ifdef _DEBUG
-const double ConfigParam::POP_DISTANCE_IN = 1500.0;
-const double ConfigParam::POP_DISTANCE_OUT = 1800.0;
-const double ConfigParam::DEPOP_DISTANCE = 2000.0;
+const double ConfigParam::POP_DISTANCE_IN = 800.0;
+const double ConfigParam::POP_DISTANCE_OUT = 1000.0;
+const double ConfigParam::DEPOP_DISTANCE = 1200.0;
 const int ConfigParam::DEPOP_COUNT = 60;
 #else
-const double ConfigParam::POP_DISTANCE_IN = 1500.0;
-const double ConfigParam::POP_DISTANCE_OUT = 1800.0;
-const double ConfigParam::DEPOP_DISTANCE = 2000.0;
+const double ConfigParam::POP_DISTANCE_IN = 800.0;
+const double ConfigParam::POP_DISTANCE_OUT = 1000.0;
+const double ConfigParam::DEPOP_DISTANCE = 1200.0;
 const int ConfigParam::DEPOP_COUNT = 1800;
 #endif
 
 const Vec2 ConfigParam::CAMERA_POSITION = Vec2(640, 400);
 
 const int ConfigParam::TIME_GREENCHARGE = 60;
-const int ConfigParam::TIME_GREENBURST = 5;
+const int ConfigParam::TIME_GREENBURST = 15;
 
 const int ConfigParam::R_OF_MYVEHICLE = 20;
 
-const Size ConfigParam::SIZE_OF_WORLD = Size(8500, 7300);
+const Size ConfigParam::SIZE_OF_NORMALWORLD = Size(8500, 7300);
+const Size ConfigParam::SIZE_OF_BOSSWORLD = Size(1500, 1000);
+const Size ConfigParam::SIZE_OF_WORLDMARGIN = Size(700, 400);
+const Size ConfigParam::SIZE_OF_WORLD = ConfigParam::SIZE_OF_NORMALWORLD + Size(0, ConfigParam::SIZE_OF_BOSSWORLD.y + ConfigParam::SIZE_OF_WORLDMARGIN.y*2);
 
 const bool ConfigParam::KEY_UP_CLICKED()
 {
@@ -36,7 +39,7 @@ const bool ConfigParam::KEY_RIGHT_CLICKED()
 
 const bool ConfigParam::KEY_LEFT_CLICKED()
 {
-	return Input::KeyLeft.clicked || GamepadCheck::I()->leftClicked();
+	return  Input::KeyLeft.clicked || GamepadCheck::I()->leftClicked();
 }
 
 const bool ConfigParam:: KEY_RIGHT_PRESSED()

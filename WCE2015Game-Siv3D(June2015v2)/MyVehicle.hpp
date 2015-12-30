@@ -11,6 +11,8 @@ namespace shimi
 
 class GameBase;
 
+struct MyVehicleSave;
+
 class MyVehicle
 {
 public:
@@ -29,9 +31,13 @@ public:
 
 	unsigned int interval;//インターバル
 
-	int life = 3;
+	int m_life = 3;
+
+	//Drawするかどうか
+	bool m_drawable = true;
 
 	bool m_isDamaged;//そのフレームでダメージを受けたかのフラグ
+
 
 	//Shot管理クラス
 	class ShotManager
@@ -53,9 +59,6 @@ public:
 		//ショットの成長値とレベル
 		std::array<ShotProperty, static_cast<size_t>(ShimiColors::ColorNum)> m_shotPropertys;
 
-		//ショットがなにもないときに撃つ
-		WhiteShot m_blankShot;
-
 		//装備可能数
 		int m_equipNum;
 
@@ -76,6 +79,8 @@ public:
 
 		std::shared_ptr<Shot> ShimiColorsToShot(const ShimiColors& col, int level);
 
+		std::shared_ptr<Shot> ShimiColorsToShot(const ShimiColors& col);
+
 		int getLevel(const ShimiColors& col);
 
 		//すでにcol色の装備をしているかどうか
@@ -84,12 +89,22 @@ public:
 		//装備中ショットを見た目上下順にソート
 		void sortEquipShotWithHierarchy();
 
+		//装備中のショットを構成はそのままにセットし直す（チャージなどが解除）
+		void resetEquipShot();
+
+		std::shared_ptr<Shot> getWhiteShotPtr()
+		{
+			return std::shared_ptr<Shot>(new WhiteShot(m_gb));
+		}
+
+
 	} m_shotManager;
 
 	std::shared_ptr<state::myvehicle::MVState> m_state;
 
 	//ダメージ時に薄く表示する
 	double m_damageEffect = 1.0;
+
 
 	MyVehicle(GameBase* base);
 
@@ -99,6 +114,8 @@ public:
 
 	void drawShotEquip()const
 	{
+		if (!m_drawable) return;
+
 		m_shotManager.draw(m_pos, m_v);
 	}
 
@@ -149,6 +166,133 @@ public:
 
 		m_shotManager.m_shotPropertys[index].exp += ir.m_value;
 	}
+
+	//ricoverPosをsavePointから取得し移動します　速さは↑方向になります
+	void recoverPos();
+
+	//ダメージや弾の各種状態をリセットします
+	void reset();
+
+	void warp();
+
+	void addSlot();
+
+	//セーブデータを書き出す
+	MyVehicleSave getSave()const;
+
+	//引数で渡されたセーブの情報を読みだす
+	bool load(const MyVehicleSave& mvs);
+
 };
+
+
+/*
+
+template <class Char> // 出力ストリーム
+inline std::basic_ostream<Char>& operator <<(std::basic_ostream<Char>& os, const MyVehicle& mv)
+{
+	return os << Char('(') << mv.m_pos << Char(',') << mv.m_shotManager << Char(')');
+}
+
+template <class Char> // 入力ストリーム
+inline std::basic_istream<Char>& operator >>(std::basic_istream<Char>& is, MyVehicle& mv)
+{
+	Char unused;
+	return is >> unused >> mv.m_pos >> unused >> mv.m_shotManager >> unused;
+}
+
+
+template <class Char> // 出力ストリーム
+inline std::basic_ostream<Char>& operator <<(std::basic_ostream<Char>& os, const MyVehicle::ShotManager& cl)
+{
+	os << '(' << cl.m_shotPropertys << ')';
+
+	os << '(' << cl.m_equipNum << ')';
+
+	os << '(';
+
+	for (const auto& sh : cl.m_equipShot)
+	{
+		if (sh)
+		{
+			if (sh.value()->m_color)
+			{
+				os << ToSString(sh.value()->m_color.value());
+			}
+			else
+			{
+				os << "White";
+			}
+		}
+		else
+		{
+			os << "None";
+		}
+
+		os << ' ';
+	}
+
+	os << ')';
+
+	return os;
+
+}
+
+
+template <class Char> // 入力ストリーム
+inline std::basic_istream<Char>& operator >>(std::basic_istream<Char>& is, MyVehicle::ShotManager& cl)
+{
+	Char unused;
+
+	is >> unused >> cl.m_shotPropertys >> unused;
+
+	is >> unused >> cl.m_equipNum >> unused;
+
+	is >> unused;
+
+	for (auto& sh : cl.m_equipShot)
+	{
+		String str;
+
+		is >> str;
+
+		if (str == L"None")
+		{
+			sh = none;
+		}
+		else if (str == L"White")
+		{
+			sh = std::shared_ptr<Shot>(new WhiteShot(cl.m_gb));
+		}
+		else
+		{
+			const ShimiColors col = ToShimiColors(str);
+
+			sh = cl.ShimiColorsToShot(col, cl.getLevel(col));
+		}
+	}
+
+	is >> unused;
+
+	return is;
+}
+*/
+
+template <class Char> // 出力ストリーム
+inline std::basic_ostream<Char>& operator <<(std::basic_ostream<Char>& os, const MyVehicle::ShotManager::ShotProperty& cl)
+{
+	return os << L'(' << cl.color << L',' << cl.level << L',' << cl.exp << L')';
+}
+
+
+template <class Char> // 入力ストリーム
+inline std::basic_istream<Char>& operator >>(std::basic_istream<Char>& is, MyVehicle::ShotManager::ShotProperty& cl)
+{
+	Char unused;
+
+	return is >> unused >> cl.color >> unused >> cl.level >> unused >> cl.exp >> unused;
+}
+
+
 
 }

@@ -27,7 +27,7 @@ public:
 
 		if (!m_bgmTag.isEmpty)
 		{
-			SoundAsset(m_bgmTag).pause(fade);
+			SoundAsset(m_bgmTag).stop(fade);
 			m_bgmTag = tag;
 			SoundAsset(m_bgmTag).play(fade);
 		}
@@ -37,6 +37,11 @@ public:
 			SoundAsset(m_bgmTag).play();
 		}
 
+	}
+
+	void stopBGM(double fade = 3000)
+	{
+		SoundAsset(m_bgmTag).stop(fade);
 	}
 
 private:

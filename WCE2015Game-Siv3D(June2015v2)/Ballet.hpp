@@ -150,7 +150,7 @@ public:
 	bool isDead()override
 	{
 
-		return !Rect(0, 0, 8000, 6500).intersects(m_pos) || m_isDead;
+		return  m_isDead || !(Rect(0, 0, ConfigParam::SIZE_OF_WORLD).intersects(m_pos));
 		//return !Window::ClientRect().movedBy(-D2Camera::I()->getDrawPos({ 0.0, 0.0 }).asPoint()).intersects(m_pos) || m_isDead;//デフォルトは画面から出た時
 	}
 };

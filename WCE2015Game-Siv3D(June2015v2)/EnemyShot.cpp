@@ -23,9 +23,10 @@ void StraightShot::update(const Vec2& pos, const Vec2& v)
 	++m_timer;
 }
 
-
 void StraightShot::shot(const Vec2& pos, const Vec2& dir)
 {
+	SoundAsset(L"EnemyBallet").playMulti();
+
 	m_gb->m_enemyBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
 		&(m_gb->m_enemyBM),
 		m_copiedBallet.m_balletPictureLabel,
@@ -60,6 +61,8 @@ void MVAimShot::update(const Vec2& pos, const Vec2& v)
 void MVAimShot::shot(const Vec2& pos, double dosuu, double speed, int num)
 {
 	const Vec2 BaseDir = (m_gb->getMyVehiclePos() - pos).normalized();
+
+	SoundAsset(L"EnemyBallet").playMulti();
 
 	if (num != 1)
 	{

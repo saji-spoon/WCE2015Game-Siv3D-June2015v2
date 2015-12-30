@@ -5,7 +5,8 @@ using namespace shimi;
 
 Title::Title()
 {
-
+	m_verFont = Font(24, L"02うつくし明朝体", FontStyle::Bold);
+	//m_verFont.changeOutlineStyle(TextOutlineStyle(Color(185,185,185), Palette::White, 2.0));
 }
 
 void Title::update()
@@ -23,7 +24,8 @@ void Title::update()
 			return;
 		case 1:
 			//今はセーブ機能なしのためContinue選択不可
-			//m_titleSelect = TitleSelect::Continue;
+			SoundAsset(L"Start").play();
+			m_titleSelect = TitleSelect::Continue;
 			return;
 		default:
 			break;
@@ -46,6 +48,7 @@ void Title::draw()const
 	m_TitleTex.draw();
 	m_NewGameTex.draw();
 	m_ContinueTex.draw();
+	m_verFont.draw(L"v.0.94", Vec2(1160, 737), Color(200, 200, 200));
 
 	//選択UI描画
 	switch (m_select)

@@ -1,4 +1,5 @@
-#include"Obstacle.hpp"
+﻿#include"Obstacle.hpp"
+#include"SaveLoadMultiPolygon.hpp"
 
 using namespace shimi;
 
@@ -16,27 +17,14 @@ Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.
 
 	if (FileSystem::Exists(polDataTXT))
 	{
-		TextReader reader(polDataTXT);
-
-		m_pols = Parse<MultiPolygon>(reader.readContents());
+		m_pols = LoadMultiPolygon(polDataTXT);
 	}
 	else
 	{
 		m_pols = MultiPolygon(Imaging::FindExternalContours(Image(imagePath), true).simplified(simp) + pos);
 
-		TextWriter writer(polDataTXT);
-
-		writer.write(Format(m_pols));
+		SaveMultiPolygon(polDataTXT, m_pols);
 	}
-	/*
-	const auto& outer = m_pols.outer
-
-	for (auto& pols : m_pols)
-	{
-
-	}
-	*/
-
 
 #ifdef _DEBUG
 	//LOG_DEBUG(L"Obstacle Constracted:", Format(m_pols));
@@ -45,21 +33,23 @@ Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.
 
 void ObstacleBase::drawDebug()const
 {
-	const Vec2 drawPos = D2Camera::I()->getDrawPos(m_pos);
+	const Vec2 drawPos = D2Camera::I()->getDrawPos(Vec2(0,0));
 
 	m_pols.draw(D2Camera::I()->getDrawPos(Vec2(0,0)), Color(40, 200, 200, 30));
 
-	//m_pols.boundingRect.movedBy(drawPos).draw(Alpha(128)*Palette::Red);
+	m_pols.boundingRect.movedBy(drawPos).draw(Alpha(128)*Palette::Red);
 
 	for (const auto& p : m_pols)
 	{
 		p.boundingRect.movedBy(drawPos).draw(Alpha(60)*Palette::Gray);
 	}
 
+
+
 	for (const auto& p : m_pols)
 	{
 		const auto& outer = p.outer();
-		/*	//�S�Ă̕ǂ�Line�ɂ��āAwallLines��
+		/*	//全ての壁のLineについて、wallLinesへ
 		for (size_t i = 0; i < outer.size(); ++i)
 		{
 			const Line line(outer[i], outer[(i + 1) % outer.size()]);
@@ -77,14 +67,74 @@ void ObstacleBase::drawDebug()const
 BreakableObstacle::BreakableObstacle(const Rect& rect, const ShimiColors& col)
 	:ObstacleBase(rect.pos, MultiPolygon({rect.asPolygon()})),
 	m_rect(rect),
-	m_col(col)
+	m_col(col),
+	m_type(Type::Rect)
 {
+}
+
+BreakableObstacle::BreakableObstacle(const Point& pos, const FilePath& imagePath, const ShimiColors& col, double simp)
+	:
+	ObstacleBase(pos, MultiPolygon()),
+	m_tex(imagePath),
+	m_col(col),
+	m_type(Type::Texture)
+{
+	if (!FileSystem::Exists(imagePath))
+	{
+		LOG_ERROR(L"Obstacle:Failed to Open File:" + imagePath);
+		return;
+	}
+
+	const String dir = FileSystem::ParentPath(imagePath);
+	const String name = FileSystem::BaseName(imagePath);
+	const String polDataTXT = dir + name + L".pol";
+
+	if (FileSystem::Exists(polDataTXT))
+	{
+		TextReader reader(polDataTXT);
+
+		m_pols = Parse<MultiPolygon>(reader.readContents()) + m_pos;
+	}
+	else
+	{
+		const MultiPolygon tempPol = MultiPolygon(Imaging::FindExternalContours(Image(imagePath), true).simplified(simp));
+
+		TextWriter writer(polDataTXT);
+
+		writer.write(Format(tempPol));
+
+		m_pols = tempPol + m_pos;
+	}
+	/*
+	const auto& outer = m_pols.outer
+
+	for (auto& pols : m_pols)
+	{
+
+	}
+	*/
+
+
+#ifdef _DEBUG
+	//LOG_DEBUG(L"Obstacle Constracted:", Format(m_pols));
+#endif
 }
 
 void BreakableObstacle::draw()const
 {
-	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).draw(ToColor(m_col).setAlpha(128));
-	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, ToColor(m_col));
+	switch (m_type)
+	{
+	case shimi::BreakableObstacle::Type::Rect:
+		m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).draw(ToColor(m_col).setAlpha(128));
+		m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, ToColor(m_col));
+		break;
+	case shimi::BreakableObstacle::Type::Texture:
+		m_tex.draw(D2Camera::I()->getDrawPos(m_pos));
+		break;
+	default:
+		break;
+	}
+
 }
 
 bool BreakableObstacle::shotByColor(const Optional<ShimiColors>& col)
@@ -107,4 +157,24 @@ void TriggerBreakableObject::draw()const
 	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, Color(120, 120, 120));
 }
 
+void RectObstacle::draw()const
+{
+	const Point DrawPosBase = D2Camera::I()->getDrawPos(Vec2(0,0)).asPoint();
+
+	switch (m_type)
+	{
+	case shimi::RectObstacle::Type::White:
+		//m_rect.movedBy(DrawPosBase).draw(Palette::White);
+		m_rect.movedBy(DrawPosBase).drawFrame(12.0, 0.0, Color(176, 176, 176));
+		break;
+	case shimi::RectObstacle::Type::Black:
+		m_rect.movedBy(DrawPosBase).draw(Color(65, 65, 65));
+		m_rect.movedBy(DrawPosBase).drawFrame(12.0, 0.0, Color(43, 43, 43));
+		break;
+	default:
+		break;
+	}
+
+
+}
 

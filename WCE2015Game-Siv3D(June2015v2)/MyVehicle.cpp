@@ -1,10 +1,16 @@
 #include"MyVehicle.hpp"
 #include"GameBase.hpp"
 #include"Config.hpp"
+#include"MyVehicleSave.hpp"
 
 using namespace shimi;
 
-MyVehicle::MyVehicle(GameBase* base) :m_gb(base), m_pos(588, 5864), interval(0), m_shotManager(base), m_state(new state::myvehicle::Normal()), m_isDamaged(false)
+MyVehicle::MyVehicle(GameBase* base) :
+        m_gb(base), 
+        m_pos(588, 5864),
+        interval(0),
+        m_shotManager(base),
+        m_state(new state::myvehicle::Normal()), m_isDamaged(false)
 {
 }
 
@@ -63,13 +69,29 @@ void MyVehicle::collisionPlayerWithObject()
 
 void MyVehicle::draw()const
 {
+	if (!m_drawable) return;
+
 	const Vec2 myDrawPos = D2Camera::I()->getDrawPos(m_pos);
 
 	const double theta = Circular(m_v).theta;
 
-	TextureAsset(L"Hero").rotate(theta).drawAt(myDrawPos, Alpha(255*m_damageEffect));
+	if (m_life >= 3)
+	{
+		TextureAsset(L"Hero").rotate(theta).drawAt(myDrawPos, Alpha(TOUINT(255 * m_damageEffect)));
+	}
+	else if (m_life == 2)
+	{
+		TextureAsset(L"HeroX").rotate(theta).drawAt(myDrawPos, Alpha(TOUINT(255 * m_damageEffect)));
+	}
+	else if (m_life == 1)
+	{
+		TextureAsset(L"HeroXX").rotate(theta).drawAt(myDrawPos, Alpha(TOUINT(255 * m_damageEffect)));
+	}
+	else 
+	{
+		TextureAsset(L"HeroXXX").rotate(theta).drawAt(myDrawPos, Alpha(TOUINT( 255 * m_damageEffect)));
+	}
 
-	const Vec2  testObjectPos = D2Camera::I()->getDrawPos({ 320, 240 });
 
 	for (auto& s : shotList)
 	{
@@ -142,29 +164,107 @@ void MyVehicle::damageUpdate()
 	//ダメージ受けていなければ処理しない
 	if (!m_isDamaged) return;
 
-	changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Damaged()));
-
+	if (m_life <= 0)
+	{
+		changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Killed()));
+	}
+	else
+	{
+		changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::Damaged()));
+		--m_life;
+	}
 	//最後にフラグを戻す
 	m_isDamaged = false;
 }
 
-MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(1), m_blankShot(gb)
+void MyVehicle::recoverPos()
+{
+	m_pos = m_gb->m_savePoint.getRecoverPoint();
+	m_v = Circular(3.0, 0);
+}
+
+void MyVehicle::reset()
+{
+	m_shotManager.resetEquipShot();
+	m_life = 3;
+
+	shotList.clear();
+	m_isDamaged = false;
+
+}
+
+MyVehicleSave MyVehicle::getSave()const
+{
+	MyVehicleSave mvs;
+
+	mvs.m_mvPos = m_pos;
+	mvs.m_equipNum = m_shotManager.m_equipNum;
+	mvs.m_shotPropertys = m_shotManager.m_shotPropertys;
+	for (auto& sh : m_shotManager.m_equipShot)
+	{
+		if (!sh)
+		{
+			mvs.m_equipShot.push_back(none);
+		}
+		else
+		{
+			mvs.m_equipShot.push_back(MyVehicleSave::ShotBox{sh.value()->m_color});
+		}
+	}
+
+	return mvs;
+
+}
+
+//引数で渡されたセーブの情報を読みだす
+bool MyVehicle::load(const MyVehicleSave& mvs)
+{
+	m_pos = mvs.m_mvPos;
+	m_shotManager.m_equipNum = mvs.m_equipNum;
+	m_shotManager.m_shotPropertys = mvs.m_shotPropertys;
+
+	assert(mvs.m_equipShot.size()==3);
+
+	for (size_t i = 0; i < mvs.m_equipShot.size(); ++i)
+	{
+		if (const auto& shotExist = mvs.m_equipShot[i])
+		{
+			if (const auto& colorExist = shotExist.value().m_color)
+			{
+				m_shotManager.m_equipShot[i] = m_shotManager.ShimiColorsToShot(colorExist.value());
+			}
+			else
+			{
+				m_shotManager.m_equipShot[i] = m_shotManager.getWhiteShotPtr();
+			}
+
+		}
+		else
+		{
+			m_shotManager.m_equipShot[i] = none;
+		}
+	}
+
+	return true;
+}
+
+MyVehicle::ShotManager::ShotManager(GameBase* gb) :m_gb(gb), m_equipNum(1)
 {
 	for (size_t i = 0; i < m_shotPropertys.size(); ++i)
 	{
 		m_shotPropertys[i].color = static_cast<ShimiColors>(i);
 	}
 
-	m_equipShot[0] = std::shared_ptr<Shot>(new WhiteShot(gb));
+	m_equipShot[0] = getWhiteShotPtr();
 
 #ifdef _DEBUG
-	m_shotPropertys[static_cast<int>(ShimiColors::Blue)].exp = 50;
-	m_shotPropertys[static_cast<int>(ShimiColors::Red)].exp = 50;
-	m_shotPropertys[static_cast<int>(ShimiColors::Green)].exp = 50;
-	m_shotPropertys[static_cast<int>(ShimiColors::Orange)].exp = 50;
-	m_shotPropertys[static_cast<int>(ShimiColors::Purple)].exp = 50;
+	m_shotPropertys[static_cast<int>(ShimiColors::Blue)].exp = 9;
+	m_shotPropertys[static_cast<int>(ShimiColors::Red)].exp = 9;
+	m_shotPropertys[static_cast<int>(ShimiColors::Green)].exp = 9;
+	m_shotPropertys[static_cast<int>(ShimiColors::Orange)].exp = 9;
+	m_shotPropertys[static_cast<int>(ShimiColors::Purple)].exp = 9;
 
-	m_equipNum = 3;
+	m_equipNum = 1;
 #endif	
 
 }
@@ -215,9 +315,10 @@ void MyVehicle::ShotManager::event()
 			//(levelを1に：装備できる色として追加される)
 			p.level = 1;
 
-			//レベルアップエフェクト
+			const NotifyStr2 notify(ToSString(p.color) + L"Shot", L"Get!:", Palette::White, 120, ToColor(p.color));
+			EffectManager::I()->effect.add<Notify>(m_gb, notify);
 		}
-		else if (p.level == 1 && p.exp >= 80)
+		else if (p.level == 1 && p.exp >= 200)
 		{
 			//装備の中に該当の色があれば更新する
 
@@ -313,6 +414,11 @@ std::shared_ptr<Shot> MyVehicle::ShotManager::ShimiColorsToShot(const ShimiColor
 	return std::shared_ptr<Shot>(nullptr);
 }
 
+std::shared_ptr<Shot> MyVehicle::ShotManager::ShimiColorsToShot(const ShimiColors& col)
+{
+	return ShimiColorsToShot(col, getLevel(col));
+}
+
 int MyVehicle::ShotManager::getLevel(const ShimiColors& col)
 {
 	int index = static_cast<int>(col);
@@ -366,4 +472,30 @@ void MyVehicle::ShotManager::sortEquipShotWithHierarchy()
 	{
 		return ToHierarchy(a.value()->m_color.value()) < ToHierarchy(b.value()->m_color.value());
 	});
+}
+
+void  MyVehicle::ShotManager::resetEquipShot()
+{
+	for (auto& tempShot : m_equipShot)
+	{
+		//白ショットではない装備がされているとき、メニューを開く際にインスタンス作り直し（緑のチャージなどが解除）
+		if (tempShot && tempShot.value()->m_color)
+		{
+			const ShimiColors targetColor = tempShot.value()->m_color.value();
+			const int level = getLevel(targetColor);
+			tempShot = ShimiColorsToShot(targetColor, level);
+		}
+	}
+}
+
+void MyVehicle::warp()
+{
+	changeState(std::shared_ptr<state::myvehicle::MVState>(new state::myvehicle::ToBoss()));
+}
+
+void MyVehicle::addSlot()
+{
+	++m_shotManager.m_equipNum;
+
+	assert(m_shotManager.m_equipNum <= 3);
 }

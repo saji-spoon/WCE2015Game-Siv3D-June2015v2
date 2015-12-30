@@ -19,6 +19,8 @@ public:
 	//自機からのダメージを受ける当たり判定
 	Vec2 m_pos;
 
+	bool m_isDead = false;
+
 	Boss(){}
 
 	Boss(GameBase* gb, const Vec2& pos);
@@ -40,7 +42,8 @@ public:
 
 	virtual bool isInBossBattle()const = 0;
 
-	virtual bool isVanished()const = 0;
+	virtual void killedSilent() = 0;
+	virtual void setVanish() = 0;
 
 };
 
@@ -63,7 +66,9 @@ public:
 
 	Boss1(GameBase* gb, const Vec2& pos, std::shared_ptr<state::boss1::Boss1Base> state = std::shared_ptr<state::boss1::Boss1Base>(new state::boss1::Stay())) :Boss(gb, pos), m_state(state), m_stayPos(pos)
 	{
-		
+#ifdef _DEBUG
+		m_life = 1;
+#endif
 	}
 
 	virtual ~Boss1(){}
@@ -108,8 +113,11 @@ public:
 	{
 		if (getMyCollision(m_pos).intersects(collision))
 		{
+			const bool dm = m_damagable;
+
 			if (m_damagable)
 			{
+				//ここにボスのダメージエフェクト
 				--m_life;
 
 				if (m_life > 0)
@@ -123,7 +131,7 @@ public:
 				
 			}
 
-			return m_damagable ? HitState::Damage : HitState::NoDamage;
+			return dm ? HitState::Damage : HitState::NoDamage;
 		}
 		return HitState::Avoid;
 	}
@@ -145,9 +153,14 @@ public:
 
 	bool isInBossBattle()const;
 
-	bool isVanished()const;
-
 	void checkMyVehicleAway();
+
+	void setVanish()override
+	{
+		m_state = std::shared_ptr<state::boss1::Boss1Base>(new state::boss1::Vanish());
+	}
+
+	void killedSilent() override;
 	
 };
 

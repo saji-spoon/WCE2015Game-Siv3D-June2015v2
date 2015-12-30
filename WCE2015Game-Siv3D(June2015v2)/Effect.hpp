@@ -2,7 +2,7 @@
 #include<Siv3D.hpp>
 #include"Camera.hpp"
 #include"ShimiColors.hpp"
-
+#include"SimpleState.hpp"
 #define TOUINT(a) static_cast<uint32>(a)
 
 namespace shimi
@@ -61,6 +61,50 @@ struct Particle
 	bool m_isDead;
 };
 
+struct NotifyStr
+{
+	String m_str;
+
+	Vec2 m_flow = Vec2(0,0);
+
+	Color m_col;
+
+	int m_stopTime;
+
+	int m_timer = 0;
+
+	NotifyStr(const String& str, const Color& col, int stopTime);
+
+	void draw(const Vec2& pos)const;
+
+	void update();
+
+};
+
+struct NotifyStr2
+{
+	String m_str1;
+	String m_str2;
+
+	Vec2 m_flow = Vec2(0, 0);
+
+	Color m_col1;
+	Color m_col2;
+
+	Font m_font;
+
+	int m_stopTime;
+
+	int m_timer = 0;
+
+	NotifyStr2(const String& str1, const String& str2,  const Color& col1, int stopTime, const Color& col2);
+
+	void draw(const Vec2& pos)const;
+
+	void update();
+
+};
+
 class ItemGet :public IEffect
 {
 public:
@@ -70,12 +114,29 @@ public:
 
 	ShimiColors m_col;
 
+	NotifyStr m_str;
+
+	int m_val;
+
 	std::vector<Particle> m_particles;
 
-	ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col);
+	ItemGet(GameBase* gb, const Vec2& pos, const ShimiColors& col, int val);
 
 	bool update(double t) override;
 
+};
+
+class Notify : public IEffect
+{
+public:
+
+	GameBase* m_gb;
+
+	NotifyStr2 m_str;
+
+	Notify(GameBase* gb, const NotifyStr2& notify);
+
+	bool update(double t) override;
 };
 
 struct TimedParticle
@@ -117,38 +178,6 @@ private:
 
 };
 
-struct SimpleState
-{
-	SimpleState(){}
-	SimpleState(int firstLimit) :m_stateLimit(firstLimit)
-	{}
-
-	void update()
-	{
-		++m_timer;
-		++m_allTimer;
-	}
-
-	void checkTimerAndGoNextState(int newLimit)
-	{
-		if (m_timer >= m_stateLimit)
-		{
-			nextState(newLimit);
-		}
-	}
-
-	void nextState(int newLimit)
-	{
-		++m_state;
-		m_timer = 0;
-		m_stateLimit = newLimit;
-	}
-
-	int m_state = 0;
-	int m_timer = 0;
-	int m_stateLimit;
-	int m_allTimer = 0;
-};
 
 class BossWarp :public IEffect
 {
@@ -202,6 +231,63 @@ public:
 	bool update(double t) override;
 
 
+};
+
+class Vanishing :public IEffect
+{
+public:
+	Color m_col;
+	int m_size;
+
+	double speed;
+
+	double progress = 0.0;
+
+	Vec2 m_pos;
+
+	Vanishing(const Vec2& pos, int size, const Color& col)
+		:m_pos(pos),
+		m_size(size),
+		m_col(col),
+		speed(1.0*size / 12.0)
+	{
+	}
+
+	bool update(double t)override;
+
+};
+
+class VanishingMV : public Vanishing
+{
+public:
+
+	VanishingMV(const Vec2& pos, int size, const Color& col)
+		:Vanishing(pos, size, col)
+
+	{
+	}
+
+	bool update(double t)override;
+
+};
+
+
+class Charging : public IEffect
+{
+public:
+
+	int m_timer = 0;
+
+	Vec2 m_pos;
+
+	Charging(){}
+
+	Charging(const Vec2& pos)
+		:m_pos(pos)
+	{
+	}
+
+	bool update(double t)override;
 };
 
 }

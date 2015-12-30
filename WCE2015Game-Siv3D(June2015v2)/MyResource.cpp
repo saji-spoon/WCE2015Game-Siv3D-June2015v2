@@ -7,6 +7,11 @@ void shimi::ResourceRegister()
 
 	const FilePath HeroRegister = ResourcePath + HeroPath;
 	TextureAsset::Register(L"Hero", HeroRegister + L"Stein.png", {}, AssetFlag::Default);
+	TextureAsset::Register(L"HeroX", HeroRegister + L"SteinX.png", {}, AssetFlag::Default);
+	TextureAsset::Register(L"HeroXX", HeroRegister + L"SteinXX.png", {}, AssetFlag::Default);
+	TextureAsset::Register(L"HeroXXX", HeroRegister + L"SteinXXX.png", {}, AssetFlag::Default);
+
+
 	TextureAsset::Register(L"ballet1", HeroRegister + L"Ballet/RedBallet.png", {}, AssetFlag::Default);
 	TextureAsset::Register(L"redBallet", HeroRegister + L"Ballet/RedBallet.png", {}, AssetFlag::Default);
 	TextureAsset::Register(L"blueBallet", HeroRegister + L"Ballet/BlueBallet.png", {}, AssetFlag::Default);
@@ -18,20 +23,47 @@ void shimi::ResourceRegister()
 
 	TextureAsset::Register(L"re", L"ballet.png", {}, AssetFlag::Default);
 
-	SoundAsset::Register(L"NormalStage", ResourcePath + L"BGM/" + L"Wake_Myself.mp3");
+	SoundAsset::Register(L"NormalStage", ResourcePath + L"BGM/" + L"Stage.wav");
 	SoundAsset(L"NormalStage").setLoop(true);
-	SoundAsset::Register(L"BossBattle", ResourcePath + L"BGM/" + L"Boss_Battle.mp3");
+	SoundAsset(L"NormalStage").setVolume(0.8);
+	SoundAsset::Register(L"BossBattle", ResourcePath + L"BGM/" + L"Boss.wav");
 	SoundAsset(L"BossBattle").setLoop(true);
-
+	SoundAsset(L"BossBattle").setVolume(0.7);
+	SoundAsset::Register(L"LastBossBGM", ResourcePath + L"BGM/" + L"Boss_Battle.mp3");
+	SoundAsset(L"LastBossBGM").setLoop(true);
+	SoundAsset(L"LastBossBGM").setLoop(true);
 	/***SE‚Ì“o˜^***/
-	SoundAsset::Register(L"MyBallet", ResourcePath + L"SE/" + L"tissue.mp3");
-	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" + L"button03b.mp3");
+	SoundAsset::Register(L"MyBallet", ResourcePath + L"SE/" + L"01_kami4.wav");
+	SoundAsset::Register(L"EnemyVanish", ResourcePath + L"SE/" +  L"button03b.mp3");
 	SoundAsset::Register(L"Select", ResourcePath + L"SE/" + L"button40.mp3");
 	SoundAsset::Register(L"Start", ResourcePath + L"SE/" + L"decision4.mp3");
-
+	SoundAsset::Register(L"Charge", ResourcePath + L"SE/" + L"02_charge.wav");
+	SoundAsset::Register(L"Lazer", ResourcePath + L"SE/" + L"02_laser.wav");
+	SoundAsset::Register(L"EnemyBallet", ResourcePath + L"SE/" + L"01_kami4.wav");
+	SoundAsset(L"EnemyBallet").setVolume(0.01);
+	SoundAsset::Register(L"Damage", ResourcePath + L"SE/" + L"01_kami1.wav");
+	SoundAsset::Register(L"BreakObstacle", ResourcePath + L"SE/" + L"06_wall_break1.wav");
+	SoundAsset::Register(L"BossDamage", ResourcePath + L"SE/" + L"07_boss_damage2.wav");
+	SoundAsset::Register(L"BossNoDamage", ResourcePath + L"SE/" + L"01_kami3.wav");
+	SoundAsset::Register(L"BossVanish", ResourcePath + L"SE/" + L"09_boss_vanish1.wav");
+	SoundAsset(L"BossVanish").setVolume(0.1);
+	SoundAsset::Register(L"ItemGet", ResourcePath + L"SE/" + L"10_item_get.wav");
+	SoundAsset::Register(L"GameOver", ResourcePath + L"SE/" + L"12_gameOver.wav");
+	SoundAsset::Register(L"FlyBoss", ResourcePath + L"SE/" + L"13_fly.wav");
+	SoundAsset::Register(L"SakanaBoss", ResourcePath + L"SE/" + L"15_ani_ge_kujira01.wav");
+	SoundAsset::Register(L"LastBoss", ResourcePath + L"SE/" + L"16_boar-child-cry1.wav");
+	SoundAsset::Register(L"Warp", ResourcePath + L"SE/" + L"13_ta_ta_maho13.wav");
+	SoundAsset::Register(L"Recover", ResourcePath + L"SE/" + L"warp_5.mp3");
+	
 	SoundAsset::Register(L"Boss1Voice1", ResourcePath + L"SE/" + L"mushi.wav");
 
+	FontManager::Register(L"Resource/Font/UtsukushiMincho-FONT/UtsukushiFONT.otf");
+
 	FontAsset::Register(L"Debug", 12, Typeface::Default);
+	FontAsset::Register(L"Notify1", 20, Typeface::Default);
+	FontAsset::Register(L"Notify2", 16, L"02‚¤‚Â‚­‚µ–¾’©‘Ì");
+	FontAsset::Register(L"Notify2Out", 16, L"02‚¤‚Â‚­‚µ–¾’©‘Ì", FontStyle::Outline);
+	FontAsset::Register(L"Ending", 24, L"02‚¤‚Â‚­‚µ–¾’©‘Ì");
 
 	const FilePath EnemyRegister = ResourcePath + L"Enemy/";
 	TextureAsset::Register(L"blueDia", EnemyRegister + L"shimi_enemy_01.png");

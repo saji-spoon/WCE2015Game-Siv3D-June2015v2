@@ -90,7 +90,7 @@ void RedShot1::shot(const Vec2& pos, const Vec2& v)
 			Circular3(m_gb->m_mv.m_v).theta + (i - 1) * Pi / 36.0,
 			0.0,
 			0.0,
-			ScheduleTimer({ 30, 80 }))));
+			ScheduleTimer({ 2, 12, 24, 36 }))));
 	}
 
 	SoundAsset(L"MyBallet").playMulti();
@@ -172,7 +172,7 @@ void GreenShot1::shot(const Vec2& pos, const Vec2& v)
 {
 	if (m_state != 0) return;
 	
-
+	SoundAsset(L"Charge").playMulti();
 
 	m_count = m_interval;
 	m_state = 1;
@@ -194,6 +194,8 @@ void GreenShot1::update()
 			changeState(2);
 
 			beamUpdate();
+
+			SoundAsset(L"Lazer").playMulti();
 
 			return;
 		}
@@ -231,7 +233,7 @@ void GreenShot1::beamUpdate()
 	const Vec2 pos = m_gb->getMyVehiclePos();
 	const Vec2 v = m_gb->getMyVehicleV();
 
-	m_beam = Line(pos, pos + v.normalized() * 400);
+	m_beam = Line(pos, pos + v.normalized() * 600);
 
 	for (const auto& walls : m_gb->m_obstacles)
 	{
@@ -260,6 +262,8 @@ void GreenShot1::beamCollision()
 	const Vec2 v = m_gb->getMyVehicleV();
 
 	const auto& colRect = Rect(pos.asPoint() - Point(10, 0), Point( 20, m_beam.length() )).rotatedAt(pos, Circular6(m_beam.vector()).theta);
+
+	if (m_stateTimer%3 == 0) DropManager::I()->m_rectDrops.push_back(RectDrop(colRect, ToColor(ShimiColors::Green)));
 
 	AwakePlayerAttack(m_gb, colRect, m_color.value(), 3);
 
@@ -299,7 +303,7 @@ void OrangeShot1::shot(const Vec2& pos, const Vec2& v)
 	Circular3(targetPos - burstPos1).theta,
 	1.2,
 	0.0,
-	ScheduleTimer({10, 20, 30}))));
+	ScheduleTimer({10, 13, 16}))));
 
 	m_gb->m_myBM.m_ballets.push_back(std::shared_ptr<Ballet>(new BalletAVR(
 		&(m_gb->m_myBM),
@@ -310,7 +314,7 @@ void OrangeShot1::shot(const Vec2& pos, const Vec2& v)
 		Circular3(targetPos - burstPos2).theta,
 		1.2,
 		0.0,
-		ScheduleTimer({ 10, 20, 30 }))));
+		ScheduleTimer({ 10, 13, 16 }))));
 
 	SoundAsset(L"MyBallet").playMulti();
 

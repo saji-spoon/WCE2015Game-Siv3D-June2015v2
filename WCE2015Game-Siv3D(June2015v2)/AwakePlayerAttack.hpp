@@ -29,11 +29,16 @@ namespace shimi
 
 				if (e->m_itemID && !gb->m_idb.isgot(e->m_itemID.value()))
 				{
-					EffectManager::I()->effect.add<ItemGet>(gb, e->m_pos, e->m_shimiColor);
+					
 
 					const int index = e->m_itemID.value();
 
+					const int itemVal = gb->m_idb.m_list[index].m_value;
+					const ShimiColors itemCol = gb->m_idb.m_list[index].m_color;
+
 					gb->m_mv.addShotExp(gb->m_idb.m_list[index]);
+
+					EffectManager::I()->effect.add<ItemGet>(gb, e->m_pos, itemCol, itemVal);
 
 					gb->m_idb.got(index);
 				}
@@ -47,6 +52,18 @@ namespace shimi
 		{
 			const HitState hit = b->damage(collision, col, value);// collision.intersects(Circle(e.m_enemy->m_pos, 30));
 
+			switch (hit)
+			{
+			case HitState::Damage:
+				SoundAsset(L"BossDamage").playMulti();
+				break;
+			case HitState::NoDamage:
+				SoundAsset(L"BossNoDamage").play();
+				break;
+			default:
+				break;
+			}
+
 			return hit != HitState::Avoid;
 		});
 
@@ -58,12 +75,16 @@ namespace shimi
 
 			if (isCrashed && !obs->m_isDead)
 			{
+				SoundAsset(L"BreakObstacle").playMulti();
+
 				obs->m_isDead = true;
 
-				//破壊アニメーション
+				EffectManager::I()->effect.add<Vanishing>(obs->m_pols.boundingRect.center, 100, ToColor(col.value()));
+
+				
 			}
 
-			return isColled;
+			return isCrashed;
 		});
 
 		return enemyHit || bossHit || obsHit;
@@ -77,7 +98,10 @@ namespace shimi
 		const bool f = collision.intersects(Circle(gb->getMyVehiclePos(), 20));
 
 		//自機の被ダメージフラグをセット
-		if (f) gb->m_mv.m_isDamaged = true;
+		if (f && !(gb->m_mv.m_isDamaged))
+		{
+			gb->m_mv.m_isDamaged = true;
+		}
 
 		return f;
 

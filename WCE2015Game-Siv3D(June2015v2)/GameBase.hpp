@@ -13,6 +13,10 @@
 #include"Menu.hpp"
 #include"DebugPoint.hpp"
 #include"Boss.hpp"
+#include"SavePoint.hpp"
+#include"Hole.hpp"
+#include"ItemObject.hpp"
+
 
 namespace shimi
 {
@@ -36,17 +40,26 @@ public:
 	//EnemyManager
 	EnemyManager m_EM = EnemyManager(this);
 
+	SavePoint m_savePoint = SavePoint(this);
+
 	MyVehicle m_mv = MyVehicle(this);
+
+	Hole m_hole;
 
 	ItemDetabase m_idb;
 
+	std::vector<ItemObject> m_itemObjects;
+
 	std::vector<std::shared_ptr<ObstacleBase>> m_obstacles;
+	std::vector<String> m_breakedObstacleTag;
 
 	std::vector<std::shared_ptr<Boss>> m_bosses;
 
 	Menu m_menu;
 
 	std::shared_ptr<state::GBState> m_state;
+
+	bool m_isDoorOpen = false;
 
 	GameBase();
 
@@ -55,7 +68,7 @@ public:
 		m_state->execute(this);
 	}
 
-	void mainGameUpdate();
+	void mainGameUpdate(bool ending, bool myVehicleStop);
 
 	inline Vec2 getMyVehiclePos()const
 	{
@@ -80,6 +93,8 @@ public:
 	void collisionEnemyWithBallet();
 
 	void collisionBalletWithObstacle();
+
+	void collisionItemWithMyVehicle();
 
 	void mainGameDraw()const;
 
@@ -130,13 +145,15 @@ public:
 
 	void collisionMyBalletWithBreakableObstacle();
 
-	void breakObstacleByTag(const String& tag)
-	{
-		Erase_if(m_obstacles, [&tag](const std::shared_ptr<ObstacleBase>& o){ return o->m_tag && (o->m_tag.value() == tag); });
-	}
+	void breakObstacleByTag(const String& tag, bool silent = false);
 
 	void readEnemyData(const FilePath& path);
 
+	void checkGameClear();
+
+	void checkBossDoorOpen();
+
+	bool m_isCleared = false;
 
 #ifdef _DEBUG
 	DebugPoint m_debugP;

@@ -6,8 +6,10 @@
 #include"BGMManager.hpp"
 #include"Config.hpp"
 #include"DropManager.hpp"
+#include"Save.hpp"
 
 #define NO_WALLDEBUG
+
 shimi::GameBase::GameBase() :
 m_tex(L"Resource/Paper2.png"), m_state(new state::MainGame()), m_menu(this, m_mv)
 {
@@ -171,7 +173,7 @@ struct DataSheetReader
 				int num;
 				int delay;*/
 
-				tempSchdl2.push_back({ Parse<double>(schdl2Str[0]), Parse<double>(schdl2Str[1]), Parse<double>(schdl2Str[2]), Parse<double>(schdl2Str[3]) });
+				tempSchdl2.push_back({ Parse<double>(schdl2Str[0]), Parse<double>(schdl2Str[1]), Parse<int>(schdl2Str[2]), Parse<int>(schdl2Str[3]) });
 			}
 
 			shotCase = std::shared_ptr<EnemyShot>(new MVAimShot(
@@ -196,13 +198,13 @@ struct DataSheetReader
 
 };
 
-void shimi::GameBase::mainGameUpdate()
+void shimi::GameBase::mainGameUpdate(bool ending, bool myVehicleStop)
 {
+	if (!myVehicleStop) m_mv.update();
+
 	m_EM.pop();
 
-	updateCamera(m_mv.m_pos);
-
-	m_mv.update();
+	if (!myVehicleStop) updateCamera(m_mv.m_pos);
 
 	for (auto& boss : m_bosses)
 	{
@@ -228,31 +230,57 @@ void shimi::GameBase::mainGameUpdate()
 
 	collisionBalletWithObstacle();
 
-	collisionMyBalletWithBreakableObstacle();
+	if (!myVehicleStop)
+	{
+		collisionPlayerWithEnemy();
 
-	collisionPlayerWithEnemy();
+		collisionPlayerWithBallet();
 
-	collisionPlayerWithBallet();
+		collisionItemWithMyVehicle();
+	}
+	
+	if (m_savePoint.collisionSavePoint(m_mv.m_pos))
+	{
+		m_mv.m_life = 3;
+	}
+
+	m_savePoint.update();
+
 
 	Erase_if(m_myBM.m_ballets, [this](const std::shared_ptr<Ballet>& b){return b->isDead(); });
 
 	//自機から離れすぎた弾は削除される
 	Erase_if(m_enemyBM.m_ballets, [this](const std::shared_ptr<Ballet>& b)
 	{
-		return b->isDead() || (b->m_pos.distanceFrom(getMyVehiclePos()) > 2000);
+		return b->isDead() || (b->m_pos.distanceFrom(getMyVehiclePos()) > 1500);
 	});
 
 	Erase_if(m_obstacles, [this](const std::shared_ptr<ObstacleBase>& o){return o->m_isDead; });
 
+	Erase_if(m_itemObjects, [](const ItemObject& item){ return item.m_isDead; });
+
 	EffectManager::I()->effect.update();
 
 	m_EM.depop();
-	
+
+	m_hole.update();
+
+	if (ending) return;
+
 	if ((Input::KeyS | Gamepad(0).button(11)).clicked)
 	{
 		changeState(std::shared_ptr<state::GBState>(new state::Menu()));
 	}
-	
+
+	checkGameClear();
+
+	checkBossDoorOpen();
+
+	if (Circle(m_hole.m_pos, 190).intersects(m_mv.m_pos) && m_mv.m_state->getStateID() != state::myvehicle::MVState::StateID::ToBoss)
+	{
+		m_mv.warp();
+		return;
+	}
 
 #ifdef _DEBUG
 	m_debugP.update();
@@ -263,7 +291,15 @@ void shimi::GameBase::mainGameDraw()const
 {
 	m_tex.map(ConfigParam::SIZE_OF_WORLD + Vec2(800, 600)).draw(D2Camera::I()->getDrawPos({ -800, -600 }), Alpha(70));
 
+	const Point BossWorldBasePos = Point(0, ConfigParam::SIZE_OF_NORMALWORLD.y + ConfigParam::SIZE_OF_WORLDMARGIN.y * 2);
+
+	Rect(D2Camera::I()->getDrawPos(BossWorldBasePos).asPoint(), ConfigParam::SIZE_OF_BOSSWORLD).draw(Palette::Black);
+
+	m_tex.map(ConfigParam::SIZE_OF_BOSSWORLD).draw(D2Camera::I()->getDrawPos(BossWorldBasePos), Color(255,255,255,70));
+
 	DropManager::I()->draw();
+
+	m_savePoint.draw();
 
 	m_mv.draw();
 
@@ -292,7 +328,14 @@ void shimi::GameBase::mainGameDraw()const
 		b->draw();
 	}
 
-	m_mv.drawShotEquip();
+	for (const auto& item : m_itemObjects)
+	{
+		item.draw();
+	}
+
+	m_hole.draw();
+
+  	m_mv.drawShotEquip();
 
 	
 #ifdef _DEBUG
@@ -303,8 +346,6 @@ void shimi::GameBase::mainGameDraw()const
 	FontAsset(L"Debug").draw(Format(DropManager::I()->m_drops.size()), { 0.0, 100.0 }, Palette::Black);
 
 	m_debugP.draw();
-
-	int i=0;
 
 	FontAsset(L"Debug").draw(L"enemyBallets:"+Format(m_enemyBM.m_ballets.size()), Vec2(240, 100), Palette::Black);
 	FontAsset(L"Debug").draw(L"enemy:" + Format(m_EM.m_enemies.size()), Vec2(240, 120), Palette::Black);
@@ -427,31 +468,28 @@ void shimi::GameBase::collisionPlayerWithEnemy()
 	}*/
 }
 
+void shimi::GameBase::collisionItemWithMyVehicle()
+{
+	for (auto& item : m_itemObjects)
+	{
+		if (Circle(m_mv.m_pos, 10).intersects(item.getCollision()) && !item.m_isDead)
+		{
+			const NotifyStr2 notify(L"+1", L"Slot", Palette::White, 120, Color(180,180,180));
+			EffectManager::I()->effect.add<Notify>(this, notify);
+
+			SoundAsset(L"ItemGet").playMulti();
+
+			item.m_isDead = true;
+			m_mv.addSlot();
+		}
+	}
+}
+
 void shimi::GameBase::changeState(const std::shared_ptr<state::GBState>& state)
 {
 	m_state->exit(this);
 	m_state = state;
 	m_state->enter(this);
-}
-
-void shimi::GameBase::collisionMyBalletWithBreakableObstacle()
-{
-	/*
-	for (auto& o : m_obstacles)
-	{
-		const bool isCrashed = AnyOf(m_myBM.m_ballets, [&o](const std::shared_ptr<Ballet>& b)
-		{
-			return o->shotByColor(b->m_shimiColor) && o->m_pols.intersects(Circle(b->m_pos, 5));
-		});
-
-		if (isCrashed)
-		{
-			//オブジェクト破壊エフェクト
-
-			o->m_isDead = true;
-		}
-	}
-	*/
 }
 
 void shimi::GameBase::readEnemyData(const FilePath& path)
@@ -610,3 +648,61 @@ void shimi::GameBase::readEnemyData(const FilePath& path)
 
 	}
 };
+
+
+void shimi::GameBase::checkGameClear()
+{
+	//すべてのボスを倒したらクリア
+
+#ifdef _DEBUG
+	const bool clearTrigger = Mouse::RightClicked();
+#else
+	const bool clearTrigger = AllOf(m_bosses, [](const std::shared_ptr<Boss>& b)
+	{
+		return b->m_isDead;
+	});
+#endif
+
+	if (clearTrigger)
+	{
+		changeState(std::shared_ptr<state::GBState>(new state::Clear()));
+	}
+}
+
+void shimi::GameBase::checkBossDoorOpen()
+{
+	bool f = true;
+
+	for (size_t i = 0; i < m_bosses.size() - 1; ++i)
+	{
+		f = f && m_bosses[i]->m_isDead;
+	}
+
+#ifdef _DEBUG
+	const bool openTrigger = Mouse::LeftClicked();
+#else
+	const bool openTrigger = f;
+#endif
+
+	if (openTrigger && !(m_isDoorOpen))
+	{
+		m_isDoorOpen = true;
+		changeState(std::shared_ptr<state::GBState>(new state::Event1()));
+	}
+	//一度開けたら開けないようにする
+}
+
+void shimi::GameBase::breakObstacleByTag(const String& tag, bool silent)
+{
+	for (auto& obs : m_obstacles)
+	{
+		if (obs->m_tag && (obs->m_tag.value() == tag))
+		{
+			m_breakedObstacleTag.push_back(obs->m_tag.value());
+			obs->m_isDead = true;
+			if (silent) continue;
+			EffectManager::I()->effect.add<Vanishing>(obs->m_pols.boundingRect.center, 100, Color(80, 80, 80));
+			SoundAsset(L"BreakObstacle").playMulti();
+		}
+	}
+}
