@@ -17,7 +17,6 @@ MyVehicle::MyVehicle(GameBase* base) :
 void MyVehicle::collisionPlayerWithObject()
 {
 	Vec2 futurePos = m_pos + m_v;//そのままならm_v進める
-
 	const int bodySize = 10;
 
 	for (const auto& obstacle : m_gb->m_obstacles)
@@ -41,7 +40,8 @@ void MyVehicle::collisionPlayerWithObject()
 	//リストを、当たり判定円の中心と交差した壁へのclosestの距離が近い順にならべる
 	std::sort(wallLines.begin(), wallLines.end(), [&futurePos](const Line& wallA, const Line& wallB)
 	{
-		return (futurePos - wallA.closest(futurePos)).length() < (futurePos - wallB.closest(futurePos)).length();
+		return (futurePos - wallA.closest(futurePos)).length() <
+			(futurePos - wallB.closest(futurePos)).length();
 	});
 
 	for (int j = 0; j < 2; ++j)

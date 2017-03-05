@@ -29,11 +29,10 @@ void shimi::GameBase::init()
 	
 
 	//TriggerBreakableObstacle
-	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject(Rect(1921, 3397, 400, 80), L"Boss1Exit")));
-	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject(Rect(4362, 1192, 254, 142), L"Boss2Exit")));
-	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject(Rect(2532, 5028, 257, 123), L"Boss3Exit")));
-	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject(Rect(3894, 3998, 216, 109), L"ToLastBoss")));
-
+	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject({ 1921, 3350 }, L"Resource/Object/Object002.png", L"Boss1Exit")));
+	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject({ 4358, 1160 }, L"Resource/Object/Object005.png", L"Boss2Exit")));
+	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject({ 2499, 4992 }, L"Resource/Object/Object006.png", L"Boss3Exit")));
+	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new TriggerBreakableObject({ 3837, 3971 }, L"Resource/Object/Object007.png", L"ToLastBoss")));
 
 	//è„ï”
 	m_obstacles.push_back(std::shared_ptr<ObstacleBase>(new RectObstacle(Rect(0, -ConfigParam::SIZE_OF_WORLDMARGIN.y, ConfigParam::SIZE_OF_NORMALWORLD.x, ConfigParam::SIZE_OF_WORLDMARGIN.y), RectObstacle::Type::White)));

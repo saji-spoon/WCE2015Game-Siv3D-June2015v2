@@ -48,7 +48,7 @@ void Title::draw()const
 	m_TitleTex.draw();
 	m_NewGameTex.draw();
 	m_ContinueTex.draw();
-	m_verFont.draw(L"v.0.94", Vec2(1160, 737), Color(200, 200, 200));
+	m_verFont.draw(L"v.1.00", Vec2(1160, 737), Color(200, 200, 200));
 
 	//‘I‘ðUI•`‰æ
 	switch (m_select)

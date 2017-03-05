@@ -282,6 +282,8 @@ void shimi::GameBase::mainGameUpdate(bool ending, bool myVehicleStop)
 		return;
 	}
 
+	BGMManager::I()->update();
+
 #ifdef _DEBUG
 	m_debugP.update();
 #endif
@@ -649,6 +651,8 @@ void shimi::GameBase::readEnemyData(const FilePath& path)
 	}
 };
 
+
+#undef _DEBUG
 
 void shimi::GameBase::checkGameClear()
 {

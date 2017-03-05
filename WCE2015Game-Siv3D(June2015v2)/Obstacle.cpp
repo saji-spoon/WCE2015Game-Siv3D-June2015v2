@@ -3,7 +3,7 @@
 
 using namespace shimi;
 
-Obstacle::Obstacle(const Point& pos, const FilePath& imagePath, double simp = 3.0) : ObstacleBase(pos, MultiPolygon()), m_tex(imagePath)
+Obstacle::Obstacle(const s3d::Point& pos, const FilePath& imagePath, double simp = 3.0) : ObstacleBase(pos, MultiPolygon()), m_tex(imagePath)
 {
 	if (!FileSystem::Exists(imagePath))
 	{
@@ -64,26 +64,31 @@ void ObstacleBase::drawDebug()const
 	}
 }
 
-BreakableObstacle::BreakableObstacle(const Rect& rect, const ShimiColors& col)
-	:ObstacleBase(rect.pos, MultiPolygon({rect.asPolygon()})),
-	m_rect(rect),
-	m_col(col),
-	m_type(Type::Rect)
+TexturedObstacle::TexturedObstacle(const Point& pos, const FilePath& imagePath, double simp, const Optional<String>& tag)
+	:ObstacleBase(pos, MultiPolygon(), tag)
+{
+	setTextureAndPolygon(imagePath, simp);
+}
+
+TexturedObstacle::TexturedObstacle(const Point& pos, const Optional<String>& tag)
+	: ObstacleBase(pos, MultiPolygon(), tag)
 {
 }
 
-BreakableObstacle::BreakableObstacle(const Point& pos, const FilePath& imagePath, const ShimiColors& col, double simp)
-	:
-	ObstacleBase(pos, MultiPolygon()),
-	m_tex(imagePath),
-	m_col(col),
-	m_type(Type::Texture)
+void TexturedObstacle::draw()const
+{
+	m_tex.draw(D2Camera::I()->getDrawPos(m_pos));
+}
+
+void TexturedObstacle::setTextureAndPolygon(const FilePath& imagePath, double simp)
 {
 	if (!FileSystem::Exists(imagePath))
 	{
 		LOG_ERROR(L"Obstacle:Failed to Open File:" + imagePath);
 		return;
 	}
+
+	m_tex = Texture(imagePath);
 
 	const String dir = FileSystem::ParentPath(imagePath);
 	const String name = FileSystem::BaseName(imagePath);
@@ -105,19 +110,23 @@ BreakableObstacle::BreakableObstacle(const Point& pos, const FilePath& imagePath
 
 		m_pols = tempPol + m_pos;
 	}
-	/*
-	const auto& outer = m_pols.outer
+}
 
-	for (auto& pols : m_pols)
-	{
+BreakableObstacle::BreakableObstacle(const Rect& rect, const ShimiColors& col)
+	:TexturedObstacle(rect.pos),
+	m_rect(rect),
+	m_col(col),
+	m_type(Type::Rect)
+{
+	m_pols = MultiPolygon({ rect.asPolygon() });
+}
 
-	}
-	*/
-
-
-#ifdef _DEBUG
-	//LOG_DEBUG(L"Obstacle Constracted:", Format(m_pols));
-#endif
+BreakableObstacle::BreakableObstacle(const Point& pos, const FilePath& imagePath, const ShimiColors& col, double simp)
+	:
+	TexturedObstacle(pos, imagePath),
+	m_col(col),
+	m_type(Type::Texture)
+{
 }
 
 void BreakableObstacle::draw()const
@@ -129,7 +138,7 @@ void BreakableObstacle::draw()const
 		m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, ToColor(m_col));
 		break;
 	case shimi::BreakableObstacle::Type::Texture:
-		m_tex.draw(D2Camera::I()->getDrawPos(m_pos));
+		TexturedObstacle::draw();
 		break;
 	default:
 		break;
@@ -144,17 +153,9 @@ bool BreakableObstacle::shotByColor(const Optional<ShimiColors>& col)
 	return col.value() == m_col;
 }
 
-TriggerBreakableObject::TriggerBreakableObject(const Rect& rect, const String& tag)
-	:ObstacleBase(rect.pos, MultiPolygon({ rect.asPolygon() }), tag),
-	m_rect(rect)
+TriggerBreakableObject::TriggerBreakableObject(const Point& pos, const FilePath& imagePath, const String& tag, double simp)
+	:TexturedObstacle(pos, imagePath, simp, tag)
 {
-
-}
-
-void TriggerBreakableObject::draw()const
-{
-	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).draw(Color(120, 120, 120).setAlpha(128));
-	m_rect.movedBy(D2Camera::I()->getDrawPos({ 0, 0 }).asPoint()).drawFrame(4.0, 0.0, Color(120, 120, 120));
 }
 
 void RectObstacle::draw()const

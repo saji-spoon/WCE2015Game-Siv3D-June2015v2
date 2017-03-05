@@ -366,7 +366,7 @@ void state::boss1::Vanish::enter(Boss1& gb)
 
 	EffectManager::I()->effect.add<BossVanish>(gb.m_pos, 250);
 
-	BGMManager::I()->changeBGM(L"NormalStage");
+	BGMManager::I()->changeBGMAtBoss(L"NormalStage");
 
 	gb.m_gb->breakObstacleByTag(L"Boss1Exit");
 
@@ -482,7 +482,7 @@ void state::boss2::Vanish::enter(Boss2& gb)
 
 	EffectManager::I()->effect.add<BossVanish>(gb.m_pos, 250);
 
-	BGMManager::I()->changeBGM(L"NormalStage");
+	BGMManager::I()->changeBGMAtBoss(L"NormalStage");
 
 	SoundAsset(L"BossVanish").playMulti();
 

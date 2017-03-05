@@ -94,10 +94,30 @@ public:
 
 };
 
-class BreakableObstacle : public ObstacleBase
+class TexturedObstacle : public ObstacleBase
 {
 public:
+	TexturedObstacle(){}
 
+	TexturedObstacle(const Point& pos, const Optional<String>& tag = none);
+
+	TexturedObstacle(const Point& pos, const FilePath& imagePath, double simp = 3.0, const Optional<String>& tag = none);
+
+	Texture m_tex;
+
+	void setTextureAndPolygon(const FilePath& imagePath, double simp);
+
+	virtual void draw()const override;
+
+	virtual void endingDraw()const override
+	{
+	}
+
+};
+
+class BreakableObstacle : public TexturedObstacle
+{
+public:
 	enum class Type
 	{
 		Rect,
@@ -111,8 +131,6 @@ public:
 	BreakableObstacle(const Point& pos, const FilePath& imagePath, const ShimiColors& col, double simp = 3.0);
 
 	bool shotByColor(const Optional<ShimiColors>& col)override;
-
-	Texture m_tex;
 
 	Rect m_rect;
 
@@ -129,23 +147,16 @@ public:
 
 };
 
-
-class TriggerBreakableObject : public ObstacleBase
+class TriggerBreakableObject : public TexturedObstacle
 {
 public:
 
 	TriggerBreakableObject(){}
 
-	TriggerBreakableObject(const Rect& rect, const String& tag);
-
-	Rect m_rect;
-
-	void draw()const override;
+	TriggerBreakableObject(const Point& pos, const FilePath& imagePath, const String& tag, double simp = 3.0);
 
 	void endingDraw()const override
 	{
 	}
-
-
 };
 }

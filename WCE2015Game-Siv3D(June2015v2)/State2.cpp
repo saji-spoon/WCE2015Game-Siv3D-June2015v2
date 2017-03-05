@@ -267,7 +267,7 @@ void state::boss3::Vanish::enter(Boss3& gb)
 
 	EffectManager::I()->effect.add<BossVanish>(gb.m_pos, 250);
 
-	BGMManager::I()->changeBGM(L"NormalStage");
+	BGMManager::I()->changeBGMAtBoss(L"NormalStage");
 
 	SoundAsset(L"BossVanish").playMulti();
 
